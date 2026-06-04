@@ -8,8 +8,9 @@
   "builds": [
     {
       "src": "aura_archives/wsgi.py",
-      "use": "@vercel/python@3.11",
+      "use": "@vercel/python",
       "config": {
+        "runtime": "python3.11",
         "maxLambdaSize": "15mb"
       }
     }
