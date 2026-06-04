@@ -18,35 +18,51 @@ else:
 if IS_VERCEL and not os.getenv('DATABASE_URL'):
     os.environ['DATABASE_URL'] = 'sqlite:////tmp/db.sqlite3'
 
+_startup_error = None
+
 try:
     from django.core.wsgi import get_wsgi_application
-    application = get_wsgi_application()
-except Exception as exc:
-    # Surface the full traceback so Vercel logs show the real cause
-    tb = traceback.format_exc()
-    print(f"WSGI STARTUP FAILED:\n{tb}", file=sys.stderr)
-
-    def application(environ, start_response):
-        start_response('500 Internal Server Error', [('Content-Type', 'text/plain')])
-        return [f"Server startup error:\n{tb}".encode()]
+    _django_app = get_wsgi_application()
+except Exception:
+    _startup_error = traceback.format_exc()
+    print(f"WSGI STARTUP FAILED:\n{_startup_error}", file=sys.stderr)
+    _django_app = None
 
 if IS_VERCEL:
     try:
         from django.core.management import call_command
-        call_command('migrate', '--run-syncdb', verbosity=0)
         call_command('createcachetable', verbosity=0)
     except Exception:
-        import traceback
-        print("Vercel startup migration failed:", traceback.format_exc(), file=sys.stderr)
+        pass
 
-try:
-    from whitenoise.wsgi import WhiteNoise
-    application = WhiteNoise(
-        application,
-        root=str(BASE_DIR / 'staticfiles'),
-        max_age=31536000,
-    )
-except (ImportError, FileNotFoundError):
-    pass
+if _django_app is not None:
+    try:
+        from whitenoise.wsgi import WhiteNoise
+        _django_app = WhiteNoise(
+            _django_app,
+            root=str(BASE_DIR / 'staticfiles'),
+            max_age=31536000,
+        )
+    except (ImportError, FileNotFoundError, Exception):
+        pass
+
+_err = _startup_error
+
+
+def application(environ, start_response):
+    if _django_app is None:
+        start_response('500 Internal Server Error', [('Content-Type', 'text/plain')])
+        return [(f"Server startup error:\n{_err}").encode()]
+    try:
+        return _django_app(environ, start_response)
+    except Exception:
+        tb = traceback.format_exc()
+        print(f"REQUEST ERROR:\n{tb}", file=sys.stderr)
+        try:
+            start_response('500 Internal Server Error', [('Content-Type', 'text/plain')])
+        except Exception:
+            pass
+        return [(f"Request error:\n{tb}").encode()]
+
 
 app = application
