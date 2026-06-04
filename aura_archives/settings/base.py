@@ -6,14 +6,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 env = environ.Env(
     DEBUG=(bool, False),
-    ALLOWED_HOSTS=(list, ['localhost', '127.0.0.1']),
+    ALLOWED_HOSTS=(list, ['localhost', '127.0.0.1', 'aura-archives.vercel.app']),
 )
 
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+# Read .env file if it exists (development only)
+env_file = os.path.join(BASE_DIR, '.env')
+if os.path.exists(env_file):
+    environ.Env.read_env(env_file)
 
 SECRET_KEY = env('SECRET_KEY', default='django-insecure-change-me-in-production')
-DEBUG = env('DEBUG')
-ALLOWED_HOSTS = env('ALLOWED_HOSTS')
+DEBUG = env('DEBUG', default=False)
+ALLOWED_HOSTS = env('ALLOWED_HOSTS', default=['localhost', '127.0.0.1', 'aura-archives.vercel.app'])
 
 DJANGO_APPS = [
     'django.contrib.admin',
