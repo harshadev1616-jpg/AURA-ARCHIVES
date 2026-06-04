@@ -9,7 +9,9 @@ sys.path.insert(0, str(BASE_DIR))
 IS_VERCEL = os.getenv('VERCEL') == '1'
 DEBUG_MODE = os.getenv('DEBUG', 'False').lower() == 'true'
 
-if IS_VERCEL or not DEBUG_MODE:
+if IS_VERCEL:
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'aura_archives.settings.production'
+elif not DEBUG_MODE:
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'aura_archives.settings.production')
 else:
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'aura_archives.settings.development')
