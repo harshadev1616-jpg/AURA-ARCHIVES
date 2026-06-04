@@ -65,8 +65,8 @@ python-dateutil==2.9.0.post0
 requests==2.32.3
 Faker==25.3.0
 
-# Development
-django-debug-toolbar==4.4.0
+# Development (not installed on Vercel)
+# django-debug-toolbar==4.4.0  -- dev only, excluded from Vercel
 factory-boy==3.3.0
 pytest-django==4.8.0
 pytest-cov==5.0.0
