@@ -11,6 +11,10 @@
       "use": "@vercel/static"
     },
     {
+      "src": "media/**",
+      "use": "@vercel/static"
+    },
+    {
       "src": "aura_archives/wsgi.py",
       "use": "@vercel/python",
       "config": {
@@ -22,6 +26,10 @@
     {
       "src": "/static/(.*)",
       "dest": "/static/$1"
+    },
+    {
+      "src": "/media/(.*)",
+      "dest": "/media/$1"
     },
     {
       "src": "/(.*)",
