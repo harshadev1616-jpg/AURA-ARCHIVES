@@ -45,9 +45,11 @@ if IS_VERCEL and _django_app is not None:
 if _django_app is not None:
     try:
         from whitenoise.wsgi import WhiteNoise
+        # Serve from the source static/ dir (no collectstatic needed on Vercel)
         _django_app = WhiteNoise(
             _django_app,
-            root=str(BASE_DIR / 'staticfiles'),
+            root=str(BASE_DIR / 'static'),
+            prefix='static',
             max_age=31536000,
         )
     except Exception:
