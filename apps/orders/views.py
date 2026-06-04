@@ -4,7 +4,6 @@ from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from django.conf import settings
 from django.db.models import F
-import razorpay
 import json
 from .models import Order, OrderItem, OrderStatusHistory
 from .cart import Cart
@@ -172,6 +171,7 @@ def create_order(request):
     OrderStatusHistory.objects.create(order=order, status="pending", created_by=request.user)
     if payment_method == "razorpay":
         try:
+            import razorpay
             client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
             rp_order = client.order.create({"amount": int(total * 100), "currency": "INR", "receipt": order.order_number})
             order.razorpay_order_id = rp_order["id"]
@@ -208,6 +208,7 @@ def verify_payment(request):
     rzp_payment_id = data.get("razorpay_payment_id")
     rzp_signature = data.get("razorpay_signature")
     try:
+        import razorpay
         order = Order.objects.get(razorpay_order_id=rzp_order_id, user=request.user)
         client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
         client.utility.verify_payment_signature({
