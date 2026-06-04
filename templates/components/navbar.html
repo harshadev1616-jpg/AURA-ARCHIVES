@@ -13,15 +13,19 @@
                 <a href="/about/" class="link-grow text-[13px] tracking-wide text-charcoal/80 dark:text-ivory/80 hover:text-gold transition-colors">About</a>
                 <a href="/contact/" class="link-grow text-[13px] tracking-wide text-charcoal/80 dark:text-ivory/80 hover:text-gold transition-colors">Contact</a>
             </div>
-            <div class="flex items-center gap-1.5">
-                <button @click="searchOpen=!searchOpen" class="p-2 hover:text-gold"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></button>
-                <button onclick="toggleDarkMode()" class="p-2 hover:text-gold">
+            <div class="flex items-center gap-0.5 md:gap-1.5">
+                <!-- Search: always visible -->
+                <button @click="searchOpen=!searchOpen" class="p-2 hover:text-gold" aria-label="Search"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></button>
+                <!-- Dark mode: desktop only -->
+                <button onclick="toggleDarkMode()" class="hidden md:block p-2 hover:text-gold" aria-label="Toggle dark mode">
                     <svg class="w-5 h-5 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
                     <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                 </button>
                 {% if user.is_authenticated %}
-                <a href="/accounts/wishlist/" class="p-2 hover:text-gold"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></a>
-                <div class="relative group">
+                <!-- Wishlist: desktop only -->
+                <a href="/accounts/wishlist/" class="hidden md:block p-2 hover:text-gold" aria-label="Wishlist"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></a>
+                <!-- User menu: desktop only -->
+                <div class="relative group hidden md:block">
                     <button class="p-2 hover:text-gold"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></button>
                     <div class="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-d-card text-charcoal dark:text-ivory rounded-xl shadow-xl border border-line dark:border-white/10 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all z-50">
                         <div class="p-2">
@@ -35,13 +39,15 @@
                     </div>
                 </div>
                 {% else %}
-                <a href="/accounts/login/" class="hidden sm:inline-block text-[13px] tracking-wide px-4 py-2 text-charcoal/80 dark:text-ivory/80 hover:text-gold transition-colors">Login</a>
-                <a href="/accounts/register/" class="hidden sm:inline-block whitespace-nowrap text-[13px] tracking-wide bg-charcoal dark:bg-ivory text-ivory dark:text-charcoal rounded-full px-5 py-2 hover:bg-gold dark:hover:bg-gold dark:hover:text-white transition-colors">Sign Up</a>
+                <a href="/accounts/login/" class="hidden md:inline-block text-[13px] tracking-wide px-4 py-2 text-charcoal/80 dark:text-ivory/80 hover:text-gold transition-colors">Login</a>
+                <a href="/accounts/register/" class="hidden md:inline-block whitespace-nowrap text-[13px] tracking-wide bg-charcoal dark:bg-ivory text-ivory dark:text-charcoal rounded-full px-5 py-2 hover:bg-gold transition-colors">Sign Up</a>
                 {% endif %}
-                <a href="/orders/cart/" onclick="if(typeof openCartDrawer==='function'){event.preventDefault();openCartDrawer();}" class="relative p-2 hover:text-gold">
+                <!-- Cart: always visible -->
+                <a href="/orders/cart/" onclick="if(typeof openCartDrawer==='function'){event.preventDefault();openCartDrawer();}" class="relative p-2 hover:text-gold" aria-label="Cart">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                     {% if cart_count > 0 %}<span class="absolute -top-0.5 -right-0.5 bg-gold text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-bold" id="cart-badge">{{ cart_count }}</span>{% endif %}
                 </a>
+                <!-- Hamburger: mobile only -->
                 <button @click="mobileOpen=!mobileOpen" class="md:hidden p-2" aria-label="Toggle menu">
                     <svg x-show="!mobileOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                     <svg x-show="mobileOpen" x-cloak class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -57,17 +63,27 @@
             </form>
         </div>
     </div>
-    <div x-show="mobileOpen" x-transition x-cloak class="md:hidden border-t border-line dark:border-white/10 bg-cream dark:bg-ink px-4 py-4 space-y-1">
-        <a href="/" class="block py-3 text-sm font-medium border-b border-line/50 dark:border-white/5">Home</a>
-        <a href="/shop/" class="block py-3 text-sm font-medium border-b border-line/50 dark:border-white/5">Shop</a>
-        <a href="/shop/quiz/" class="block py-3 text-sm font-medium text-gold border-b border-line/50 dark:border-white/5">Find Your Scent</a>
-        <a href="/blog/" class="block py-3 text-sm font-medium border-b border-line/50 dark:border-white/5">Journal</a>
-        <a href="/about/" class="block py-3 text-sm font-medium border-b border-line/50 dark:border-white/5">About</a>
-        <a href="/contact/" class="block py-3 text-sm font-medium border-b border-line/50 dark:border-white/5">Contact</a>
-        <div class="pt-2 flex gap-3">
+    <div x-show="mobileOpen" x-transition x-cloak class="md:hidden border-t border-line dark:border-white/10 bg-cream dark:bg-ink px-4 py-2">
+        <a href="/" class="flex items-center py-3 text-sm font-medium border-b border-line/40 dark:border-white/5">Home</a>
+        <a href="/shop/" class="flex items-center py-3 text-sm font-medium border-b border-line/40 dark:border-white/5">Shop</a>
+        <a href="/shop/quiz/" class="flex items-center py-3 text-sm font-medium text-gold border-b border-line/40 dark:border-white/5">Find Your Scent</a>
+        <a href="/blog/" class="flex items-center py-3 text-sm font-medium border-b border-line/40 dark:border-white/5">Journal</a>
+        <a href="/about/" class="flex items-center py-3 text-sm font-medium border-b border-line/40 dark:border-white/5">About</a>
+        <a href="/contact/" class="flex items-center py-3 text-sm font-medium border-b border-line/40 dark:border-white/5">Contact</a>
+        {% if user.is_authenticated %}
+        <a href="/accounts/wishlist/" class="flex items-center py-3 text-sm font-medium border-b border-line/40 dark:border-white/5">Wishlist</a>
+        <a href="/accounts/dashboard/" class="flex items-center py-3 text-sm font-medium border-b border-line/40 dark:border-white/5">My Account</a>
+        {% endif %}
+        <!-- Dark mode toggle in menu -->
+        <button onclick="toggleDarkMode()" class="flex items-center gap-2 w-full py-3 text-sm font-medium border-b border-line/40 dark:border-white/5">
+            <svg class="w-4 h-4 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+            <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            <span class="dark:hidden">Dark Mode</span>
+            <span class="hidden dark:block">Light Mode</span>
+        </button>
+        <div class="py-3 flex gap-3">
             {% if user.is_authenticated %}
-            <a href="/accounts/dashboard/" class="flex-1 text-center py-2.5 text-sm border border-line dark:border-white/10 rounded-full">My Account</a>
-            <a href="/accounts/logout/" class="flex-1 text-center py-2.5 text-sm text-red-500 border border-red-200 rounded-full">Logout</a>
+            <a href="/accounts/logout/" class="flex-1 text-center py-2.5 text-sm text-red-500 border border-red-200 dark:border-red-900 rounded-full">Logout</a>
             {% else %}
             <a href="/accounts/login/" class="flex-1 text-center py-2.5 text-sm border border-line dark:border-white/10 rounded-full">Login</a>
             <a href="/accounts/register/" class="flex-1 text-center py-2.5 text-sm bg-charcoal text-ivory rounded-full">Sign Up</a>
