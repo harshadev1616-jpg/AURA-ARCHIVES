@@ -42,7 +42,10 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                     {% if cart_count > 0 %}<span class="absolute -top-0.5 -right-0.5 bg-gold text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-bold" id="cart-badge">{{ cart_count }}</span>{% endif %}
                 </a>
-                <button @click="mobileOpen=!mobileOpen" class="md:hidden p-2"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+                <button @click="mobileOpen=!mobileOpen" class="md:hidden p-2" aria-label="Toggle menu">
+                    <svg x-show="!mobileOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    <svg x-show="mobileOpen" x-cloak class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
             </div>
         </div>
     </div>
@@ -54,14 +57,21 @@
             </form>
         </div>
     </div>
-    <div x-show="mobileOpen" x-transition class="md:hidden border-t border-line dark:border-white/10 bg-cream dark:bg-ink px-4 py-4 space-y-1">
-        <a href="/" class="block py-2 text-sm font-medium">Home</a>
-        <a href="/shop/" class="block py-2 text-sm font-medium">Shop</a>
-        <a href="/shop/quiz/" class="block py-2 text-sm font-medium text-gold">Find Your Scent</a>
-        <a href="/blog/" class="block py-2 text-sm font-medium">Journal</a>
-        <a href="/about/" class="block py-2 text-sm font-medium">About</a>
-        <a href="/contact/" class="block py-2 text-sm font-medium">Contact</a>
-        <hr class="border-line dark:border-white/10">
-        {% if user.is_authenticated %}<a href="/accounts/dashboard/" class="block py-2 text-sm">My Account</a><a href="/accounts/logout/" class="block py-2 text-sm text-red-500">Logout</a>{% else %}<a href="/accounts/login/" class="block py-2 text-sm">Login</a><a href="/accounts/register/" class="block py-2 text-sm">Register</a>{% endif %}
+    <div x-show="mobileOpen" x-transition x-cloak class="md:hidden border-t border-line dark:border-white/10 bg-cream dark:bg-ink px-4 py-4 space-y-1">
+        <a href="/" class="block py-3 text-sm font-medium border-b border-line/50 dark:border-white/5">Home</a>
+        <a href="/shop/" class="block py-3 text-sm font-medium border-b border-line/50 dark:border-white/5">Shop</a>
+        <a href="/shop/quiz/" class="block py-3 text-sm font-medium text-gold border-b border-line/50 dark:border-white/5">Find Your Scent</a>
+        <a href="/blog/" class="block py-3 text-sm font-medium border-b border-line/50 dark:border-white/5">Journal</a>
+        <a href="/about/" class="block py-3 text-sm font-medium border-b border-line/50 dark:border-white/5">About</a>
+        <a href="/contact/" class="block py-3 text-sm font-medium border-b border-line/50 dark:border-white/5">Contact</a>
+        <div class="pt-2 flex gap-3">
+            {% if user.is_authenticated %}
+            <a href="/accounts/dashboard/" class="flex-1 text-center py-2.5 text-sm border border-line dark:border-white/10 rounded-full">My Account</a>
+            <a href="/accounts/logout/" class="flex-1 text-center py-2.5 text-sm text-red-500 border border-red-200 rounded-full">Logout</a>
+            {% else %}
+            <a href="/accounts/login/" class="flex-1 text-center py-2.5 text-sm border border-line dark:border-white/10 rounded-full">Login</a>
+            <a href="/accounts/register/" class="flex-1 text-center py-2.5 text-sm bg-charcoal text-ivory rounded-full">Sign Up</a>
+            {% endif %}
+        </div>
     </div>
 </nav>
