@@ -39,10 +39,15 @@ admin.site.index_title = 'Welcome to Aura Archives Admin'
 admin.site.index_template = 'admin/aura_index.html'
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     try:
         import debug_toolbar
         urlpatterns = [path('__debug__/', include(debug_toolbar.urls))] + urlpatterns
     except ImportError:
         pass
+
+# Serve media files in all environments (WhiteNoise handles static, Django serves media)
+from django.views.static import serve as _serve
+urlpatterns += [
+    path('media/<path:path>', _serve, {'document_root': settings.MEDIA_ROOT}),
+]
