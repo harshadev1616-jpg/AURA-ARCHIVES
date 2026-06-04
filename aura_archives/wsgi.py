@@ -6,18 +6,14 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(BASE_DIR))
 
-# Always use production settings on Vercel regardless of any env var
 IS_VERCEL = os.getenv('VERCEL') == '1'
-if IS_VERCEL:
-    os.environ['DJANGO_SETTINGS_MODULE'] = 'aura_archives.settings.production'
-    if not os.getenv('DATABASE_URL'):
-        os.environ['DATABASE_URL'] = 'sqlite:////tmp/db.sqlite3'
-else:
-    DEBUG_MODE = os.getenv('DEBUG', 'False').lower() == 'true'
-    if DEBUG_MODE:
-        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'aura_archives.settings.development')
-    else:
-        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'aura_archives.settings.production')
+
+# Unconditionally force production settings — no env-var can override this
+os.environ['DJANGO_SETTINGS_MODULE'] = 'aura_archives.settings.production'
+print(f"[wsgi] VERCEL={os.getenv('VERCEL')!r} SETTINGS={os.environ['DJANGO_SETTINGS_MODULE']}", file=sys.stderr)
+
+if IS_VERCEL and not os.getenv('DATABASE_URL'):
+    os.environ['DATABASE_URL'] = 'sqlite:////tmp/db.sqlite3'
 
 _startup_error = None
 
