@@ -164,31 +164,44 @@ RAZORPAY_KEY_ID = env('RAZORPAY_KEY_ID', default='')
 RAZORPAY_KEY_SECRET = env('RAZORPAY_KEY_SECRET', default='')
 
 # Redis
-REDIS_URL = env('REDIS_URL', default='redis://localhost:6379/0')
+REDIS_URL = env('REDIS_URL', default='' if os.getenv('VERCEL') == '1' else 'redis://localhost:6379/0')
 
 # Cache configuration with fallback support
-try:
-    # Try Redis cache first
-    if REDIS_URL and REDIS_URL.startswith('redis://'):
-        CACHES = {
-            'default': {
-                'BACKEND': 'django_redis.cache.RedisCache',
-                'LOCATION': REDIS_URL,
-                'OPTIONS': {
-                    'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-                    'CONNECTION_POOL_KWARGS': {'max_connections': 5},
-                    'SOCKET_CONNECT_TIMEOUT': 5,
-                    'SOCKET_TIMEOUT': 5,
+# On Vercel, skip Redis entirely since it's not available on free tier
+IS_VERCEL = os.getenv('VERCEL') == '1'
+
+if not IS_VERCEL:
+    try:
+        # Try Redis cache first
+        if REDIS_URL and REDIS_URL.startswith('redis://'):
+            CACHES = {
+                'default': {
+                    'BACKEND': 'django_redis.cache.RedisCache',
+                    'LOCATION': REDIS_URL,
+                    'OPTIONS': {
+                        'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+                        'CONNECTION_POOL_KWARGS': {'max_connections': 5},
+                        'SOCKET_CONNECT_TIMEOUT': 5,
+                        'SOCKET_TIMEOUT': 5,
+                    }
                 }
             }
+            SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+            SESSION_CACHE_ALIAS = 'default'
+        else:
+            raise ValueError("REDIS_URL not configured")
+    except Exception as e:
+        # Fallback to database cache if Redis unavailable
+        print(f"Redis cache unavailable ({e}), using database cache")
+        CACHES = {
+            'default': {
+                'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+                'LOCATION': 'django_cache_table',
+            }
         }
-        SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-        SESSION_CACHE_ALIAS = 'default'
-    else:
-        raise ValueError("REDIS_URL not configured")
-except Exception as e:
-    # Fallback to database cache if Redis unavailable
-    print(f"Redis cache unavailable ({e}), using database cache")
+        SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+else:
+    # Vercel: No Redis available on free tier - use database cache
     CACHES = {
         'default': {
             'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
