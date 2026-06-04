@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Our Story — About Aura Archives{% endblock %}
+{% block meta_description %}Aura Archives is a small studio hand-pouring soy candles made to preserve moments. This is our story — how we started, how we make, and why.{% endblock %}
+{% block content %}
+
+<!-- Hero -->
+<section class="relative bg-cream dark:bg-ink overflow-hidden">
+    <div class="relative max-w-3xl mx-auto px-4 sm:px-6 py-28 text-center">
+        <p class="eyebrow text-gold mb-5">Est. in a small kitchen</p>
+        <h1 class="font-display text-5xl md:text-7xl text-charcoal dark:text-ivory mb-6">Our Story</h1>
+        <p class="font-serif italic text-charcoal/50 dark:text-ivory/50 text-2xl">Light That Preserves Moments</p>
+        <div class="w-12 h-px bg-gold/50 mx-auto mt-8"></div>
+    </div>
+</section>
+
+<!-- The beginning -->
+<section class="py-24 bg-white dark:bg-gray-800">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div data-reveal="left" class="img-zoom rounded-[2rem] overflow-hidden aspect-[4/5] bg-[#EFE9E1] shadow-[0_40px_80px_-30px_rgba(43,43,43,0.3)]">
+                <img src="https://images.unsplash.com/photo-1599446794254-16ca0a6ba0e9?w=900&q=80" alt="Hand-pouring a candle in the Aura Archives studio" class="w-full h-full object-cover">
+            </div>
+            <div data-reveal="right">
+                <p class="eyebrow text-gold mb-4">How it began</p>
+                <h2 class="font-display text-3xl md:text-4xl text-charcoal dark:text-ivory mb-6 leading-tight">It started with a single pour on a kitchen table.</h2>
+                <div class="space-y-4 text-gray-600 dark:text-gray-400 leading-relaxed">
+                    <p>Aura Archives began the way most good things do — quietly, and a little by accident. One winter, between long workdays, we melted down a pot of soy wax just to see if we could make the house smell like the calm we couldn't find anywhere else.</p>
+                    <p>The first candle was lopsided. The second tunnelled. By the nineteenth, the studio fell quiet and someone simply said, <em class="text-charcoal dark:text-ivory not-italic font-medium">"oh."</em> That was the one. That was the moment a hobby became a promise.</p>
+                    <p>We named it Aura Archives because we'd come to believe a scent can <em class="text-charcoal dark:text-ivory not-italic font-medium">archive</em> a feeling — store it the way a photograph stores light, and hand it back the instant you strike a match.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Process timeline -->
+<section class="py-20 bg-ivory dark:bg-gray-900">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16" data-reveal>
+            <p class="text-gold text-xs uppercase tracking-[0.3em] font-medium mb-3">Hand-poured, never rushed</p>
+            <h2 class="font-display text-4xl md:text-5xl text-charcoal dark:text-ivory">How Every Candle is Made</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {% for n in "1234" %}
+            <div data-reveal data-reveal-delay="{{ forloop.counter0 }}" class="relative text-center">
+                <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-gold to-[#e8c87a] text-white flex items-center justify-center font-display text-2xl mb-5 shadow-lg anim-glow">{{ forloop.counter }}</div>
+                {% if forloop.counter == 1 %}<h3 class="font-serif text-lg font-semibold text-charcoal dark:text-ivory mb-2">Blend</h3><p class="text-sm text-gray-500 leading-relaxed">We hand-blend premium fragrance oils in small test pours, adjusting for the season's humidity until the scent sings.</p>{% endif %}
+                {% if forloop.counter == 2 %}<h3 class="font-serif text-lg font-semibold text-charcoal dark:text-ivory mb-2">Pour</h3><p class="text-sm text-gray-500 leading-relaxed">100% natural soy wax is poured by hand into each vessel, one at a time, at exactly the right temperature.</p>{% endif %}
+                {% if forloop.counter == 3 %}<h3 class="font-serif text-lg font-semibold text-charcoal dark:text-ivory mb-2">Cure</h3><p class="text-sm text-gray-500 leading-relaxed">Each candle rests and cures slowly for days, so the fragrance settles deep and burns clean and true.</p>{% endif %}
+                {% if forloop.counter == 4 %}<h3 class="font-serif text-lg font-semibold text-charcoal dark:text-ivory mb-2">Crown</h3><p class="text-sm text-gray-500 leading-relaxed">We finish, inspect, and wrap each one in gift-ready packaging — ready to become someone's moment.</p>{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Values -->
+<section class="py-20 bg-charcoal dark:bg-black text-ivory">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16" data-reveal>
+            <p class="text-gold text-xs uppercase tracking-[0.3em] font-medium mb-3">What we believe</p>
+            <h2 class="font-display text-4xl md:text-5xl text-ivory">Our Promises</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {% for v in "123456" %}
+            <div data-reveal data-reveal-delay="{{ forloop.counter0 }}" class="hover-lift bg-white/5 border border-white/10 rounded-2xl p-7">
+                {% if forloop.counter == 1 %}<div class="text-3xl mb-4">🤍</div><h3 class="font-serif text-lg font-semibold mb-2">Made by hand</h3><p class="text-sm text-gray-400 leading-relaxed">Every candle is poured by a person, not a machine. No two are exactly alike — and we love them for it.</p>{% endif %}
+                {% if forloop.counter == 2 %}<div class="text-3xl mb-4">🌿</div><h3 class="font-serif text-lg font-semibold mb-2">100% natural soy</h3><p class="text-sm text-gray-400 leading-relaxed">Clean-burning soy wax and cotton wicks. No paraffin, no shortcuts, nothing we wouldn't burn at home.</p>{% endif %}
+                {% if forloop.counter == 3 %}<div class="text-3xl mb-4">🔥</div><h3 class="font-serif text-lg font-semibold mb-2">Small batches only</h3><p class="text-sm text-gray-400 leading-relaxed">We pour in batches of twenty to forty, so we can watch over every single one.</p>{% endif %}
+                {% if forloop.counter == 4 %}<div class="text-3xl mb-4">🌸</div><h3 class="font-serif text-lg font-semibold mb-2">Fragrance that lasts</h3><p class="text-sm text-gray-400 leading-relaxed">Premium oils, cured slowly, so the scent fills the room for the full life of the candle.</p>{% endif %}
+                {% if forloop.counter == 5 %}<div class="text-3xl mb-4">🎁</div><h3 class="font-serif text-lg font-semibold mb-2">Always gift-ready</h3><p class="text-sm text-gray-400 leading-relaxed">Every candle arrives wrapped to be given — because most of ours become someone else's moment.</p>{% endif %}
+                {% if forloop.counter == 6 %}<div class="text-3xl mb-4">🌍</div><h3 class="font-serif text-lg font-semibold mb-2">Kind by default</h3><p class="text-sm text-gray-400 leading-relaxed">Recyclable vessels, minimal packaging, and a promise to keep getting gentler on the planet.</p>{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Stats -->
+<section class="py-16 bg-ivory dark:bg-gray-900">
+    <div class="max-w-5xl mx-auto px-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {% for s in "1234" %}
+            <div data-reveal data-reveal-delay="{{ forloop.counter0 }}" class="hover-lift text-center bg-white dark:bg-gray-800 rounded-2xl p-7 shadow-sm">
+                {% if forloop.counter == 1 %}<div class="font-display text-4xl text-gold mb-2">100%</div><div class="text-xs text-gray-500 uppercase tracking-wider">Natural Soy</div>{% endif %}
+                {% if forloop.counter == 2 %}<div class="font-display text-4xl text-gold mb-2">500+</div><div class="text-xs text-gray-500 uppercase tracking-wider">Happy Homes</div>{% endif %}
+                {% if forloop.counter == 3 %}<div class="font-display text-4xl text-gold mb-2">50h</div><div class="text-xs text-gray-500 uppercase tracking-wider">Max Burn Time</div>{% endif %}
+                {% if forloop.counter == 4 %}<div class="font-display text-4xl text-gold mb-2">20+</div><div class="text-xs text-gray-500 uppercase tracking-wider">Fragrances</div>{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="py-24 aura-gradient-bg relative overflow-hidden">
+    <div class="absolute top-0 left-1/4 w-48 h-48 rounded-full bg-gold/20 blur-3xl anim-float pointer-events-none"></div>
+    <div class="relative max-w-2xl mx-auto px-4 text-center" data-reveal="scale">
+        <h2 class="font-display text-4xl md:text-5xl text-charcoal dark:text-ivory mb-5">Find the moment that's yours</h2>
+        <p class="text-gray-600 dark:text-gray-300 mb-9 text-lg">Every candle we make is waiting to preserve something. Come find the one that fits your feeling.</p>
+        <div class="flex flex-wrap gap-4 justify-center">
+            <a href="/shop/" data-magnetic class="btn-shimmer bg-gold text-white px-9 py-4 rounded-full font-semibold hover:bg-opacity-90 transition-all shadow-lg">Shop the Collection</a>
+            <a href="/shop/quiz/" data-magnetic class="border-2 border-charcoal dark:border-ivory text-charcoal dark:text-ivory px-9 py-4 rounded-full font-semibold hover:bg-charcoal hover:text-white dark:hover:bg-ivory dark:hover:text-charcoal transition-all">Take the Scent Quiz</a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

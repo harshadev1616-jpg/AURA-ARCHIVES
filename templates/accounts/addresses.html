@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}My Addresses{% endblock %}
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <div class="flex items-center gap-3 mb-1">
+                <a href="/accounts/dashboard/" class="text-gold hover:underline text-sm">Dashboard</a>
+                <span class="text-gray-400">/</span>
+                <span class="text-sm">Addresses</span>
+            </div>
+            <h1 class="font-display text-3xl text-charcoal dark:text-ivory">My Addresses</h1>
+        </div>
+        <a href="/accounts/addresses/add/" class="bg-gold text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-opacity-90">+ Add New</a>
+    </div>
+    {% if addresses %}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {% for address in addresses %}
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border-2 {% if address.is_default %}border-gold{% else %}border-transparent{% endif %}">
+            <div class="flex justify-between items-start mb-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-semibold bg-blush text-charcoal px-2 py-0.5 rounded-full">{{ address.get_address_type_display }}</span>
+                    {% if address.is_default %}<span class="text-xs text-gold font-medium">Default</span>{% endif %}
+                </div>
+                <div class="flex gap-2">
+                    <a href="/accounts/addresses/{{ address.pk }}/edit/" class="text-xs text-gold hover:underline">Edit</a>
+                    <button onclick="deleteAddress({{ address.pk }})" class="text-xs text-red-400 hover:underline">Delete</button>
+                </div>
+            </div>
+            <p class="font-semibold text-sm text-charcoal dark:text-ivory">{{ address.full_name }}</p>
+            <p class="text-xs text-gray-500 mt-1">{{ address.phone }}</p>
+            <p class="text-xs text-gray-500 mt-1 leading-relaxed">{{ address.address_line1 }}{% if address.address_line2 %}, {{ address.address_line2 }}{% endif %}, {{ address.city }}, {{ address.state }} - {{ address.pincode }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-20">
+        <div class="text-6xl mb-4">&#128205;</div>
+        <h2 class="font-display text-2xl text-charcoal dark:text-ivory mb-3">No addresses saved</h2>
+        <p class="text-gray-400 mb-6">Add a delivery address to checkout faster</p>
+        <a href="/accounts/addresses/add/" class="bg-gold text-white px-6 py-3 rounded-full text-sm font-medium">Add Address</a>
+    </div>
+    {% endif %}
+</div>
+<script>
+function deleteAddress(id) {
+    if (!confirm('Delete this address?')) return;
+    fetch('/accounts/addresses/' + id + '/delete/', {method:'POST',headers:{'X-CSRFToken':getCookie('csrftoken')}}).then(r=>r.json()).then(d=>{if(d.success)location.reload();});
+}
+</script>
+{% endblock %}

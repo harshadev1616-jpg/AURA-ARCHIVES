@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Offline — Aura Archives{% endblock %}
+{% block content %}
+<section class="min-h-[70vh] aura-gradient-bg flex items-center">
+    <div class="max-w-lg mx-auto px-4 text-center">
+        <div class="text-7xl mb-6 anim-flicker inline-block">🕯️</div>
+        <h1 class="font-display text-3xl text-charcoal dark:text-ivory mb-4">You're offline</h1>
+        <p class="text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+            Even the steadiest flame needs air. We can't reach the studio right now — check your connection and the moment will return.
+        </p>
+        <button onclick="location.reload()" class="bg-gold text-white px-8 py-4 rounded-full font-semibold hover:bg-opacity-90 transition-all shadow-lg">Try Again</button>
+    </div>
+</section>
+{% endblock %}

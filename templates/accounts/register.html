@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Create Account{% endblock %}
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-ivory via-blush/30 to-lavender/30 dark:from-gray-900 dark:to-gray-800 py-12 px-4">
+    <div class="w-full max-w-md">
+        <div class="text-center mb-8">
+            <a href="/" class="inline-block">
+                <div class="font-display text-3xl text-charcoal dark:text-ivory">Aura <span class="text-gold">Archives</span></div>
+                <p class="text-gold text-xs italic mt-1">Light That Preserves Moments</p>
+            </a>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8">
+            <h1 class="font-display text-2xl text-charcoal dark:text-ivory mb-1">Join Aura Archives</h1>
+            <p class="text-gray-400 text-sm mb-7">Create your account to start shopping</p>
+            {% if form.errors %}
+            <div class="bg-red-50 border border-red-200 rounded-xl px-4 py-3 mb-5 text-sm text-red-600">
+                Please correct the errors below.
+            </div>
+            {% endif %}
+            {% if ref_code %}
+            <div class="mb-5 flex items-center gap-2 bg-gold/10 border border-gold/30 rounded-xl px-4 py-3">
+                <span class="text-lg">🎁</span>
+                <p class="text-xs text-charcoal dark:text-ivory font-medium">A friend invited you! You'll both earn <strong>100 Aura points</strong> after your first order.</p>
+            </div>
+            {% endif %}
+            <form method="POST" action="{% url 'accounts:register' %}">
+                {% csrf_token %}
+                <input type="hidden" name="ref_code" value="{{ ref_code }}">
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">First Name</label>
+                        <input type="text" name="first_name" required value="{{ form.first_name.value|default:'' }}"
+                               class="w-full border-2 border-line dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gold bg-ivory dark:bg-gray-700 dark:text-ivory transition-colors" placeholder="First">
+                        {% if form.first_name.errors %}<p class="text-red-500 text-xs mt-1">{{ form.first_name.errors.0 }}</p>{% endif %}
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">Last Name</label>
+                        <input type="text" name="last_name" required value="{{ form.last_name.value|default:'' }}"
+                               class="w-full border-2 border-line dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gold bg-ivory dark:bg-gray-700 dark:text-ivory transition-colors" placeholder="Last">
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">Email Address</label>
+                    <input type="email" name="email" required value="{{ form.email.value|default:'' }}"
+                           class="w-full border-2 border-line dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gold bg-ivory dark:bg-gray-700 dark:text-ivory transition-colors" placeholder="your@email.com">
+                    {% if form.email.errors %}<p class="text-red-500 text-xs mt-1">{{ form.email.errors.0 }}</p>{% endif %}
+                </div>
+                <div class="mb-4">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">Phone (Optional)</label>
+                    <input type="tel" name="phone" value="{{ form.phone.value|default:'' }}"
+                           class="w-full border-2 border-line dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gold bg-ivory dark:bg-gray-700 dark:text-ivory transition-colors" placeholder="+91 98765 43210">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">Password</label>
+                    <input type="password" name="password1" required
+                           class="w-full border-2 border-line dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gold bg-ivory dark:bg-gray-700 dark:text-ivory transition-colors" placeholder="Min. 8 characters">
+                    {% if form.password1.errors %}<p class="text-red-500 text-xs mt-1">{{ form.password1.errors.0 }}</p>{% endif %}
+                </div>
+                <div class="mb-5">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">Confirm Password</label>
+                    <input type="password" name="password2" required
+                           class="w-full border-2 border-line dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gold bg-ivory dark:bg-gray-700 dark:text-ivory transition-colors" placeholder="Repeat password">
+                    {% if form.password2.errors %}<p class="text-red-500 text-xs mt-1">{{ form.password2.errors.0 }}</p>{% endif %}
+                </div>
+                <label class="flex items-center gap-2 mb-5 cursor-pointer">
+                    <input type="checkbox" name="newsletter_subscribed" class="w-4 h-4 text-gold rounded" checked>
+                    <span class="text-xs text-gray-500">Subscribe for exclusive offers and updates</span>
+                </label>
+                <button type="submit" class="w-full bg-charcoal text-ivory py-4 rounded-full text-[13px] tracking-wide hover:bg-gold transition-colors">
+                    Create Account
+                </button>
+            </form>
+            <div class="text-center mt-6 text-sm text-gray-500">
+                Already have an account?
+                <a href="/accounts/login/" class="text-gold font-medium hover:underline">Sign in</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

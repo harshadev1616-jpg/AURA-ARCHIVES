@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<style>
+    @page { size: A4; margin: 1.5cm; }
+    body { font-family: Helvetica, Arial, sans-serif; color: #222; font-size: 12px; }
+    .slip { page-break-after: always; }
+    .slip:last-child { page-break-after: auto; }
+    .brand { font-size: 18px; letter-spacing: 2px; }
+    .brand .g { color: #B8945A; }
+    .muted { color: #888; }
+    .right { text-align: right; }
+    .row:after { content:""; display:block; clear:both; }
+    .col-l { float:left; width:55%; }
+    .col-r { float:right; width:45%; text-align:right; }
+    .hr { border-top: 2px solid #222; margin: 10px 0 14px; }
+    table { width:100%; border-collapse: collapse; margin-top: 10px; }
+    th { text-align:left; border-bottom: 2px solid #222; padding: 8px 6px; font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color:#555; }
+    td { padding: 10px 6px; border-bottom: 1px solid #eee; }
+    .chk { width: 26px; height: 16px; border: 1.5px solid #999; display:inline-block; }
+    .label { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color:#999; margin-bottom:3px; }
+    .big { font-size: 16px; letter-spacing: 1px; }
+    .foot { margin-top: 18px; color:#aaa; font-size: 9px; }
+</style></head>
+<body>
+{% for order in orders %}
+    <div class="slip">
+        <div class="row">
+            <div class="col-l">
+                <div class="brand">AURA <span class="g">ARCHIVES</span></div>
+                <div class="muted" style="font-style:italic;">Packing Slip</div>
+            </div>
+            <div class="col-r">
+                <div class="big">#{{ order.order_number }}</div>
+                <div class="muted">{{ order.created_at|date:"d M Y" }}</div>
+                {% if order.is_gift %}<div style="color:#B8945A;font-weight:bold;margin-top:4px;">🎁 GIFT — no prices enclosed</div>{% endif %}
+            </div>
+        </div>
+        <div class="hr"></div>
+        <div class="row">
+            <div class="col-l">
+                <div class="label">Ship to</div>
+                <strong>{{ order.shipping_full_name }}</strong><br>
+                {{ order.shipping_phone }}<br>
+                {{ order.shipping_address_line1 }}{% if order.shipping_address_line2 %}, {{ order.shipping_address_line2 }}{% endif %}<br>
+                {{ order.shipping_city }}, {{ order.shipping_state }} {{ order.shipping_pincode }}<br>
+                {{ order.shipping_country }}
+            </div>
+            <div class="col-r">
+                <div class="label">Fulfilment</div>
+                {{ order.items.count }} line{{ order.items.count|pluralize }}<br>
+                {% if order.courier_name %}{{ order.courier_name }}<br>{% endif %}
+                {% if order.tracking_number %}<span class="muted">{{ order.tracking_number }}</span>{% endif %}
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr><th style="width:40px;">Pick</th><th>SKU</th><th>Product</th><th class="right">Qty</th></tr>
+            </thead>
+            <tbody>
+                {% for item in order.items.all %}
+                <tr>
+                    <td><span class="chk"></span></td>
+                    <td class="muted">{{ item.product.sku|default:item.product_id|default:"—" }}</td>
+                    <td><strong>{{ item.product_name }}</strong>{% if item.variant_info %}<br><span class="muted">{{ item.variant_info }}</span>{% endif %}</td>
+                    <td class="right" style="font-size:15px;"><strong>{{ item.quantity }}</strong></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if order.gift_message %}
+        <div style="margin-top:14px;border:1px dashed #B8945A;border-radius:8px;padding:10px 12px;">
+            <div class="label" style="color:#B8945A;">Gift note to enclose</div>
+            <em>{{ order.gift_message }}</em>
+        </div>
+        {% endif %}
+
+        <div class="foot">Aura Archives — hand-poured with care. Trim wick · check vessel · wrap with tissue.</div>
+    </div>
+{% endfor %}
+</body></html>

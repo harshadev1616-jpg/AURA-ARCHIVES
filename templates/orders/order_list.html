@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}My Orders{% endblock %}
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h1 class="font-display text-3xl text-charcoal dark:text-ivory mb-8">My Orders</h1>
+    {% if orders %}
+    <div class="space-y-4">
+        {% for order in orders %}
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-6 py-4 border-b border-line dark:border-white/10 dark:border-gray-700">
+                <div>
+                    <p class="font-semibold text-charcoal dark:text-ivory">#{{ order.order_number }}</p>
+                    <p class="text-xs text-gray-400 mt-0.5">{{ order.created_at|date:"F d, Y" }}</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="text-sm font-semibold text-charcoal dark:text-ivory">Rs.{{ order.total }}</span>
+                    <span class="text-xs px-3 py-1 rounded-full font-medium
+                        {% if order.status == 'delivered' %}bg-green-100 text-green-700
+                        {% elif order.status == 'shipped' %}bg-blue-100 text-blue-700
+                        {% elif order.status == 'cancelled' %}bg-red-100 text-red-600
+                        {% else %}bg-yellow-100 text-yellow-700{% endif %}">
+                        {{ order.get_status_display }}
+                    </span>
+                    <a href="/orders/{{ order.pk }}/" class="text-sm text-gold hover:underline">Details &rarr;</a>
+                </div>
+            </div>
+            <div class="px-6 py-3 flex gap-4 overflow-x-auto">
+                {% for item in order.items.all|slice:":3" %}
+                <div class="flex items-center gap-2 shrink-0">
+                    <div class="w-10 h-10 rounded-lg overflow-hidden bg-[#EFE9E1]">
+                        {% if item.product_image %}<img src="{{ item.product_image }}" class="w-full h-full object-cover">{% else %}<div class="w-full h-full flex items-center justify-center text-sm">&#128367;</div>{% endif %}
+                    </div>
+                    <span class="text-xs text-gray-500 max-w-20 truncate">{{ item.product_name }}</span>
+                </div>
+                {% endfor %}
+                {% if order.items.count > 3 %}<span class="text-xs text-gray-400 self-center">+{{ order.items.count|add:"-3" }} more</span>{% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-24">
+        <div class="text-7xl mb-6">&#128230;</div>
+        <h2 class="font-display text-2xl text-charcoal dark:text-ivory mb-3">No orders yet</h2>
+        <p class="text-gray-400 mb-8">Your candle journey starts here!</p>
+        <a href="/shop/" class="bg-gold text-white px-8 py-4 rounded-full font-semibold hover:bg-opacity-90">Shop Now</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

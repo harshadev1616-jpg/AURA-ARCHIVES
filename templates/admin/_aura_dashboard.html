@@ -1,0 +1,84 @@
+{% load humanize %}
+<div class="aura-dash">
+    <p class="eyebrow">Studio Overview</p>
+    <h1>Good to see you</h1>
+    <p class="sub">Light That Preserves Moments — here's how the studio is doing today.</p>
+
+    {% if alerts %}
+    <div class="aura-alert">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <strong style="color:#8a6d2f;">🔔 {{ alert_count }} new order{{ alert_count|pluralize }} need{{ alert_count|pluralize:'s,' }} your attention</strong>
+            <a href="/insights/?clear_alerts=1" style="font-size:12px;color:#999;">Mark all read ✓</a>
+        </div>
+        {% for n in alerts %}
+        <a class="row" href="{{ n.link }}">
+            <span><strong style="color:#B8945A;">{{ n.title }}</strong> &nbsp; <span style="color:#777;">{{ n.message }}</span></span>
+            <span style="font-size:11px;color:#aaa;white-space:nowrap;">{{ n.created_at|timesince }} ago →</span>
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="aura-cards">
+        <a href="/insights/" class="aura-card c-gold" style="text-decoration:none;">
+            <div class="big">₹{{ revenue|floatformat:0|intcomma }}</div>
+            <div class="lbl">Total Revenue</div>
+            <div class="sm">₹{{ revenue_30|floatformat:0|intcomma }} in last 30 days</div>
+        </a>
+        <a href="/aura-admin/orders/order/" class="aura-card c-ink" style="text-decoration:none;">
+            <div class="big">{{ orders_total }}</div>
+            <div class="lbl">Total Orders</div>
+            <div class="sm">{{ orders_7 }} in last 7 days</div>
+        </a>
+        <div class="aura-card c-blush">
+            <div class="big">₹{{ aov|floatformat:0|intcomma }}</div>
+            <div class="lbl">Avg Order Value</div>
+            <div class="sm">{{ orders_to_fulfil }} awaiting fulfilment</div>
+        </div>
+        <a href="/aura-admin/accounts/user/" class="aura-card c-lav" style="text-decoration:none;">
+            <div class="big">{{ customers }}</div>
+            <div class="lbl">Customers</div>
+            <div class="sm">+{{ new_customers_30 }} this month</div>
+        </a>
+    </div>
+
+    <div class="aura-chart">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;">
+            <strong style="font-family:'Playfair Display',serif;font-size:16px;color:#1a1a1a;">Revenue · last 14 days</strong>
+            <span style="color:#8a8175;font-size:12px;">₹{{ sales_14|floatformat:0 }} total · peak ₹{{ sales_peak|floatformat:0 }}</span>
+        </div>
+        <div class="aura-bars">
+            {% for s in sales_series %}
+            <div class="aura-bar-col" title="{{ s.label }} — ₹{{ s.amount|floatformat:0 }}">
+                <div class="aura-bar" style="height:{{ s.h }}px;"></div>
+                <div class="aura-bar-lbl">{{ s.short }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="aura-chips">
+        <a class="aura-chip" href="/aura-admin/orders/order/?status__exact=confirmed">
+            <div class="n" style="color:#10b981;">{{ orders_to_fulfil }}</div><div class="t">Orders to fulfil</div>
+        </a>
+        <a class="aura-chip" href="/aura-admin/reviews/review/?is_approved__exact=0">
+            <div class="n" style="color:#B8945A;">{{ pending_reviews }}</div><div class="t">Reviews to approve</div>
+        </a>
+        <a class="aura-chip" href="/aura-admin/products/stocknotification/?is_notified__exact=0">
+            <div class="n" style="color:#8b5cf6;">{{ restock_requests }}</div><div class="t">Restock requests</div>
+        </a>
+        <a class="aura-chip" href="/aura-admin/products/product/?on_offer=no">
+            <div class="n" style="color:#dc2626;">{{ low_stock_count }}</div><div class="t">Low stock items</div>
+        </a>
+        <a class="aura-chip" href="/insights/">
+            <div class="n" style="color:#2B2B2B;">📊</div><div class="t">Full Insights →</div>
+        </a>
+    </div>
+
+    {% if low_stock %}
+    <div style="background:#fff8e8;border:1px solid #f0d9a0;border-radius:12px;padding:12px 16px;margin-top:6px;">
+        <strong style="color:#8a6d2f;font-size:12px;">⚠ Low stock:</strong>
+        {% for p in low_stock %}<a href="/aura-admin/products/product/{{ p.pk }}/change/" style="color:#333;">{{ p.name }} ({{ p.stock }})</a>{% if not forloop.last %} · {% endif %}{% endfor %}
+    </div>
+    {% endif %}
+</div>

@@ -1,0 +1,274 @@
+{% extends "base.html" %}
+{% block title %}Order #{{ order.order_number }}{% endblock %}
+{% block content %}
+
+{% if request.GET.placed %}
+<!-- Celebration / Thank-you banner -->
+<section class="relative aura-gradient-bg overflow-hidden">
+    <div class="absolute top-10 left-1/4 w-48 h-48 rounded-full bg-gold/20 blur-3xl anim-float pointer-events-none"></div>
+    <div class="absolute bottom-6 right-1/4 w-52 h-52 rounded-full bg-blush/30 blur-3xl anim-float-slow pointer-events-none"></div>
+    <!-- floating sparks -->
+    <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+        <span class="absolute left-[15%] top-[60%] text-gold/70 anim-float" style="animation-delay:.2s">✦</span>
+        <span class="absolute left-[35%] top-[30%] text-gold/60 anim-float-slow" style="animation-delay:.8s">✦</span>
+        <span class="absolute left-[62%] top-[45%] text-gold/70 anim-float" style="animation-delay:1.4s">✦</span>
+        <span class="absolute left-[82%] top-[28%] text-gold/60 anim-float-slow" style="animation-delay:.5s">✦</span>
+    </div>
+    <div class="relative max-w-2xl mx-auto px-4 py-16 text-center anim-scale-in">
+        <div class="text-7xl mb-5 anim-flicker inline-block">🕯️</div>
+        <p class="text-gold text-xs uppercase tracking-[0.3em] font-medium mb-3">Your moment is on its way</p>
+        <h1 class="font-display text-4xl md:text-5xl text-charcoal dark:text-ivory mb-4">Thank you{% if order.user.first_name %}, {{ order.user.first_name }}{% endif %}</h1>
+        <p class="text-gray-600 dark:text-gray-300 text-lg leading-relaxed max-w-lg mx-auto mb-2">
+            Your candles are about to be hand-wrapped with care. We've sent a confirmation to your email — the rest is ours to handle.
+        </p>
+        <p class="font-serif italic text-gold text-lg mb-8">Order #{{ order.order_number }} · we'll keep you posted at every step.</p>
+        <div class="flex flex-wrap gap-3 justify-center">
+            <a href="#order-details" class="bg-gold text-white px-7 py-3 rounded-full font-semibold hover:bg-opacity-90 transition-all shadow-lg">View Order Details</a>
+            <a href="/shop/" class="border-2 border-charcoal dark:border-ivory text-charcoal dark:text-ivory px-7 py-3 rounded-full font-semibold hover:bg-charcoal hover:text-white dark:hover:bg-ivory dark:hover:text-charcoal transition-all">Keep Exploring</a>
+        </div>
+        <p class="text-xs text-gray-400 mt-8 tracking-widest uppercase">A little ritual tip while you wait: trim the wick before that very first light.</p>
+    </div>
+</section>
+{% endif %}
+
+<div id="order-details" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="flex items-center gap-3 mb-8">
+        <a href="/orders/" class="text-gold hover:underline text-sm flex items-center gap-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            My Orders
+        </a>
+        <span class="text-gray-400">/</span>
+        <span class="text-sm text-charcoal dark:text-ivory">Order #{{ order.order_number }}</span>
+    </div>
+
+    <!-- Status Banner -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm mb-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <h1 class="font-display text-2xl text-charcoal dark:text-ivory">Order #{{ order.order_number }}</h1>
+                <p class="text-sm text-gray-400 mt-1">Placed on {{ order.created_at|date:"F d, Y" }}</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="px-4 py-2 rounded-full text-sm font-semibold
+                    {% if order.status == 'delivered' %}bg-green-100 text-green-700
+                    {% elif order.status == 'shipped' or order.status == 'out_for_delivery' %}bg-blue-100 text-blue-700
+                    {% elif order.status == 'cancelled' %}bg-red-100 text-red-600
+                    {% elif order.status == 'processing' or order.status == 'confirmed' %}bg-purple-100 text-purple-700
+                    {% else %}bg-yellow-100 text-yellow-700{% endif %}">
+                    {{ order.get_status_display }}
+                </span>
+                <a href="/orders/{{ order.pk }}/invoice/" target="_blank"
+                   class="text-sm border border-line dark:border-white/15 text-charcoal dark:text-ivory px-4 py-2 rounded-full hover:border-gold hover:text-gold transition-colors inline-flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg>
+                    Invoice
+                </a>
+                {% if order.can_cancel %}
+                <button onclick="cancelOrder({{ order.pk }})"
+                        class="text-sm text-red-500 border border-red-200 px-4 py-2 rounded-full hover:bg-red-50 transition-colors">Cancel Order</button>
+                {% endif %}
+                {% if order.can_return and not return_request %}
+                <button onclick="document.getElementById('return-form').classList.toggle('hidden')"
+                        class="text-sm border border-line dark:border-white/15 text-charcoal dark:text-ivory px-4 py-2 rounded-full hover:border-gold hover:text-gold transition-colors">Request a Return</button>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if return_request %}
+        <div class="mt-5 rounded-xl border border-line dark:border-white/10 bg-cream dark:bg-d-card px-5 py-4">
+            <div class="flex items-center justify-between">
+                <p class="eyebrow text-gold">Return {{ return_request.get_status_display }}</p>
+                <span class="text-xs text-charcoal/50 dark:text-ivory/50">{{ return_request.created_at|date:"M d, Y" }}</span>
+            </div>
+            <p class="text-sm text-charcoal/70 dark:text-ivory/70 mt-1.5">{{ return_request.get_reason_display }} — {{ return_request.description }}</p>
+            {% if return_request.status == 'approved' and return_request.refund_amount %}<p class="text-sm text-gold mt-1">Refund of Rs.{{ return_request.refund_amount }} is on its way.</p>{% endif %}
+        </div>
+        {% endif %}
+
+        {% if order.can_return and not return_request %}
+        <div id="return-form" class="hidden mt-5 rounded-xl border border-line dark:border-white/10 bg-cream dark:bg-d-card p-5" x-data="{ reason: 'defective' }">
+            <p class="font-display text-lg text-charcoal dark:text-ivory mb-3">Request a Return</p>
+            <select id="return-reason" class="w-full border border-line dark:border-white/15 rounded-lg px-3 py-2.5 text-sm mb-3 bg-white dark:bg-gray-800 dark:text-ivory focus:outline-none focus:border-gold">
+                <option value="defective">Defective / Damaged</option>
+                <option value="wrong_item">Wrong Item</option>
+                <option value="not_as_described">Not as Described</option>
+                <option value="changed_mind">Changed Mind</option>
+                <option value="other">Other</option>
+            </select>
+            <textarea id="return-desc" rows="3" placeholder="Tell us what happened…" class="w-full border border-line dark:border-white/15 rounded-lg px-3 py-2.5 text-sm mb-3 bg-white dark:bg-gray-800 dark:text-ivory resize-none focus:outline-none focus:border-gold"></textarea>
+            <button onclick="submitReturn({{ order.pk }})" class="bg-charcoal text-ivory px-5 py-2.5 rounded-full text-[13px] tracking-wide hover:bg-gold transition-colors">Submit Return Request</button>
+        </div>
+        {% endif %}
+
+        <!-- Live Progress Tracker -->
+        {% if order.status not in 'cancelled,refunded,returned' %}
+        <div class="mt-8 pt-7 border-t border-line dark:border-white/10">
+            <p class="eyebrow text-gold mb-1">Order tracking</p>
+            <p class="font-display text-2xl text-charcoal dark:text-ivory mb-6">
+                {% if order.status == 'delivered' %}Delivered — we hope it brings light ✦
+                {% elif order.status == 'out_for_delivery' %}Out for delivery today
+                {% elif order.status == 'shipped' %}On its way to you
+                {% elif order.status == 'processing' %}Hand-wrapping your order
+                {% elif order.status == 'confirmed' %}Order confirmed
+                {% else %}Order received{% endif %}
+            </p>
+            {% with steps="pending,confirmed,processing,shipped,delivered" %}
+            <div class="flex items-start">
+                {% for step in "12345" %}
+                {% with done="1" %}{% endwith %}
+                <div class="flex flex-col items-center text-center" style="flex:0 0 auto;width:62px;">
+                    <div class="relative w-10 h-10 rounded-full flex items-center justify-center
+                        {% if forloop.counter == 1 and order.status == 'pending' or forloop.counter == 2 and order.status == 'confirmed' or forloop.counter == 3 and order.status == 'processing' or forloop.counter == 4 and order.status in 'shipped,out_for_delivery' or forloop.counter == 5 and order.status == 'delivered' %}
+                        bg-gold text-white ring-4 ring-gold/20
+                        {% elif forloop.counter == 1 or forloop.counter == 2 and order.status in 'confirmed,processing,shipped,out_for_delivery,delivered' or forloop.counter == 3 and order.status in 'processing,shipped,out_for_delivery,delivered' or forloop.counter == 4 and order.status in 'shipped,out_for_delivery,delivered' or forloop.counter == 5 and order.status == 'delivered' %}
+                        bg-charcoal text-ivory dark:bg-ivory dark:text-charcoal
+                        {% else %}bg-[#EFE9E1] dark:bg-white/10 text-charcoal/30 dark:text-ivory/30{% endif %}">
+                        {% if forloop.counter == 1 %}<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                        {% elif forloop.counter == 2 %}<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        {% elif forloop.counter == 3 %}<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                        {% elif forloop.counter == 4 %}<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM9 17h6m4 0a2 2 0 11-4 0 2 2 0 014 0zM13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 001 1h2m0 0h2a1 1 0 001-1v-3.65a1 1 0 00-.22-.624l-3.48-4.35A1 1 0 0016.52 7H13"/></svg>
+                        {% else %}<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>{% endif %}
+                    </div>
+                    <span class="text-[11px] mt-2 text-charcoal/60 dark:text-ivory/50">{% if forloop.counter == 1 %}Placed{% elif forloop.counter == 2 %}Confirmed{% elif forloop.counter == 3 %}Made{% elif forloop.counter == 4 %}Shipped{% else %}Delivered{% endif %}</span>
+                </div>
+                {% if not forloop.last %}
+                <div class="h-0.5 mt-5 rounded-full
+                    {% if forloop.counter == 1 and order.status in 'confirmed,processing,shipped,out_for_delivery,delivered' or forloop.counter == 2 and order.status in 'processing,shipped,out_for_delivery,delivered' or forloop.counter == 3 and order.status in 'shipped,out_for_delivery,delivered' or forloop.counter == 4 and order.status == 'delivered' %}bg-charcoal dark:bg-ivory{% else %}bg-[#EFE9E1] dark:bg-white/10{% endif %}"
+                    style="flex:1 1 auto;"></div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% endwith %}
+
+            {% if order.tracking_number and order.status in 'shipped,out_for_delivery' %}
+            <div class="mt-7 rounded-2xl bg-charcoal dark:bg-d-card text-ivory p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <p class="eyebrow text-gold mb-1">{% if order.courier_name %}{{ order.courier_name }}{% else %}Courier{% endif %}</p>
+                    <p class="font-mono text-lg tracking-wide">{{ order.tracking_number }}</p>
+                    {% if order.estimated_delivery %}<p class="text-ivory/55 text-xs mt-1">Arriving by {{ order.estimated_delivery|date:"D, d M" }}</p>{% endif %}
+                </div>
+                {% if order.tracking_url %}
+                <a href="{{ order.tracking_url }}" target="_blank" class="btn-gold whitespace-nowrap">Track Package
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                </a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Items -->
+        <div class="lg:col-span-2 space-y-4">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm">
+                <h2 class="font-semibold text-charcoal dark:text-ivory mb-4">Items Ordered</h2>
+                <div class="space-y-4">
+                    {% for item in order.items.all %}
+                    <div class="flex gap-4 items-start pb-4 border-b border-line dark:border-white/10 last:border-0 last:pb-0">
+                        <div class="w-16 h-16 rounded-xl overflow-hidden bg-[#EFE9E1] shrink-0">
+                            {% if item.product_image %}
+                            <img src="{{ item.product_image }}" alt="{{ item.product_name }}" class="w-full h-full object-cover">
+                            {% else %}
+                            <div class="w-full h-full flex items-center justify-center text-xl">🕯️</div>
+                            {% endif %}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="font-medium text-charcoal dark:text-ivory text-sm">{{ item.product_name }}</p>
+                            {% if item.variant_info %}<p class="text-xs text-gray-400 mt-0.5">{{ item.variant_info }}</p>{% endif %}
+                            <p class="text-xs text-gray-400 mt-1">Qty: {{ item.quantity }} × Rs.{{ item.price }}</p>
+                        </div>
+                        <div class="font-semibold text-sm text-charcoal dark:text-ivory">Rs.{{ item.line_total }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Order Journey timeline -->
+            {% if order.status_history.exists %}
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm">
+                <h2 class="font-display text-lg text-charcoal dark:text-ivory mb-5">Order Journey</h2>
+                <div class="relative">
+                    <span class="absolute left-[7px] top-1 bottom-1 w-px bg-line dark:bg-white/10"></span>
+                    <div class="space-y-5">
+                        {% for history in order.status_history.all reversed %}
+                        <div class="relative flex gap-4">
+                            <span class="relative z-10 mt-0.5 w-4 h-4 rounded-full shrink-0 border-2 border-white dark:border-gray-800 {% if forloop.first %}bg-gold ring-4 ring-gold/15{% else %}bg-charcoal/70 dark:bg-ivory/40{% endif %}"></span>
+                            <div class="flex-1 -mt-0.5">
+                                <p class="text-sm font-medium text-charcoal dark:text-ivory">{{ history.get_status_display|default:history.status|title }}</p>
+                                {% if history.note %}<p class="text-xs text-charcoal/50 dark:text-ivory/50 mt-0.5">{{ history.note }}</p>{% endif %}
+                                <p class="text-xs text-charcoal/40 dark:text-ivory/40 mt-0.5">{{ history.created_at|date:"M d, Y · g:i A" }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Summary -->
+        <div class="space-y-5">
+            <!-- Price Summary -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm">
+                <h2 class="font-semibold text-charcoal dark:text-ivory mb-4">Order Summary</h2>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between"><span class="text-gray-500">Subtotal</span><span>Rs.{{ order.subtotal }}</span></div>
+                    {% if order.discount > 0 %}<div class="flex justify-between"><span class="text-green-600">Discount</span><span class="text-green-600">-Rs.{{ order.discount }}</span></div>{% endif %}
+                    <div class="flex justify-between"><span class="text-gray-500">Shipping</span><span>{% if order.shipping_charge == 0 %}Free{% else %}Rs.{{ order.shipping_charge }}{% endif %}</span></div>
+                    {% if order.tax > 0 and not site_settings.prices_include_tax %}<div class="flex justify-between"><span class="text-gray-500">{{ site_settings.tax_label|default:"Tax" }}</span><span>Rs.{{ order.tax }}</span></div>{% endif %}
+                    <hr class="border-line dark:border-white/10 my-2">
+                    <div class="flex justify-between font-bold text-charcoal dark:text-ivory"><span>Total</span><span>Rs.{{ order.total }}</span></div>
+                    {% if order.tax > 0 and site_settings.prices_include_tax %}<p class="text-xs text-gray-400 text-right">incl. Rs.{{ order.tax }} {{ site_settings.tax_label|default:"tax" }}</p>{% endif %}
+                </div>
+                <div class="mt-3 pt-3 border-t border-line dark:border-white/10">
+                    <p class="text-xs text-gray-400">Payment: {{ order.get_payment_method_display }}</p>
+                    <p class="text-xs {% if order.payment_status == 'paid' %}text-green-500{% else %}text-yellow-500{% endif %} mt-1">{{ order.get_payment_status_display }}</p>
+                </div>
+            </div>
+
+            <!-- Delivery Address -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm">
+                <h2 class="font-semibold text-charcoal dark:text-ivory mb-3">Delivery Address</h2>
+                <p class="font-medium text-sm text-charcoal dark:text-ivory">{{ order.shipping_full_name }}</p>
+                <p class="text-xs text-gray-400 mt-1">{{ order.shipping_phone }}</p>
+                <p class="text-xs text-gray-400 mt-1 leading-relaxed">{{ order.shipping_address_line1 }}{% if order.shipping_address_line2 %}, {{ order.shipping_address_line2 }}{% endif %}, {{ order.shipping_city }}, {{ order.shipping_state }} - {{ order.shipping_pincode }}</p>
+            </div>
+
+            <!-- Gift Message -->
+            {% if order.is_gift and order.gift_message %}
+            <div class="bg-blush/20 border border-line dark:border-white/10 rounded-2xl p-5">
+                <h3 class="font-semibold text-charcoal dark:text-ivory mb-2 text-sm flex items-center gap-2">🎁 Gift Message</h3>
+                <p class="text-sm text-gray-600 italic">{{ order.gift_message }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+function cancelOrder(orderId) {
+    if (!confirm('Are you sure you want to cancel this order?')) return;
+    fetch(`/orders/${orderId}/cancel/`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')},
+        body: JSON.stringify({})
+    }).then(r => r.json()).then(d => {
+        if (d.success) { showToast('Order cancelled'); setTimeout(() => location.reload(), 1500); }
+        else showToast(d.message);
+    });
+}
+function submitReturn(orderId) {
+    const reason = document.getElementById('return-reason').value;
+    const description = document.getElementById('return-desc').value.trim();
+    if (!description) { showToast('Please tell us about the issue'); return; }
+    fetch(`/orders/${orderId}/return/`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')},
+        body: JSON.stringify({reason, description})
+    }).then(r => r.json()).then(d => {
+        showToast(d.message);
+        if (d.success) setTimeout(() => location.reload(), 1500);
+    });
+}
+</script>
+{% endblock %}

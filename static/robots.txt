@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /aura-admin/
+Disallow: /accounts/
+Disallow: /orders/
+
+Sitemap: /sitemap.xml

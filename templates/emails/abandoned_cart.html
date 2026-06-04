@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"></head>
+<body style="font-family: Georgia, serif; background: #F8F4EF; margin: 0; padding: 20px;">
+    <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 16px; overflow: hidden;">
+        <div style="background: #333333; padding: 32px; text-align: center;">
+            <h1 style="color: white; margin: 0; font-size: 28px;">Aura <span style="color: #C9A86A;">Archives</span></h1>
+            <p style="color: #C9A86A; margin: 8px 0 0; font-style: italic; font-size: 14px;">Light That Preserves Moments</p>
+        </div>
+        <div style="padding: 40px;">
+            <div style="text-align:center; font-size:44px; margin-bottom:8px;">🕯️</div>
+            <h2 style="color: #333; font-size: 24px; margin-bottom: 8px; text-align:center;">You left a moment behind</h2>
+            <p style="color: #666; margin-bottom: 24px; text-align:center;">Hi {{ user.first_name }}, your candles are still waiting in your cart. Small batches go quickly — shall we finish what you started?</p>
+            <div style="background: #F8F4EF; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
+                {% for item in items %}
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid #eee;">
+                    <span style="font-size:14px; color:#333;">{{ item.product.name }} × {{ item.quantity }}</span>
+                    <strong style="font-size:14px; color:#C9A86A;">Rs.{{ item.total }}</strong>
+                </div>
+                {% endfor %}
+            </div>
+            <div style="text-align:center;">
+                <a href="{{ site_url }}/orders/cart/" style="display: inline-block; background: #C9A86A; color: white; padding: 14px 32px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 14px;">Return to Your Cart</a>
+            </div>
+            <p style="color:#999; font-size:13px; text-align:center; margin-top:24px; font-style:italic;">Buy any 3 candles and save 10% — a little nudge from us.</p>
+        </div>
+        <div style="background: #F8F4EF; padding: 20px; text-align: center;">
+            <p style="color: #999; font-size: 12px; margin: 0;">Aura Archives | Handmade with love in India</p>
+        </div>
+    </div>
+</body></html>

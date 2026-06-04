@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}My Wishlist{% endblock %}
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h1 class="font-display text-3xl text-charcoal dark:text-ivory mb-8">My Wishlist</h1>
+    {% if wishlist.products.exists %}
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        {% for product in wishlist.products.all %}
+        {% include "components/product_card.html" %}
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-24">
+        <div class="text-7xl mb-6">&#10084;&#65039;</div>
+        <h2 class="font-display text-2xl text-charcoal dark:text-ivory mb-3">Your wishlist is empty</h2>
+        <p class="text-gray-400 mb-8">Save your favourite candles here</p>
+        <a href="/shop/" class="bg-gold text-white px-8 py-4 rounded-full font-semibold hover:bg-opacity-90">Explore Candles</a>
+    </div>
+    {% endif %}
+</div>
+<script>
+function addToCart(productId) {
+    fetch('/shop/cart/add/', {method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':getCookie('csrftoken')},body:JSON.stringify({product_id:productId,quantity:1})}).then(r=>r.json()).then(d=>{if(d.success)showToast(d.message);});
+}
+function toggleWishlist(productId) {
+    fetch('/wishlist/toggle/', {method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':getCookie('csrftoken')},body:JSON.stringify({product_id:productId})}).then(r=>r.json()).then(d=>{if(d.success)location.reload();});
+}
+</script>
+{% endblock %}

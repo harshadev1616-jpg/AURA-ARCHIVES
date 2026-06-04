@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% block title %}My Account{% endblock %}
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h1 class="font-display text-3xl text-charcoal dark:text-ivory">Hello, {{ user.first_name }}</h1>
+            <p class="text-gray-400 text-sm mt-1">Welcome back to Aura Archives</p>
+        </div>
+        <a href="/accounts/profile/" class="flex items-center gap-3 bg-white dark:bg-gray-800 rounded-2xl px-4 py-2.5 shadow-sm hover:shadow-md transition-shadow">
+            <div class="w-9 h-9 bg-gradient-to-br from-blush to-lavender rounded-full flex items-center justify-center font-bold text-charcoal">{{ user.first_name|first }}</div>
+            <span class="text-sm font-medium text-charcoal dark:text-ivory">Edit Profile</span>
+        </a>
+    </div>
+
+    <!-- Loyalty / Aura Rewards -->
+    <div class="relative overflow-hidden rounded-3xl bg-charcoal dark:bg-black text-ivory p-6 md:p-8 mb-8" x-data="{ open: false }">
+        <div class="absolute -top-12 -right-8 w-48 h-48 rounded-full bg-gold/20 blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-14 -left-8 w-48 h-48 rounded-full bg-blush/10 blur-3xl pointer-events-none"></div>
+        <div class="relative flex flex-col md:flex-row md:items-center justify-between gap-5">
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="eyebrow text-gold">Aura Rewards</span>
+                    <span class="text-[10px] bg-gold/20 text-gold px-2 py-0.5 rounded-full font-semibold">{{ user.loyalty_tier }} member</span>
+                </div>
+                <div class="flex items-baseline gap-2">
+                    <span class="font-display text-4xl text-ivory">{{ user.loyalty_points }}</span>
+                    <span class="text-gray-400 text-sm">points · worth Rs.{{ loyalty_value }}</span>
+                </div>
+                <p class="text-gray-400 text-xs mt-2">Earn 10% back in points on every delivered order. Redeem from {{ min_redeem }} points at checkout.</p>
+            </div>
+            <div class="flex items-center gap-3">
+                
+                {% if loyalty_history %}
+                <button @click="open = !open" class="text-xs text-gold border border-gold/40 rounded-full px-4 py-2 hover:bg-gold/10 transition-colors whitespace-nowrap">History</button>
+                {% endif %}
+            </div>
+        </div>
+        {% if loyalty_history %}
+        <div x-show="open" x-transition x-cloak class="relative mt-5 pt-5 border-t border-white/10 space-y-2">
+            {% for tx in loyalty_history %}
+            <div class="flex items-center justify-between text-sm">
+                <span class="text-gray-300">{{ tx.reason }}</span>
+                <span class="font-semibold {% if tx.points > 0 %}text-green-400{% else %}text-gold{% endif %}">{{ tx.points|stringformat:"+d" }} pts</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Refer a friend -->
+    <div class="rounded-3xl bg-cream dark:bg-gray-800 border border-line dark:border-white/10 p-6 md:p-7 mb-8" x-data="{ copied: false }">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <p class="eyebrow text-gold mb-1">Give 100, Get 100</p>
+                <h3 class="font-display text-xl text-charcoal dark:text-ivory">Refer a friend</h3>
+                <p class="text-gray-500 text-sm mt-1">Share your code. When a friend places their first order, you <em>both</em> get 100 points.
+                {% if user.successful_referrals %}<span class="text-gold font-medium">· {{ user.successful_referrals }} friend{{ user.successful_referrals|pluralize }} joined!</span>{% endif %}</p>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+                <code class="bg-white dark:bg-gray-900 border border-gold/40 rounded-full px-4 py-2.5 text-sm font-mono font-semibold text-charcoal dark:text-ivory tracking-wider">{{ user.referral_code }}</code>
+                <button @click="navigator.clipboard.writeText('{{ request.scheme }}://{{ request.get_host }}/accounts/register/?ref={{ user.referral_code }}'); copied=true; setTimeout(()=>copied=false,2000)"
+                        class="bg-charcoal text-ivory px-5 py-2.5 rounded-full text-[13px] tracking-wide hover:bg-gold transition-colors whitespace-nowrap">
+                    <span x-show="!copied">Copy Link</span>
+                    <span x-show="copied" x-cloak>Copied! ✨</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <a href="/orders/" class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all group">
+            <div class="text-2xl mb-2">📦</div>
+            <div class="font-display text-3xl text-charcoal dark:text-ivory group-hover:text-gold transition-colors">{{ recent_orders|length }}</div>
+            <div class="text-xs text-gray-400 mt-1">Recent Orders</div>
+        </a>
+        <a href="/accounts/wishlist/" class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all group">
+            <div class="text-2xl mb-2">❤️</div>
+            <div class="font-display text-3xl text-charcoal dark:text-ivory group-hover:text-gold transition-colors">
+                {% if user.wishlist %}{{ user.wishlist.products.count }}{% else %}0{% endif %}
+            </div>
+            <div class="text-xs text-gray-400 mt-1">Wishlist Items</div>
+        </a>
+        <a href="/accounts/addresses/" class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all group">
+            <div class="text-2xl mb-2">📍</div>
+            <div class="font-display text-3xl text-charcoal dark:text-ivory group-hover:text-gold transition-colors">{{ user.addresses.count }}</div>
+            <div class="text-xs text-gray-400 mt-1">Saved Addresses</div>
+        </a>
+        <a href="/accounts/notifications/" class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all group relative">
+            <div class="text-2xl mb-2">🔔</div>
+            <div class="font-display text-3xl text-charcoal dark:text-ivory group-hover:text-gold transition-colors">{{ unread_notifications }}</div>
+            <div class="text-xs text-gray-400 mt-1">Notifications</div>
+            {% if unread_notifications > 0 %}
+            <div class="absolute top-3 right-3 w-2.5 h-2.5 bg-red-400 rounded-full"></div>
+            {% endif %}
+        </a>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+        {% for link in links %}{% endfor %}
+        <a href="/orders/" class="flex items-center gap-3 bg-white dark:bg-gray-800 rounded-xl px-4 py-3 shadow-sm hover:shadow-md hover:text-gold transition-all text-sm font-medium text-charcoal dark:text-ivory">
+            <svg class="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+            My Orders
+        </a>
+        <a href="/accounts/wishlist/" class="flex items-center gap-3 bg-white dark:bg-gray-800 rounded-xl px-4 py-3 shadow-sm hover:shadow-md hover:text-gold transition-all text-sm font-medium text-charcoal dark:text-ivory">
+            <svg class="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+            Wishlist
+        </a>
+        <a href="/accounts/addresses/" class="flex items-center gap-3 bg-white dark:bg-gray-800 rounded-xl px-4 py-3 shadow-sm hover:shadow-md hover:text-gold transition-all text-sm font-medium text-charcoal dark:text-ivory">
+            <svg class="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            Addresses
+        </a>
+        <a href="/accounts/profile/" class="flex items-center gap-3 bg-white dark:bg-gray-800 rounded-xl px-4 py-3 shadow-sm hover:shadow-md hover:text-gold transition-all text-sm font-medium text-charcoal dark:text-ivory">
+            <svg class="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            Profile
+        </a>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden">
+        <div class="flex items-center justify-between px-6 py-5 border-b border-line dark:border-white/10 dark:border-gray-700">
+            <h2 class="font-semibold text-charcoal dark:text-ivory">Recent Orders</h2>
+            <a href="/orders/" class="text-sm text-gold hover:underline">View All</a>
+        </div>
+        {% if recent_orders %}
+        <div class="divide-y divide-line dark:divide-white/10 dark:divide-gray-700">
+            {% for order in recent_orders %}
+            <div class="px-6 py-4 flex items-center justify-between hover:bg-ivory dark:hover:bg-gray-700/50 transition-colors">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 bg-blush dark:bg-gray-700 rounded-xl flex items-center justify-center text-sm">
+                        {% if order.items.first and order.items.first.product_image %}
+                        <img src="{{ order.items.first.product_image }}" class="w-full h-full object-cover rounded-xl">
+                        {% else %}🕯️{% endif %}
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-charcoal dark:text-ivory">#{{ order.order_number }}</p>
+                        <p class="text-xs text-gray-400">{{ order.created_at|date:"M d, Y" }} · {{ order.items.count }} item{{ order.items.count|pluralize }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-sm font-semibold text-charcoal dark:text-ivory">Rs.{{ order.total }}</p>
+                    </div>
+                    <span class="text-xs px-3 py-1 rounded-full font-medium
+                        {% if order.status == 'delivered' %}bg-green-100 text-green-700
+                        {% elif order.status == 'shipped' or order.status == 'out_for_delivery' %}bg-blue-100 text-blue-700
+                        {% elif order.status == 'cancelled' %}bg-red-100 text-red-600
+                        {% else %}bg-yellow-100 text-yellow-700{% endif %}">
+                        {{ order.get_status_display }}
+                    </span>
+                    <a href="/orders/{{ order.pk }}/" class="text-gold hover:underline text-xs">View →</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-16">
+            <div class="text-5xl mb-4">🕯️</div>
+            <p class="text-gray-400 text-sm mb-4">No orders yet. Start your candle journey!</p>
+            <a href="/shop/" class="bg-gold text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-opacity-90">Shop Now</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }}{% endblock %}
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <a href="/blog/" class="text-gold hover:underline text-sm mb-6 inline-block">&larr; The Journal</a>
+    {% if post.category %}<p class="text-xs text-gold uppercase tracking-widest font-medium mb-3">{{ post.category.name }}</p>{% endif %}
+    <h1 class="font-display text-4xl md:text-5xl text-charcoal dark:text-ivory mb-4 leading-tight">{{ post.title }}</h1>
+    <div class="flex items-center gap-4 text-sm text-gray-400 mb-8">
+        {% if post.author %}<span>By {{ post.author.get_full_name }}</span>{% endif %}
+        <span>{{ post.published_at|date:"F d, Y" }}</span>
+        <span>{{ post.view_count }} views</span>
+    </div>
+    {% if post.featured_image %}<img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="w-full rounded-2xl mb-8 aspect-video object-cover">{% endif %}
+    <div class="prose prose-lg max-w-none text-gray-700 dark:text-gray-300 leading-relaxed">{{ post.content|linebreaks }}</div>
+    {% if related_posts %}
+    <div class="mt-16 border-t border-line dark:border-white/10 pt-10">
+        <h2 class="font-display text-2xl text-charcoal dark:text-ivory mb-6">More from the Journal</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {% for related in related_posts %}<a href="{{ related.get_absolute_url }}" class="group"><div class="rounded-2xl overflow-hidden bg-[#EFE9E1] aspect-video mb-3">{% if related.featured_image %}<img src="{{ related.featured_image.url }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform">{% endif %}</div><h3 class="font-display text-sm text-charcoal dark:text-ivory group-hover:text-gold transition-colors">{{ related.title }}</h3></a>{% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

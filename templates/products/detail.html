@@ -1,0 +1,563 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }}{% endblock %}
+{% block meta_description %}{{ product.short_description|default:product.description|truncatewords:25 }}{% endblock %}
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-xs text-gray-400 mb-8">
+        <a href="/" class="hover:text-gold">Home</a><span>/</span>
+        <a href="/shop/" class="hover:text-gold">Shop</a><span>/</span>
+        {% if product.category %}<a href="{{ product.category.get_absolute_url }}" class="hover:text-gold">{{ product.category.name }}</a><span>/</span>{% endif %}
+        <span class="text-charcoal dark:text-ivory">{{ product.name }}</span>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-20">
+        <!-- Product Gallery -->
+        <div x-data="{ active: 0, count: {{ product.images.count|default:1 }}, lightbox: false, zoom: false,
+                       next() { this.active = (this.active + 1) % this.count }, prev() { this.active = (this.active - 1 + this.count) % this.count } }"
+             @keydown.window.escape="lightbox=false" @keydown.window.arrow-right="if(lightbox) next()" @keydown.window.arrow-left="if(lightbox) prev()">
+            <div class="relative rounded-[1.75rem] overflow-hidden bg-[#EFE9E1] dark:bg-gray-800 aspect-[4/5] mb-4 group {% if product.images.exists %}cursor-zoom-in{% endif %}"
+                 @click="{% if product.images.exists %}lightbox = true{% endif %}">
+                {% for img in product.images.all %}
+                <img x-show="active === {{ forloop.counter0 }}" src="{{ img.image.url }}" alt="{{ img.alt_text|default:product.name }}"
+                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                {% empty %}
+                <div class="w-full h-full flex items-center justify-center">
+                    <svg class="w-20 h-20 text-charcoal/15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                </div>
+                {% endfor %}
+                {% if product.discount_percentage > 0 %}
+                <div class="absolute top-4 left-4 bg-charcoal/90 text-ivory text-[11px] tracking-wide px-3 py-1.5 rounded-full backdrop-blur">−{{ product.discount_percentage }}%</div>
+                {% endif %}
+                {% if product.images.exists %}
+                <div class="absolute bottom-4 right-4 w-9 h-9 rounded-full bg-ivory/85 backdrop-blur flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                    <svg class="w-4 h-4 text-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m-3-3h6"/></svg>
+                </div>
+                {% endif %}
+            </div>
+            <!-- Thumbnails -->
+            {% if product.images.count > 1 %}
+            <div class="flex gap-3 overflow-x-auto pb-2">
+                {% for img in product.images.all %}
+                <button @click="active = {{ forloop.counter0 }}"
+                        class="shrink-0 w-20 h-24 rounded-xl overflow-hidden border transition-colors"
+                        :class="active === {{ forloop.counter0 }} ? 'border-gold' : 'border-line hover:border-gold'">
+                    <img src="{{ img.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+                </button>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Lightbox / Zoom -->
+            {% if product.images.exists %}
+            <div x-show="lightbox" x-cloak x-transition.opacity
+                 class="fixed inset-0 z-[60] bg-charcoal/95 backdrop-blur-sm flex items-center justify-center p-4"
+                 @click.self="lightbox=false">
+                <button @click="lightbox=false" class="absolute top-5 right-5 text-ivory/70 hover:text-ivory" aria-label="Close">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+                {% if product.images.count > 1 %}
+                <button @click.stop="prev()" class="absolute left-4 md:left-8 text-ivory/70 hover:text-ivory" aria-label="Previous">
+                    <svg class="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M15 19l-7-7 7-7"/></svg>
+                </button>
+                <button @click.stop="next()" class="absolute right-4 md:right-8 text-ivory/70 hover:text-ivory" aria-label="Next">
+                    <svg class="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M9 5l7 7-7 7"/></svg>
+                </button>
+                {% endif %}
+                <div class="max-w-3xl max-h-[88vh] overflow-hidden rounded-2xl" :class="zoom ? 'cursor-zoom-out' : 'cursor-zoom-in'" @click.stop="zoom=!zoom">
+                    {% for img in product.images.all %}
+                    <img x-show="active === {{ forloop.counter0 }}" src="{{ img.image.url }}" alt="{{ img.alt_text|default:product.name }}"
+                         class="w-full h-full object-contain transition-transform duration-300" :class="zoom ? 'scale-[1.8]' : 'scale-100'">
+                    {% endfor %}
+                </div>
+                <p class="absolute bottom-5 left-0 right-0 text-center text-ivory/50 text-xs tracking-wide">Click image to zoom · ← → to browse · Esc to close</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Product Info -->
+        <div>
+            {% if product.category %}
+            <a href="{{ product.category.get_absolute_url }}" class="eyebrow text-gold mb-4 block hover:opacity-70 transition-opacity">{{ product.category.name }}</a>
+            {% endif %}
+            <h1 class="font-display text-4xl md:text-[2.75rem] leading-tight text-charcoal dark:text-ivory mb-3">{{ product.name }}</h1>
+
+            <!-- The Moment it preserves -->
+            {% if product.moment %}
+            <p class="flex items-start gap-2.5 text-charcoal/60 dark:text-ivory/60 italic font-serif text-xl leading-snug mb-5">
+                <svg class="w-5 h-5 mt-1 shrink-0 text-gold" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C9 6 8 9 8 12a4 4 0 008 0c0-3-1-6-4-10z"/></svg>
+                <span>{{ product.moment }}</span>
+            </p>
+            {% endif %}
+
+            <!-- Rating -->
+            {% if product.average_rating > 0 %}
+            <div class="flex items-center gap-2 mb-4">
+                <div class="flex items-center gap-0.5">
+                    {% for i in "12345" %}
+                    <svg class="w-4 h-4 {% if forloop.counter <= product.average_rating %}text-gold fill-gold{% else %}text-gray-300 fill-gray-300{% endif %}" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    {% endfor %}
+                </div>
+                <span class="text-sm text-gray-500">{{ product.average_rating|floatformat:1 }} ({{ product.review_count }} reviews)</span>
+            </div>
+            {% endif %}
+
+            <!-- Price -->
+            <div class="flex items-baseline gap-3 mb-7 mt-1">
+                <span class="font-display text-3xl text-charcoal dark:text-ivory">Rs.{{ product.price }}</span>
+                {% if product.compare_price %}<span class="text-lg text-charcoal/35 line-through">Rs.{{ product.compare_price }}</span>{% endif %}
+                {% if product.discount_percentage > 0 %}<span class="text-gold text-[13px] tracking-wide">{{ product.discount_percentage }}% off</span>{% endif %}
+            </div>
+
+            <!-- Short Description -->
+            {% if product.short_description %}
+            <p class="text-charcoal/60 dark:text-ivory/55 text-base leading-relaxed mb-7">{{ product.short_description }}</p>
+            {% endif %}
+
+            <!-- Candle Details Pills -->
+            <div class="flex flex-wrap gap-2 mb-6">
+                {% if product.burn_time_display %}
+                <span class="flex items-center gap-1.5 bg-cream dark:bg-gray-700 border border-line dark:border-white/10 rounded-full px-3.5 py-2 text-xs tracking-wide text-charcoal/70 dark:text-ivory/70">
+                    <svg class="w-3.5 h-3.5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    {{ product.burn_time_display }}
+                </span>
+                {% endif %}
+                {% if product.wax_type %}
+                <span class="flex items-center gap-1.5 bg-cream dark:bg-gray-700 border border-line dark:border-white/10 rounded-full px-3.5 py-2 text-xs tracking-wide text-charcoal/70 dark:text-ivory/70">
+                    <svg class="w-3.5 h-3.5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    {{ product.wax_type }}
+                </span>
+                {% endif %}
+                {% if product.is_gift_ready %}
+                <span class="flex items-center gap-1.5 bg-cream dark:bg-gray-700 border border-line dark:border-white/10 rounded-full px-3.5 py-2 text-xs tracking-wide text-charcoal/70 dark:text-ivory/70">
+                    <svg class="w-3.5 h-3.5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/></svg>
+                    Gift Ready
+                </span>
+                {% endif %}
+                {% if product.weight %}
+                <span class="bg-cream dark:bg-gray-700 border border-line dark:border-white/10 rounded-full px-3.5 py-2 text-xs tracking-wide text-charcoal/70 dark:text-ivory/70">{{ product.weight }}g</span>
+                {% endif %}
+            </div>
+
+            <!-- Fragrance Pyramid / Notes -->
+            {% if product.notes_top or product.notes_heart or product.notes_base %}
+            <div class="bg-cream dark:bg-gray-800 border border-line dark:border-white/10 rounded-2xl p-6 mb-7">
+                <p class="eyebrow text-gold mb-5 flex items-center gap-2">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21l5-5 5 5M12 3v13M5 8h14"/></svg>
+                    The Scent Journey
+                </p>
+                <div class="space-y-3">
+                    {% if product.notes_top %}
+                    <div class="flex items-center gap-3">
+                        <span class="shrink-0 w-16 text-[10px] uppercase tracking-wider text-gray-500 font-semibold">Opens</span>
+                        <span class="w-2 h-2 rounded-full bg-gold/40"></span>
+                        <span class="text-sm text-charcoal dark:text-ivory">{{ product.notes_top }}</span>
+                    </div>
+                    {% endif %}
+                    {% if product.notes_heart %}
+                    <div class="flex items-center gap-3">
+                        <span class="shrink-0 w-16 text-[10px] uppercase tracking-wider text-gray-500 font-semibold">Heart</span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-gold/70"></span>
+                        <span class="text-sm text-charcoal dark:text-ivory font-medium">{{ product.notes_heart }}</span>
+                    </div>
+                    {% endif %}
+                    {% if product.notes_base %}
+                    <div class="flex items-center gap-3">
+                        <span class="shrink-0 w-16 text-[10px] uppercase tracking-wider text-gray-500 font-semibold">Settles</span>
+                        <span class="w-3 h-3 rounded-full bg-gold"></span>
+                        <span class="text-sm text-charcoal dark:text-ivory">{{ product.notes_base }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% elif product.fragrance_notes %}
+            <div class="bg-blush/30 dark:bg-gray-700 rounded-2xl p-4 mb-6">
+                <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Fragrance Notes</p>
+                <p class="text-sm text-charcoal dark:text-ivory font-medium">{{ product.fragrance_notes }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Variants -->
+            {% if product.variants.exists %}
+            <div class="mb-6" x-data="{ selectedVariant: null }">
+                <p class="text-sm font-semibold text-charcoal dark:text-ivory mb-3">Select Variant</p>
+                <div class="flex flex-wrap gap-2">
+                    {% for variant in product.variants.all %}
+                    <button @click="selectedVariant = {{ variant.pk }}"
+                            :class="selectedVariant === {{ variant.pk }} ? 'bg-charcoal text-ivory border-charcoal' : 'bg-white dark:bg-gray-800 border-line hover:border-gold hover:text-gold'"
+                            class="border-2 rounded-full px-4 py-2 text-sm font-medium transition-all">
+                        {{ variant.value }}
+                        {% if variant.price_adjustment != 0 %}
+                        <span class="text-xs">({% if variant.price_adjustment > 0 %}+{% endif %}Rs.{{ variant.price_adjustment }})</span>
+                        {% endif %}
+                    </button>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Quantity + Add to Cart -->
+            <div id="buy-box" class="flex items-center gap-3 mb-4" x-data="{ qty: 1 }">
+                <div class="flex items-center border border-line dark:border-white/15 rounded-full overflow-hidden">
+                    <button @click="qty = Math.max(1, qty - 1)" class="px-4 py-3.5 hover:text-gold transition-colors text-base">−</button>
+                    <span class="px-3 py-3.5 min-w-10 text-center text-sm" x-text="qty">1</span>
+                    <button @click="qty++" class="px-4 py-3.5 hover:text-gold transition-colors text-base">+</button>
+                </div>
+                {% if product.is_in_stock %}
+                <button @click="addToCart({{ product.pk }}, null, qty)"
+                        class="flex-1 bg-charcoal dark:bg-ivory text-ivory dark:text-charcoal py-4 rounded-full text-[13px] tracking-wide hover:bg-gold dark:hover:bg-gold dark:hover:text-white transition-colors flex items-center justify-center gap-2">
+                    Add to Cart
+                </button>
+                {% else %}
+                <button class="flex-1 bg-cream text-charcoal/40 py-4 rounded-full text-[13px] tracking-[0.15em] uppercase cursor-not-allowed">Sold Out</button>
+                {% endif %}
+            </div>
+            {% if product.is_in_stock %}
+            <a href="/orders/checkout/" onclick="addToCart({{ product.pk }}, null, 1)" class="w-full block text-center border border-charcoal dark:border-ivory text-charcoal dark:text-ivory py-4 rounded-full text-[13px] tracking-wide hover:bg-charcoal hover:text-ivory dark:hover:bg-ivory dark:hover:text-charcoal transition-colors mb-6">
+                Buy Now
+            </a>
+            {% else %}
+            <!-- Notify me when back in stock -->
+            <div class="rounded-2xl border-2 border-dashed border-gold/40 bg-gold/5 p-5 mb-6" x-data="{ done: false }">
+                <p class="font-display text-lg text-charcoal dark:text-ivory mb-1">Sold out — for now</p>
+                <p class="text-xs text-gray-500 mb-3">Our small batches sell quickly. Leave your email and we'll tell you the moment {{ product.name }} is back.</p>
+                <div x-show="!done" class="flex gap-2">
+                    <input type="email" id="restock-email" placeholder="your@email.com"
+                           value="{% if user.is_authenticated %}{{ user.email }}{% endif %}"
+                           class="flex-1 border border-line rounded-full px-4 py-2.5 text-sm focus:outline-none focus:border-gold bg-white dark:bg-gray-700 dark:text-ivory">
+                    <button onclick="notifyRestock('{{ product.slug }}')" class="bg-charcoal text-ivory px-5 py-2.5 rounded-full text-[13px] tracking-wide hover:bg-gold transition-colors whitespace-nowrap">Notify Me</button>
+                </div>
+                <p x-show="done" x-cloak class="text-sm text-green-600 font-medium flex items-center gap-1.5">✨ You're on the list — we'll be in touch.</p>
+            </div>
+            {% endif %}
+
+            <!-- Stock Badge -->
+            {% if product.is_low_stock %}
+            <p class="text-orange-500 text-sm mb-4 flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                Only {{ product.stock }} left in stock!
+            </p>
+            {% endif %}
+
+            <!-- Wishlist -->
+            <button onclick="toggleWishlist({{ product.pk }})" class="flex items-center gap-2 text-sm text-gray-500 hover:text-red-400 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                Add to Wishlist
+            </button>
+
+            <!-- Accordion Details -->
+            <div class="mt-8 border-t border-line dark:border-white/10" x-data="{ open: null }">
+                {% if product.description %}
+                <div class="border-b border-line dark:border-white/10">
+                    <button @click="open = open === 1 ? null : 1" class="w-full flex items-center justify-between py-4 text-sm font-semibold text-charcoal dark:text-ivory">
+                        Description
+                        <svg class="w-4 h-4 transition-transform" :class="open === 1 ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div x-show="open === 1" x-transition class="pb-4 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{{ product.description }}</div>
+                </div>
+                {% endif %}
+                {% if product.ingredients %}
+                <div class="border-b border-line dark:border-white/10">
+                    <button @click="open = open === 2 ? null : 2" class="w-full flex items-center justify-between py-4 text-sm font-semibold text-charcoal dark:text-ivory">
+                        Ingredients
+                        <svg class="w-4 h-4 transition-transform" :class="open === 2 ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div x-show="open === 2" x-transition class="pb-4 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{{ product.ingredients }}</div>
+                </div>
+                {% endif %}
+                {% if product.care_instructions %}
+                <div class="border-b border-line dark:border-white/10">
+                    <button @click="open = open === 3 ? null : 3" class="w-full flex items-center justify-between py-4 text-sm font-semibold text-charcoal dark:text-ivory">
+                        Care Instructions
+                        <svg class="w-4 h-4 transition-transform" :class="open === 3 ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div x-show="open === 3" x-transition class="pb-4 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{{ product.care_instructions }}</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- The Story Behind This Candle -->
+    {% if product.story or product.ritual %}
+    <section class="mb-20">
+        <div class="relative rounded-3xl overflow-hidden bg-charcoal dark:bg-black text-ivory px-8 py-14 md:px-16 md:py-20">
+            <!-- ambient glow -->
+            <div class="absolute -top-16 -right-10 w-56 h-56 rounded-full bg-gold/20 blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-20 -left-10 w-56 h-56 rounded-full bg-blush/10 blur-3xl pointer-events-none"></div>
+            <div class="relative max-w-3xl mx-auto text-center">
+                <div class="w-10 h-px bg-gold/50 mx-auto mb-6"></div>
+                {% if product.story %}
+                <p class="text-gold text-xs uppercase tracking-[0.3em] font-medium mb-5">The Story</p>
+                <p class="font-serif text-2xl md:text-3xl leading-relaxed text-ivory mb-10">{{ product.story }}</p>
+                {% endif %}
+                {% if product.ritual %}
+                <div class="inline-flex flex-col items-center border-t border-gold/30 pt-8 max-w-xl">
+                    <p class="text-gold text-xs uppercase tracking-[0.3em] font-medium mb-3">The Ritual</p>
+                    <p class="text-gray-300 text-base leading-relaxed italic">{{ product.ritual }}</p>
+                </div>
+                {% endif %}
+                <p class="text-gray-500 text-xs mt-10 tracking-widest uppercase">Hand-poured in small batches · Made to preserve a moment</p>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Reviews Section -->
+    <section class="mb-20">
+        <div class="flex items-center justify-between mb-8">
+            <h2 class="font-display text-3xl text-charcoal dark:text-ivory">Customer Reviews</h2>
+            {% if user.is_authenticated %}
+            <button onclick="document.getElementById('review-form').classList.toggle('hidden')"
+                    class="bg-charcoal text-ivory px-5 py-2.5 rounded-full text-[13px] tracking-wide hover:bg-gold transition-colors">Write a Review</button>
+            {% endif %}
+        </div>
+
+        <!-- Review Form -->
+        {% if user.is_authenticated %}
+        <div id="review-form" class="hidden bg-ivory dark:bg-gray-800 rounded-2xl p-6 mb-8" x-data="{ rating: 5 }">
+            <h3 class="font-semibold text-charcoal dark:text-ivory mb-4">Write Your Review</h3>
+            <div class="mb-4">
+                <p class="text-sm text-gray-500 mb-2">Rating</p>
+                <div class="flex gap-1">
+                    {% for i in "12345" %}
+                    <button @click="rating = {{ forloop.counter }}" class="text-2xl" :class="rating >= {{ forloop.counter }} ? 'text-gold' : 'text-gray-300'">★</button>
+                    {% endfor %}
+                </div>
+            </div>
+            <input type="text" id="review-title" placeholder="Review title (optional)" class="w-full border border-line rounded-xl px-4 py-3 text-sm mb-3 focus:outline-none focus:border-gold bg-white dark:bg-gray-700">
+            <textarea id="review-body" rows="4" placeholder="Share your experience..." class="w-full border border-line rounded-xl px-4 py-3 text-sm mb-3 focus:outline-none focus:border-gold bg-white dark:bg-gray-700 resize-none"></textarea>
+            <div class="flex items-center justify-between gap-3 flex-wrap">
+                <label class="cursor-pointer flex items-center gap-2 text-sm text-gray-500 hover:text-gold transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    <span id="review-photo-label">Add a photo</span>
+                    <input type="file" id="review-image" accept="image/*" class="hidden" onchange="document.getElementById('review-photo-label').textContent = this.files[0] ? this.files[0].name : 'Add a photo'">
+                </label>
+                <button @click="submitReview({{ product.pk }}, rating)" class="bg-charcoal text-ivory px-6 py-2.5 rounded-full text-[13px] tracking-wide hover:bg-gold transition-colors">Submit Review</button>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Reviews List -->
+        {% if reviews %}
+        <div class="space-y-6">
+            {% for review in reviews %}
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-gradient-to-br from-blush to-lavender rounded-full flex items-center justify-center font-semibold text-charcoal">{{ review.user.first_name|first }}</div>
+                        <div>
+                            <div class="font-medium text-charcoal dark:text-ivory text-sm">{{ review.user.get_full_name }}</div>
+                            <div class="flex items-center gap-1 mt-0.5">
+                                {% for i in "12345" %}
+                                <svg class="w-3.5 h-3.5 {% if forloop.counter <= review.rating %}text-gold fill-gold{% else %}text-gray-300 fill-gray-300{% endif %}" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-xs text-gray-400">{{ review.created_at|date:"M d, Y" }}</div>
+                </div>
+                {% if review.title %}<h4 class="font-semibold text-charcoal dark:text-ivory mb-2 text-sm">{{ review.title }}</h4>{% endif %}
+                <p class="text-sm text-gray-600 dark:text-gray-400">{{ review.body }}</p>
+                {% if review.image %}
+                <a href="{{ review.image.url }}" target="_blank" class="inline-block mt-3 rounded-xl overflow-hidden w-24 h-24 bg-blush img-zoom">
+                    <img src="{{ review.image.url }}" alt="Review photo" class="w-full h-full object-cover">
+                </a>
+                {% endif %}
+                <div class="flex items-center gap-4 mt-3">
+                    {% if review.is_verified_purchase %}<p class="text-xs text-green-500 flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>Verified Purchase</p>{% endif %}
+                    <button onclick="markHelpful({{ review.pk }}, this)" class="text-xs text-gray-400 hover:text-gold transition-colors flex items-center gap-1.5">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/></svg>
+                        Helpful (<span class="helpful-count">{{ review.helpful_count }}</span>)
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-12 bg-ivory dark:bg-gray-800 rounded-2xl">
+            <div class="text-4xl mb-3">⭐</div>
+            <p class="text-gray-500">No reviews yet. Be the first to review this product!</p>
+        </div>
+        {% endif %}
+    </section>
+
+    <!-- Complete the Ritual (cross-sell) -->
+    {% if pair_with %}
+    <section class="mb-20">
+        <div class="rounded-3xl bg-gradient-to-br from-blush/30 to-lavender/20 dark:from-gray-800 dark:to-gray-800 p-8 md:p-12">
+            <div class="text-center mb-10">
+                <p class="text-gold text-xs uppercase tracking-[0.3em] font-medium mb-2">Pairs beautifully with</p>
+                <h2 class="font-display text-3xl text-charcoal dark:text-ivory">Complete the Ritual</h2>
+                <p class="text-gray-500 text-sm mt-2 max-w-md mx-auto">Candles from across the studio that set the mood alongside {{ product.name }}.</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                {% for item in pair_with %}
+                <div class="hover-lift bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-sm flex flex-col">
+                    <a href="{{ item.get_absolute_url }}" class="img-zoom block aspect-square bg-blush overflow-hidden">
+                        {% if item.primary_image %}<img src="{{ item.primary_image.image.url }}" alt="{{ item.name }}" class="w-full h-full object-cover">
+                        {% else %}<div class="w-full h-full flex items-center justify-center"><svg class="w-10 h-10 text-charcoal/15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></div>{% endif %}
+                    </a>
+                    <div class="p-4 flex-1 flex flex-col">
+                        <p class="text-[10px] text-gold uppercase tracking-wider mb-1">{{ item.category.name }}</p>
+                        <a href="{{ item.get_absolute_url }}"><h3 class="font-display text-charcoal dark:text-ivory text-sm hover:text-gold transition-colors line-clamp-1">{{ item.name }}</h3></a>
+                        {% if item.moment %}<p class="text-xs text-gold/80 italic font-serif line-clamp-2 mt-1 mb-3 leading-snug">{{ item.moment }}</p>{% endif %}
+                        <div class="mt-auto flex items-center justify-between">
+                            <span class="font-bold text-charcoal dark:text-ivory text-sm">Rs.{{ item.price }}</span>
+                            <button onclick="addToCart({{ item.pk }})" class="bg-charcoal text-ivory text-[11px] tracking-wide px-4 py-2 rounded-full hover:bg-gold transition-colors">Add</button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Related Products -->
+    {% if related_products %}
+    <section class="mb-20">
+        <h2 class="font-display text-3xl text-charcoal dark:text-ivory mb-8">You May Also Love</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-5">
+            {% for related in related_products %}
+            {% include "components/product_card.html" with product=related %}
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+</div>
+
+<!-- Sticky Add-to-Cart bar (appears after scrolling past the buy box) -->
+<div id="sticky-buy" x-data="{ qty: 1 }"
+     class="fixed left-0 right-0 bottom-0 z-40 translate-y-full transition-transform duration-300 ease-out
+            bg-white/95 dark:bg-ink/95 backdrop-blur-md border-t border-line dark:border-white/10 shadow-[0_-10px_40px_-20px_rgba(43,43,43,0.4)]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center gap-4">
+        <div class="hidden sm:block w-12 h-14 rounded-lg overflow-hidden bg-[#EFE9E1] shrink-0">
+            {% if product.primary_image %}<img src="{{ product.primary_image.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover">{% endif %}
+        </div>
+        <div class="min-w-0 flex-1">
+            <p class="font-display text-base sm:text-lg text-charcoal dark:text-ivory truncate leading-tight">{{ product.name }}</p>
+            <div class="flex items-baseline gap-2">
+                <span class="text-charcoal dark:text-ivory text-sm font-medium">Rs.{{ product.price }}</span>
+                {% if product.compare_price %}<span class="text-charcoal/35 line-through text-xs">Rs.{{ product.compare_price }}</span>{% endif %}
+            </div>
+        </div>
+        {% if product.is_in_stock %}
+        <div class="hidden sm:flex items-center border border-line dark:border-white/15 rounded-full overflow-hidden shrink-0">
+            <button @click="qty = Math.max(1, qty-1)" class="px-3.5 py-2.5 hover:text-gold text-base">−</button>
+            <span class="px-2 text-sm min-w-8 text-center" x-text="qty">1</span>
+            <button @click="qty++" class="px-3.5 py-2.5 hover:text-gold text-base">+</button>
+        </div>
+        <button @click="addToCart({{ product.pk }}, null, qty)"
+                class="bg-charcoal dark:bg-ivory text-ivory dark:text-charcoal px-6 sm:px-8 py-3 rounded-full text-[13px] tracking-wide hover:bg-gold dark:hover:bg-gold dark:hover:text-white transition-colors shrink-0">
+            Add to Cart
+        </button>
+        {% else %}
+        <span class="bg-cream text-charcoal/40 px-6 py-3 rounded-full text-[12px] tracking-[0.15em] uppercase shrink-0">Sold Out</span>
+        {% endif %}
+    </div>
+</div>
+
+{% include "components/recently_viewed.html" with exclude_pk=product.pk %}
+
+<script>
+// Reveal the sticky buy bar once the main buy box scrolls out of view
+(function () {
+    const buyBox = document.getElementById('buy-box');
+    const bar = document.getElementById('sticky-buy');
+    if (!buyBox || !bar) return;
+    const fab = document.getElementById('whatsapp-fab');
+    const show = () => { bar.classList.remove('translate-y-full'); if (fab) fab.style.transform = 'translateY(-72px)'; };
+    const hide = () => { bar.classList.add('translate-y-full'); if (fab) fab.style.transform = ''; };
+    if ('IntersectionObserver' in window && window.innerHeight > 0) {
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                // show bar only when the buy box is above the viewport (scrolled past)
+                if (!e.isIntersecting && e.boundingClientRect.top < 0) show();
+                else hide();
+            });
+        }, { threshold: 0 });
+        io.observe(buyBox);
+    } else {
+        // fallback: simple scroll check
+        window.addEventListener('scroll', () => {
+            const r = buyBox.getBoundingClientRect();
+            if (r.bottom < 0) show(); else hide();
+        }, { passive: true });
+    }
+})();
+
+function addToCart(productId, variantId=null, qty=1) {
+    fetch('/shop/cart/add/', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')},
+        body: JSON.stringify({product_id: productId, variant_id: variantId, quantity: qty})
+    }).then(r => r.json()).then(data => {
+        if (data.success) {
+            showToast(data.message);
+            const badge = document.getElementById('cart-badge');
+            if (badge) badge.textContent = data.cart_count;
+        }
+    });
+}
+function toggleWishlist(productId) {
+    {% if user.is_authenticated %}
+    fetch('/wishlist/toggle/', {method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':getCookie('csrftoken')},body:JSON.stringify({product_id:productId})}).then(r=>r.json()).then(d=>showToast(d.message));
+    {% else %}window.location.href='/accounts/login/?next={{ request.path }}';{% endif %}
+}
+function submitReview(productId, rating) {
+    const title = document.getElementById('review-title').value;
+    const body = document.getElementById('review-body').value;
+    const imageInput = document.getElementById('review-image');
+    if (!body) { showToast('Please write your review'); return; }
+    const fd = new FormData();
+    fd.append('product_id', productId);
+    fd.append('rating', rating);
+    fd.append('title', title);
+    fd.append('body', body);
+    if (imageInput && imageInput.files[0]) fd.append('image', imageInput.files[0]);
+    fetch('/reviews/submit/', {
+        method: 'POST',
+        headers: {'X-CSRFToken': getCookie('csrftoken')},  // no Content-Type: let browser set multipart boundary
+        body: fd
+    }).then(r => r.json()).then(data => {
+        showToast(data.message);
+        if (data.success) document.getElementById('review-form').classList.add('hidden');
+    });
+}
+
+function markHelpful(reviewId, btn) {
+    fetch('/reviews/helpful/', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')},
+        body: JSON.stringify({review_id: reviewId})
+    }).then(r => r.json()).then(data => {
+        if (data.success) {
+            const span = btn.querySelector('.helpful-count');
+            if (span) span.textContent = data.helpful_count;
+            btn.classList.add('text-gold');
+            btn.disabled = true;
+        } else {
+            showToast(data.message);
+        }
+    });
+}
+
+function notifyRestock(slug) {
+    const email = document.getElementById('restock-email').value;
+    if (!email || !email.includes('@')) { showToast('Please enter a valid email'); return; }
+    fetch('/shop/notify-restock/', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')},
+        body: JSON.stringify({product_slug: slug, email})
+    }).then(r => r.json()).then(data => {
+        showToast(data.message);
+        if (data.success) {
+            const root = document.querySelector('[x-data] #restock-email')?.closest('[x-data]');
+            // toggle Alpine state if available
+            try { Alpine.$data(document.querySelector('#restock-email').closest('[x-data]')).done = true; } catch(e){}
+        }
+    });
+}
+</script>
+{% endblock %}

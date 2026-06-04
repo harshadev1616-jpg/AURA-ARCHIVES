@@ -1,0 +1,67 @@
+<nav data-nav class="bg-ivory/90 dark:bg-ink/90 backdrop-blur-md border-b border-line dark:border-white/10 sticky top-0 z-40 transition-all duration-300"
+     x-data="{ mobileOpen: false, searchOpen: false }">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-[72px]">
+            <a href="/" class="group flex items-baseline gap-2 leading-none">
+                <span class="font-display text-xl md:text-2xl text-charcoal dark:text-ivory tracking-wide transition-colors group-hover:text-gold">AURA</span>
+                <span class="font-display text-xl md:text-2xl text-gold tracking-[0.2em]">ARCHIVES</span>
+            </a>
+            <div class="hidden md:flex items-center gap-9">
+                <a href="/shop/" class="link-grow text-[13px] tracking-wide text-charcoal/80 dark:text-ivory/80 hover:text-gold transition-colors">Shop</a>
+                <a href="/shop/quiz/" class="link-grow text-[13px] tracking-wide text-gold hover:text-gold transition-colors">Find Your Scent</a>
+                <a href="/blog/" class="link-grow text-[13px] tracking-wide text-charcoal/80 dark:text-ivory/80 hover:text-gold transition-colors">Journal</a>
+                <a href="/about/" class="link-grow text-[13px] tracking-wide text-charcoal/80 dark:text-ivory/80 hover:text-gold transition-colors">About</a>
+                <a href="/contact/" class="link-grow text-[13px] tracking-wide text-charcoal/80 dark:text-ivory/80 hover:text-gold transition-colors">Contact</a>
+            </div>
+            <div class="flex items-center gap-1.5">
+                <button @click="searchOpen=!searchOpen" class="p-2 hover:text-gold"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></button>
+                <button onclick="toggleDarkMode()" class="p-2 hover:text-gold">
+                    <svg class="w-5 h-5 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                    <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                </button>
+                {% if user.is_authenticated %}
+                <a href="/accounts/wishlist/" class="p-2 hover:text-gold"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></a>
+                <div class="relative group">
+                    <button class="p-2 hover:text-gold"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></button>
+                    <div class="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-d-card text-charcoal dark:text-ivory rounded-xl shadow-xl border border-line dark:border-white/10 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all z-50">
+                        <div class="p-2">
+                            <a href="/accounts/dashboard/" class="block px-3 py-2 text-sm hover:bg-ivory dark:hover:bg-white/5 rounded-lg">Dashboard</a>
+                            <a href="/orders/" class="block px-3 py-2 text-sm hover:bg-ivory dark:hover:bg-white/5 rounded-lg">My Orders</a>
+                            <a href="/accounts/profile/" class="block px-3 py-2 text-sm hover:bg-ivory dark:hover:bg-white/5 rounded-lg">Profile</a>
+                            {% if user.is_staff %}<a href="/aura-admin/" class="block px-3 py-2 text-sm text-gold hover:bg-ivory dark:hover:bg-white/5 rounded-lg">Admin</a>{% endif %}
+                            <hr class="my-1 border-line dark:border-white/10">
+                            <a href="/accounts/logout/" class="block px-3 py-2 text-sm text-red-500 hover:bg-ivory dark:hover:bg-white/5 rounded-lg">Logout</a>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <a href="/accounts/login/" class="hidden sm:inline-block text-[13px] tracking-wide px-4 py-2 text-charcoal/80 dark:text-ivory/80 hover:text-gold transition-colors">Login</a>
+                <a href="/accounts/register/" class="hidden sm:inline-block whitespace-nowrap text-[13px] tracking-wide bg-charcoal dark:bg-ivory text-ivory dark:text-charcoal rounded-full px-5 py-2 hover:bg-gold dark:hover:bg-gold dark:hover:text-white transition-colors">Sign Up</a>
+                {% endif %}
+                <a href="/orders/cart/" onclick="if(typeof openCartDrawer==='function'){event.preventDefault();openCartDrawer();}" class="relative p-2 hover:text-gold">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                    {% if cart_count > 0 %}<span class="absolute -top-0.5 -right-0.5 bg-gold text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-bold" id="cart-badge">{{ cart_count }}</span>{% endif %}
+                </a>
+                <button @click="mobileOpen=!mobileOpen" class="md:hidden p-2"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+            </div>
+        </div>
+    </div>
+    <div x-show="searchOpen" x-transition class="border-t border-line dark:border-white/10 bg-cream dark:bg-ink">
+        <div class="max-w-2xl mx-auto px-4 py-4">
+            <form action="/search/" method="GET" class="flex gap-2">
+                <input name="q" type="text" placeholder="Search candles, scents, moments…" class="flex-1 border border-line rounded-full px-5 py-2.5 text-sm focus:outline-none focus:border-gold bg-white dark:bg-gray-800 dark:border-white/10 dark:text-ivory">
+                <button type="submit" class="bg-charcoal text-ivory px-6 py-2.5 rounded-full text-[13px] tracking-wide hover:bg-gold transition-colors">Search</button>
+            </form>
+        </div>
+    </div>
+    <div x-show="mobileOpen" x-transition class="md:hidden border-t border-line dark:border-white/10 bg-cream dark:bg-ink px-4 py-4 space-y-1">
+        <a href="/" class="block py-2 text-sm font-medium">Home</a>
+        <a href="/shop/" class="block py-2 text-sm font-medium">Shop</a>
+        <a href="/shop/quiz/" class="block py-2 text-sm font-medium text-gold">Find Your Scent</a>
+        <a href="/blog/" class="block py-2 text-sm font-medium">Journal</a>
+        <a href="/about/" class="block py-2 text-sm font-medium">About</a>
+        <a href="/contact/" class="block py-2 text-sm font-medium">Contact</a>
+        <hr class="border-line dark:border-white/10">
+        {% if user.is_authenticated %}<a href="/accounts/dashboard/" class="block py-2 text-sm">My Account</a><a href="/accounts/logout/" class="block py-2 text-sm text-red-500">Logout</a>{% else %}<a href="/accounts/login/" class="block py-2 text-sm">Login</a><a href="/accounts/register/" class="block py-2 text-sm">Register</a>{% endif %}
+    </div>
+</nav>

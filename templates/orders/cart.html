@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+{% block title %}Your Cart{% endblock %}
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="mb-10">
+        <p class="eyebrow text-gold mb-3">Your selection</p>
+        <h1 class="font-display text-4xl md:text-5xl text-charcoal dark:text-ivory">Shopping Bag</h1>
+    </div>
+
+    {% if cart|length > 0 %}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10" x-data="{ couponCode: '', discount: 0, discountMsg: '' }">
+        <!-- Cart Items -->
+        <div class="lg:col-span-2">
+            <div class="border-t border-line dark:border-white/10">
+            {% for item in cart %}
+            <div class="flex gap-5 py-6 border-b border-line dark:border-white/10" id="cart-item-{{ item.product.pk }}">
+                <a href="{{ item.product.get_absolute_url }}" class="img-zoom shrink-0 w-24 h-28 rounded-xl overflow-hidden bg-[#EFE9E1]">
+                    {% if item.product.primary_image %}
+                    <img src="{{ item.product.primary_image.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-cover">
+                    {% else %}
+                    <div class="w-full h-full flex items-center justify-center"><svg class="w-8 h-8 text-charcoal/15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></div>
+                    {% endif %}
+                </a>
+                <div class="flex-1 min-w-0">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            {% if item.product.category %}<p class="eyebrow text-charcoal/35 dark:text-ivory/35 mb-1" style="letter-spacing:0.18em">{{ item.product.category.name }}</p>{% endif %}
+                            <a href="{{ item.product.get_absolute_url }}" class="font-display text-lg text-charcoal dark:text-ivory hover:text-gold transition-colors">{{ item.product.name }}</a>
+                            {% if item.variant %}<p class="text-xs text-charcoal/40 mt-0.5">{{ item.variant.name }}: {{ item.variant.value }}</p>{% endif %}
+                            {% if item.product.moment %}<p class="text-[13px] text-charcoal/40 dark:text-ivory/40 italic font-serif mt-1 line-clamp-1">{{ item.product.moment }}</p>{% endif %}
+                        </div>
+                        <button onclick="removeFromCart({{ item.product.pk }}, '{{ item.variant.pk|default:'none' }}')"
+                                class="text-charcoal/25 hover:text-charcoal transition-colors ml-2 p-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </button>
+                    </div>
+                    <div class="flex items-end justify-between mt-4">
+                        <div class="flex items-center border border-line dark:border-white/15 rounded-full overflow-hidden">
+                            <button onclick="updateQty({{ item.product.pk }}, '{{ item.variant.pk|default:'none' }}', {{ item.quantity|add:'-1' }})" class="px-3.5 py-2 hover:text-gold transition-colors text-sm">−</button>
+                            <span class="px-2 py-2 text-sm min-w-8 text-center" id="qty-{{ item.product.pk }}">{{ item.quantity }}</span>
+                            <button onclick="updateQty({{ item.product.pk }}, '{{ item.variant.pk|default:'none' }}', {{ item.quantity|add:'1' }})" class="px-3.5 py-2 hover:text-gold transition-colors text-sm">+</button>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-display text-lg text-charcoal dark:text-ivory">Rs.{{ item.total_price|floatformat:0 }}</div>
+                            <div class="text-xs text-charcoal/35">Rs.{{ item.price }} each</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            </div>
+            <!-- Continue Shopping -->
+            <a href="/shop/" class="inline-flex items-center gap-2 text-[13px] tracking-wide text-charcoal/70 dark:text-ivory/70 hover:text-gold transition-colors mt-6">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"/></svg>
+                Continue Shopping
+            </a>
+        </div>
+
+        <!-- Order Summary -->
+        <div>
+            <div class="bg-cream dark:bg-gray-800 border border-line dark:border-white/10 rounded-2xl p-7 sticky top-24">
+                <h2 class="font-display text-xl text-charcoal dark:text-ivory mb-6">Order Summary</h2>
+
+                <!-- Coupon -->
+                <div class="mb-5">
+                    <div class="flex gap-2">
+                        <input x-model="couponCode" type="text" placeholder="Coupon code"
+                               class="flex-1 border border-line dark:border-white/10 rounded-full px-4 py-2.5 text-sm focus:outline-none focus:border-gold bg-white dark:bg-gray-700 dark:text-ivory uppercase tracking-wide">
+                        <button @click="applyCoupon()" class="bg-charcoal text-ivory px-5 py-2.5 rounded-full text-[13px] tracking-wide hover:bg-gold transition-colors">Apply</button>
+                    </div>
+                    <p x-show="discountMsg" x-text="discountMsg" class="text-xs mt-1.5 text-green-600"></p>
+                </div>
+
+                <!-- Bundle & Save nudge -->
+                {% if cart.qualifies_for_bundle %}
+                <div class="bg-charcoal/[0.04] dark:bg-white/5 border border-line dark:border-white/10 rounded-xl px-4 py-3 mb-5">
+                    <p class="text-xs text-charcoal dark:text-ivory tracking-wide">Bundle unlocked — saving {{ cart.bundle_rate_percent }}% on {{ cart|length }} candles.</p>
+                </div>
+                {% else %}
+                <div class="bg-charcoal/[0.04] dark:bg-white/5 border border-line dark:border-white/10 rounded-xl px-4 py-3 mb-5">
+                    <p class="text-xs text-charcoal/70 dark:text-ivory/70 tracking-wide mb-2">Add {{ cart.items_to_next_bundle }} more candle{{ cart.items_to_next_bundle|pluralize }} to save {{ cart.bundle_rate_percent }}%</p>
+                    <div class="h-1 bg-line dark:bg-white/10 rounded-full overflow-hidden">
+                        <div class="h-full bg-gold rounded-full transition-all" style="width: {% widthratio cart|length 3 100 %}%"></div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="space-y-3 text-sm mb-6 pt-1">
+                    <div class="flex justify-between">
+                        <span class="text-charcoal/50 dark:text-ivory/50">Subtotal</span>
+                        <span id="subtotal-display">Rs.{{ cart.subtotal|floatformat:0 }}</span>
+                    </div>
+                    {% if cart.bundle_discount %}
+                    <div class="flex justify-between">
+                        <span class="text-gold">Bundle Saving ({{ cart.bundle_rate_percent }}%)</span>
+                        <span class="text-gold">−Rs.{{ cart.bundle_discount|floatformat:0 }}</span>
+                    </div>
+                    {% endif %}
+                    <div class="flex justify-between" x-show="discount > 0">
+                        <span class="text-gold">Coupon Discount</span>
+                        <span class="text-gold">−Rs.<span x-text="discount"></span></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-charcoal/50 dark:text-ivory/50">Shipping</span>
+                        <span class="text-charcoal/50 dark:text-ivory/50">At checkout</span>
+                    </div>
+                    <hr class="border-line dark:border-white/10">
+                    <div class="flex justify-between items-baseline">
+                        <span class="text-charcoal dark:text-ivory">Total</span>
+                        <span class="font-display text-2xl text-charcoal dark:text-ivory" id="total-display">Rs.{{ cart.total_after_bundle|floatformat:0 }}</span>
+                    </div>
+                </div>
+
+                {% if user.is_authenticated %}
+                <a href="/orders/checkout/" class="block w-full bg-charcoal dark:bg-ivory text-ivory dark:text-charcoal py-4 rounded-full text-[13px] tracking-wide text-center hover:bg-gold dark:hover:bg-gold dark:hover:text-white transition-colors">
+                    Proceed to Checkout
+                </a>
+                {% else %}
+                <a href="/accounts/login/?next=/orders/checkout/" class="block w-full bg-charcoal dark:bg-ivory text-ivory dark:text-charcoal py-4 rounded-full text-[13px] tracking-wide text-center hover:bg-gold transition-colors">
+                    Login to Checkout
+                </a>
+                <a href="/accounts/register/" class="block w-full mt-3 text-center text-[13px] text-charcoal/60 hover:text-gold transition-colors">Create an account</a>
+                {% endif %}
+
+                <!-- Trust line -->
+                <div class="mt-6 pt-5 border-t border-line dark:border-white/10">
+                    <div class="flex items-center justify-center gap-5 text-[11px] tracking-wide text-charcoal/40 dark:text-ivory/40">
+                        <span>Secure Payment</span>
+                        <span class="w-1 h-1 rounded-full bg-charcoal/20"></span>
+                        <span>Fast Delivery</span>
+                        <span class="w-1 h-1 rounded-full bg-charcoal/20"></span>
+                        <span>Easy Returns</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="text-center py-24">
+        <div class="w-12 h-px bg-gold/50 mx-auto mb-8"></div>
+        <h2 class="font-display text-3xl text-charcoal dark:text-ivory mb-3">No moments saved yet</h2>
+        <p class="text-charcoal/50 dark:text-ivory/50 mb-8 max-w-md mx-auto">Your bag is waiting for its first story. Every candle here is hand-poured to preserve a feeling — go find the one that's yours.</p>
+        <a href="/shop/" class="btn-gold">
+            Explore the Collection
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function removeFromCart(productId, variantId='none') {
+    fetch('/shop/cart/remove/', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')},
+        body: JSON.stringify({product_id: productId, variant_id: variantId})
+    }).then(r => r.json()).then(data => {
+        if (data.success) {
+            document.getElementById('cart-item-' + productId)?.remove();
+            const badge = document.getElementById('cart-badge');
+            if (badge) badge.textContent = data.cart_count;
+            if (data.cart_count === 0) location.reload();
+            showToast('Item removed from cart');
+        }
+    });
+}
+function updateQty(productId, variantId, qty) {
+    if (qty < 1) { removeFromCart(productId, variantId); return; }
+    fetch('/shop/cart/update/', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')},
+        body: JSON.stringify({product_id: productId, variant_id: variantId, quantity: qty})
+    }).then(r => r.json()).then(data => {
+        if (data.success) {
+            document.getElementById('qty-' + productId).textContent = qty;
+            document.getElementById('subtotal-display').textContent = 'Rs.' + Math.round(data.total);
+            document.getElementById('total-display').textContent = 'Rs.' + Math.round(data.total);
+            const badge = document.getElementById('cart-badge');
+            if (badge) badge.textContent = data.cart_count;
+        }
+    });
+}
+function applyCoupon() {
+    const code = document.querySelector('input[placeholder="Coupon code"]').value;
+    const total = {{ cart.subtotal|floatformat:0 }};
+    fetch('/orders/apply-coupon/', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')},
+        body: JSON.stringify({code, cart_total: total})
+    }).then(r => r.json()).then(data => {
+        if (data.success) {
+            showToast(data.message);
+        } else {
+            showToast(data.message);
+        }
+    });
+}
+</script>
+{% endblock %}

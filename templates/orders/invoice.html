@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+    @page { size: A4; margin: 1.6cm; }
+    body { font-family: Helvetica, Arial, sans-serif; color: #2B2B2B; font-size: 11px; }
+    .brand { font-size: 22px; letter-spacing: 2px; }
+    .brand .gold { color: #B8945A; }
+    .muted { color: #888; }
+    .right { text-align: right; }
+    .row:after { content: ""; display: block; clear: both; }
+    .col-l { float: left; width: 50%; }
+    .col-r { float: right; width: 50%; text-align: right; }
+    table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+    th { text-align: left; border-bottom: 2px solid #2B2B2B; padding: 8px 6px; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color:#666; }
+    td { padding: 9px 6px; border-bottom: 1px solid #eee; vertical-align: top; }
+    .totals td { border: none; padding: 4px 6px; }
+    .totals .grand td { border-top: 2px solid #2B2B2B; font-size: 14px; padding-top: 8px; }
+    .badge { background:#f3efe9; color:#2B2B2B; padding:3px 8px; border-radius:8px; font-size:9px; }
+    .hr { border-top: 1px solid #e6dfd5; margin: 16px 0; }
+    .foot { margin-top: 28px; color:#999; font-size: 9px; text-align:center; }
+    .label { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color:#999; margin-bottom: 3px; }
+</style>
+</head>
+<body>
+    <div class="row">
+        <div class="col-l">
+            <div class="brand">AURA <span class="gold">ARCHIVES</span></div>
+            <div class="muted" style="font-style:italic; margin-top:4px;">Light That Preserves Moments</div>
+            {% if site.contact_email %}<div class="muted" style="margin-top:8px;">{{ site.contact_email }}</div>{% endif %}
+            {% if site.contact_phone %}<div class="muted">{{ site.contact_phone }}</div>{% endif %}
+        </div>
+        <div class="col-r">
+            <div style="font-size:20px; letter-spacing:2px;">INVOICE</div>
+            <div class="muted" style="margin-top:6px;">#{{ order.order_number }}</div>
+            <div class="muted">{{ order.created_at|date:"d M Y" }}</div>
+            <div style="margin-top:8px;"><span class="badge">{{ order.get_payment_status_display }}</span> <span class="badge">{{ order.get_status_display }}</span></div>
+        </div>
+    </div>
+
+    <div class="hr"></div>
+
+    <div class="row">
+        <div class="col-l">
+            <div class="label">Billed to</div>
+            <strong>{{ order.shipping_full_name }}</strong><br>
+            {{ order.shipping_phone }}<br>
+            {% if order.user %}{{ order.user.email }}<br>{% endif %}
+        </div>
+        <div class="col-r">
+            <div class="label">Ship to</div>
+            {{ order.shipping_address_line1 }}{% if order.shipping_address_line2 %}, {{ order.shipping_address_line2 }}{% endif %}<br>
+            {{ order.shipping_city }}, {{ order.shipping_state }} {{ order.shipping_pincode }}<br>
+            {{ order.shipping_country }}
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Product</th>
+                <th class="right">Qty</th>
+                <th class="right">Price</th>
+                <th class="right">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order.items.all %}
+            <tr>
+                <td class="muted">{{ item.product.sku|default:item.product_id|default:"—" }}</td>
+                <td>
+                    <strong>{{ item.product_name }}</strong>
+                    {% if item.variant_info %}<br><span class="muted">{{ item.variant_info }}</span>{% endif %}
+                </td>
+                <td class="right">{{ item.quantity }}</td>
+                <td class="right">Rs.{{ item.price }}</td>
+                <td class="right">Rs.{{ item.line_total }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="row" style="margin-top:16px;">
+        <div class="col-l">
+            {% if order.coupon_code %}<div class="muted">Coupon applied: <strong>{{ order.coupon_code }}</strong></div>{% endif %}
+            {% if order.is_gift %}<div class="muted">Gift order{% if order.gift_message %} — "{{ order.gift_message }}"{% endif %}</div>{% endif %}
+            <div class="muted" style="margin-top:6px;">Payment method: {{ order.get_payment_method_display }}</div>
+        </div>
+        <div class="col-r">
+            <table class="totals" style="width:auto; float:right; min-width:220px;">
+                <tr><td class="muted">Subtotal</td><td class="right">Rs.{{ order.subtotal }}</td></tr>
+                {% if order.discount > 0 %}<tr><td class="muted">Discount</td><td class="right">−Rs.{{ order.discount }}</td></tr>{% endif %}
+                <tr><td class="muted">Shipping</td><td class="right">{% if order.shipping_charge == 0 %}Free{% else %}Rs.{{ order.shipping_charge }}{% endif %}</td></tr>
+                {% if order.tax > 0 %}<tr><td class="muted">{{ site.tax_label|default:"Tax" }}</td><td class="right">Rs.{{ order.tax }}</td></tr>{% endif %}
+                <tr class="grand"><td><strong>Total</strong></td><td class="right"><strong>Rs.{{ order.total }}</strong></td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="foot">
+        Thank you for choosing Aura Archives — hand-poured with care.<br>
+        This is a computer-generated invoice and does not require a signature.
+    </div>
+</body>
+</html>

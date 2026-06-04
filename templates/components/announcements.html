@@ -1,0 +1,14 @@
+{% if announcements %}
+<div class="relative bg-gold text-white py-2 pl-4 pr-10 text-center" x-data="{show: true}" x-show="show">
+    <div class="flex items-center justify-center gap-2 flex-wrap text-[12px] sm:text-[13px] tracking-wide leading-tight">
+        {% for ann in announcements %}
+        <span class="inline-flex items-center gap-1.5">
+            {{ ann.message }}
+            {% if ann.link_url %}<a href="{{ ann.link_url }}" class="underline underline-offset-2 font-medium whitespace-nowrap">{{ ann.link_text }}</a>{% endif %}
+        </span>
+        {% if not forloop.last %}<span class="opacity-50 hidden sm:inline">|</span>{% endif %}
+        {% endfor %}
+    </div>
+    <button @click="show=false" aria-label="Dismiss" class="absolute right-3 top-1/2 -translate-y-1/2 opacity-70 hover:opacity-100 text-sm">✕</button>
+</div>
+{% endif %}

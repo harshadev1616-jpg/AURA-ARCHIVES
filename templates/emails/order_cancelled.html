@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"></head>
+<body style="font-family: Georgia, serif; background: #F8F4EF; margin: 0; padding: 20px;">
+    <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 16px; overflow: hidden;">
+        <div style="background: #333333; padding: 32px; text-align: center;">
+            <h1 style="color: white; margin: 0; font-size: 28px;">Aura <span style="color: #C9A86A;">Archives</span></h1>
+            <p style="color: #C9A86A; margin: 8px 0 0; font-style: italic; font-size: 14px;">Light That Preserves Moments</p>
+        </div>
+        <div style="padding: 40px;">
+
+            <h2 style="color: #333; font-size: 24px; margin-bottom: 8px;">Order Cancelled</h2>
+            <p style="color: #666; margin-bottom: 24px;">Your order #{{ order.order_number }} has been cancelled. If a payment was made, your refund is on its way and will reflect in 5–7 business days.</p>
+            <div style="background: #F8F4EF; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                <p style="margin: 0 0 8px; font-size: 14px;"><strong>Order Number:</strong> #{{ order.order_number }}</p>
+                <p style="margin: 0; font-size: 14px;"><strong>Amount:</strong> Rs.{{ order.total }}</p>
+            </div>
+            <p style="color: #666; margin-bottom: 24px;">Changed your mind? The whole collection is still here whenever you're ready.</p>
+            <div style="text-align:center;">
+                <a href="{{ site_url }}/shop/" style="display: inline-block; background: #C9A86A; color: white; padding: 14px 32px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 14px;">Explore the Collection</a>
+            </div>
+
+        </div>
+        <div style="background: #F8F4EF; padding: 20px; text-align: center;">
+            <p style="color: #999; font-size: 12px; margin: 0;">Aura Archives | Handmade with love in India</p>
+        </div>
+    </div>
+</body></html>

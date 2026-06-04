@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"></head>
+<body style="font-family: Georgia, serif; background: #F8F4EF; margin: 0; padding: 20px;">
+    <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 16px; overflow: hidden;">
+        <div style="background: #333333; padding: 32px; text-align: center;">
+            <h1 style="color: white; margin: 0; font-size: 28px;">Aura <span style="color: #C9A86A;">Archives</span></h1>
+            <p style="color: #C9A86A; margin: 8px 0 0; font-style: italic; font-size: 14px;">Light That Preserves Moments</p>
+        </div>
+        <div style="padding: 40px;">
+            <h2 style="color: #333; font-size: 24px; margin-bottom: 8px;">Order Confirmed!</h2>
+            <p style="color: #666; margin-bottom: 24px;">Thank you for your order. We are preparing your candles with care.</p>
+            <div style="background: #F8F4EF; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                <p style="margin: 0 0 8px; font-size: 14px;"><strong>Order Number:</strong> #{{ order.order_number }}</p>
+                <p style="margin: 0 0 8px; font-size: 14px;"><strong>Total:</strong> Rs.{{ order.total }}</p>
+                <p style="margin: 0; font-size: 14px;"><strong>Payment:</strong> {{ order.get_payment_method_display }}</p>
+            </div>
+            <a href="{{ site_url }}/orders/{{ order.pk }}/" style="display: inline-block; background: #C9A86A; color: white; padding: 14px 32px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 14px;">Track Your Order</a>
+        </div>
+        <div style="background: #F8F4EF; padding: 20px; text-align: center;">
+            <p style="color: #999; font-size: 12px; margin: 0;">Aura Archives | Handmade with love in India</p>
+        </div>
+    </div>
+</body></html>

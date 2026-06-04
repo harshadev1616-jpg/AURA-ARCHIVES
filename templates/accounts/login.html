@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-ivory via-blush/30 to-lavender/30 dark:from-gray-900 dark:to-gray-800 py-12 px-4">
+    <div class="w-full max-w-md">
+        <!-- Logo -->
+        <div class="text-center mb-8">
+            <a href="/" class="inline-block">
+                <div class="font-display text-3xl text-charcoal dark:text-ivory">Aura <span class="text-gold">Archives</span></div>
+                <p class="text-gold text-xs italic mt-1">Light That Preserves Moments</p>
+            </a>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8">
+            <h1 class="font-display text-2xl text-charcoal dark:text-ivory mb-1">Welcome back</h1>
+            <p class="text-gray-400 text-sm mb-7">Sign in to your Aura Archives account</p>
+
+            {% if form.errors %}
+            <div class="bg-red-50 border border-red-200 rounded-xl px-4 py-3 mb-5 text-sm text-red-600">
+                Invalid email or password. Please try again.
+            </div>
+            {% endif %}
+
+            <form method="POST" action="{% url 'accounts:login' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">Email Address</label>
+                    <input type="email" name="username" required autofocus
+                           class="w-full border-2 border-line dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gold bg-ivory dark:bg-gray-700 dark:text-ivory dark:border-gray-600 transition-colors"
+                           placeholder="your@email.com" value="{{ form.username.value|default:'' }}">
+                </div>
+                <div class="mb-5" x-data="{ show: false }">
+                    <div class="flex justify-between mb-2">
+                        <label class="text-xs font-semibold uppercase tracking-wider text-gray-500">Password</label>
+                        <a href="/accounts/password/reset/" class="text-xs text-gold hover:underline">Forgot password?</a>
+                    </div>
+                    <div class="relative">
+                        <input :type="show ? 'text' : 'password'" name="password" required
+                               class="w-full border border-line rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gold bg-cream dark:bg-gray-700 dark:text-ivory dark:border-gray-600 pr-12 transition-colors"
+                               placeholder="Your password">
+                        <button type="button" @click="show = !show" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                            <svg x-show="!show" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            <svg x-show="show" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-charcoal text-ivory py-4 rounded-full text-[13px] tracking-wide hover:bg-gold transition-colors">
+                    Sign In
+                </button>
+            </form>
+
+            <div class="text-center mt-6 text-sm text-gray-500">
+                Don't have an account?
+                <a href="/accounts/register/" class="text-gold font-medium hover:underline">Create one</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

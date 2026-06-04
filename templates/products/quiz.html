@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+{% block title %}Find Your Moment — Scent Quiz{% endblock %}
+{% block meta_description %}Answer four little questions and we'll find the Aura Archives candle made for your moment.{% endblock %}
+
+{% block content %}
+<div class="min-h-[85vh] aura-gradient-bg relative overflow-hidden">
+    <!-- ambient orbs -->
+    <div class="absolute top-20 left-10 w-48 h-48 rounded-full bg-blush/30 blur-3xl anim-float pointer-events-none"></div>
+    <div class="absolute bottom-20 right-16 w-56 h-56 rounded-full bg-lavender/30 blur-3xl anim-float-slow pointer-events-none"></div>
+    <div class="absolute top-1/3 right-1/4 w-32 h-32 rounded-full bg-gold/20 blur-3xl anim-float pointer-events-none" style="animation-delay:2s"></div>
+
+    {# ensures the csrftoken cookie is set for the quiz result POST #}
+    <form class="hidden">{% csrf_token %}</form>
+    <div class="relative max-w-2xl mx-auto px-4 sm:px-6 py-16"
+         x-data="scentQuiz()">
+
+        <!-- ===== INTRO ===== -->
+        <div x-show="screen === 'intro'" x-transition.opacity.duration.500ms class="text-center">
+            <div class="text-6xl mb-6 anim-flicker inline-block">🕯️</div>
+            <p class="text-gold text-xs uppercase tracking-[0.3em] font-medium mb-4">The Scent Finder</p>
+            <h1 class="font-display text-4xl md:text-5xl text-charcoal dark:text-ivory mb-5">Find Your Moment</h1>
+            <p class="text-gray-600 dark:text-gray-300 text-lg leading-relaxed max-w-lg mx-auto mb-10">
+                Four little questions. One candle made for the feeling you're chasing. Let's find the moment that's yours.
+            </p>
+            <button @click="start()" data-magnetic
+                    class="btn-shimmer anim-glow bg-gold text-white px-10 py-4 rounded-full font-semibold text-base hover:bg-opacity-90 transition-all shadow-lg">
+                Begin
+            </button>
+            <p class="text-xs text-gray-400 mt-5">Takes about 20 seconds</p>
+        </div>
+
+        <!-- ===== QUESTIONS ===== -->
+        <div x-show="screen === 'quiz'" x-transition.opacity.duration.300ms>
+            <!-- progress -->
+            <div class="mb-10">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs uppercase tracking-widest text-gray-400" x-text="'Question ' + (step + 1) + ' of ' + quiz.length"></span>
+                    <button @click="reset()" class="text-xs text-gray-400 hover:text-gold transition-colors">Start over</button>
+                </div>
+                <div class="h-1.5 bg-white/50 dark:bg-gray-700 rounded-full overflow-hidden">
+                    <div class="h-full bg-gradient-to-r from-gold to-[#e8c87a] rounded-full transition-all duration-500"
+                         :style="'width:' + ((step + 1) / quiz.length * 100) + '%'"></div>
+                </div>
+            </div>
+
+            <template x-for="(q, qi) in quiz" :key="q.key">
+                <div x-show="step === qi" x-transition:enter.duration.400ms
+                     x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0">
+                    <h2 class="font-display text-3xl text-charcoal dark:text-ivory mb-2 text-center" x-text="q.question"></h2>
+                    <p class="text-gray-500 text-center mb-8 italic font-serif" x-text="q.subtitle"></p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <template x-for="opt in q.options" :key="opt.value">
+                            <button @click="choose(q.key, opt.value)"
+                                    class="group flex items-center gap-4 text-left p-5 rounded-2xl bg-white/80 dark:bg-gray-800/80 backdrop-blur border-2 transition-all duration-200 hover:-translate-y-1 hover:shadow-xl"
+                                    :class="answers[q.key] === opt.value ? 'border-gold shadow-lg' : 'border-transparent hover:border-gold/50'">
+                                <span class="text-3xl group-hover:scale-125 transition-transform duration-300" x-text="opt.emoji"></span>
+                                <span class="font-serif text-lg font-semibold text-charcoal dark:text-ivory" x-text="opt.label"></span>
+                            </button>
+                        </template>
+                    </div>
+                    <div class="flex justify-between items-center mt-8">
+                        <button x-show="step > 0" @click="back()" class="text-sm text-gray-400 hover:text-gold transition-colors flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                            Back
+                        </button>
+                        <span x-show="step === 0"></span>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <!-- ===== BLENDING (loading) ===== -->
+        <div x-show="screen === 'loading'" x-transition.opacity class="text-center py-20">
+            <div class="text-7xl mb-8 anim-flicker inline-block">🕯️</div>
+            <p class="font-display text-2xl text-charcoal dark:text-ivory mb-2">Blending your match…</p>
+            <p class="text-gray-500 text-sm">Reading the notes you chose</p>
+            <div class="flex justify-center gap-1.5 mt-6">
+                <span class="w-2 h-2 rounded-full bg-gold animate-bounce" style="animation-delay:0ms"></span>
+                <span class="w-2 h-2 rounded-full bg-gold animate-bounce" style="animation-delay:150ms"></span>
+                <span class="w-2 h-2 rounded-full bg-gold animate-bounce" style="animation-delay:300ms"></span>
+            </div>
+        </div>
+
+        <!-- ===== RESULT ===== -->
+        <div x-show="screen === 'result'" x-transition.opacity.duration.500ms x-cloak>
+            <div class="text-center mb-8">
+                <p class="text-gold text-xs uppercase tracking-[0.3em] font-medium mb-3">Your candle is</p>
+                <h2 class="font-display text-4xl md:text-5xl text-charcoal dark:text-ivory" x-text="match.name"></h2>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-2xl anim-scale-in">
+                <div class="grid grid-cols-1 sm:grid-cols-2">
+                    <a :href="match.url" class="img-zoom block aspect-square bg-blush overflow-hidden">
+                        <template x-if="match.image">
+                            <img :src="match.image" :alt="match.name" class="w-full h-full object-cover">
+                        </template>
+                        <template x-if="!match.image">
+                            <div class="w-full h-full flex items-center justify-center text-7xl">🕯️</div>
+                        </template>
+                    </a>
+                    <div class="p-7 flex flex-col justify-center">
+                        <p class="text-xs text-gold uppercase tracking-widest mb-2" x-text="match.category"></p>
+                        <p class="font-serif italic text-gold text-lg leading-snug mb-4" x-text="match.moment"></p>
+                        <p class="text-sm text-gray-500 mb-5" x-text="match.notes"></p>
+                        <div class="flex items-baseline gap-2 mb-6">
+                            <span class="font-bold text-2xl text-charcoal dark:text-ivory" x-text="'Rs.' + match.price"></span>
+                            <template x-if="match.compare_price">
+                                <span class="text-gray-400 line-through text-sm" x-text="'Rs.' + match.compare_price"></span>
+                            </template>
+                        </div>
+                        <div class="flex flex-col gap-3">
+                            <button @click="addMatchToCart()" class="btn-shimmer bg-gold text-white py-3 rounded-full font-semibold hover:bg-opacity-90 transition-all">Add to Cart</button>
+                            <a :href="match.url" class="text-center border-2 border-charcoal dark:border-ivory text-charcoal dark:text-ivory py-3 rounded-full font-semibold hover:bg-charcoal hover:text-white dark:hover:bg-ivory dark:hover:text-charcoal transition-all">Read its story</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- alternates -->
+            <div x-show="alternates.length" class="mt-12">
+                <p class="text-center text-xs uppercase tracking-[0.3em] text-gray-400 mb-6">You might also love</p>
+                <div class="grid grid-cols-3 gap-4">
+                    <template x-for="alt in alternates" :key="alt.slug">
+                        <a :href="alt.url" class="img-zoom group block bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm hover-lift">
+                            <div class="aspect-square bg-blush overflow-hidden">
+                                <template x-if="alt.image"><img :src="alt.image" :alt="alt.name" class="w-full h-full object-cover"></template>
+                                <template x-if="!alt.image"><div class="w-full h-full flex items-center justify-center text-4xl">🕯️</div></template>
+                            </div>
+                            <div class="p-3">
+                                <p class="font-serif text-sm font-semibold text-charcoal dark:text-ivory line-clamp-1 group-hover:text-gold transition-colors" x-text="alt.name"></p>
+                                <p class="text-xs text-gray-400 mt-0.5" x-text="'Rs.' + alt.price"></p>
+                            </div>
+                        </a>
+                    </template>
+                </div>
+            </div>
+
+            <div class="text-center mt-10">
+                <button @click="reset()" class="text-sm text-gray-400 hover:text-gold transition-colors">Take the quiz again</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>[x-cloak]{display:none!important}</style>
+<script>
+function scentQuiz() {
+    return {
+        quiz: {{ quiz_json|safe }},
+        screen: 'intro',
+        step: 0,
+        answers: {},
+        match: {},
+        alternates: [],
+        start() { this.screen = 'quiz'; this.step = 0; },
+        reset() { this.answers = {}; this.step = 0; this.match = {}; this.alternates = []; this.screen = 'intro'; },
+        back() { if (this.step > 0) this.step--; },
+        choose(key, value) {
+            this.answers[key] = value;
+            setTimeout(() => {
+                if (this.step < this.quiz.length - 1) this.step++;
+                else this.submit();
+            }, 260);
+        },
+        submit() {
+            this.screen = 'loading';
+            fetch('/shop/quiz/result/', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')},
+                body: JSON.stringify({answers: this.answers})
+            })
+            .then(r => r.json())
+            .then(d => {
+                if (d.success) {
+                    this.match = d.match;
+                    this.alternates = d.alternates || [];
+                    setTimeout(() => { this.screen = 'result'; }, 1400);
+                } else {
+                    showToast(d.message || 'Something went wrong');
+                    this.screen = 'quiz';
+                }
+            })
+            .catch(() => { showToast('Something went wrong'); this.screen = 'quiz'; });
+        },
+        addMatchToCart() {
+            fetch('/shop/cart/add/', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')},
+                body: JSON.stringify({product_slug: this.match.slug, quantity: 1})
+            })
+            .then(r => r.json()).then(d => {
+                if (d.success) {
+                    showToast(d.message || 'Added to cart!');
+                    const badge = document.getElementById('cart-badge');
+                    if (badge) badge.textContent = d.cart_count;
+                }
+            });
+        },
+    }
+}
+</script>
+{% endblock %}

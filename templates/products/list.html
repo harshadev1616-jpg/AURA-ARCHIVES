@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}Shop All Candles{% endblock %}
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Page Header -->
+    <div class="text-center mb-10">
+        <p class="text-gold text-xs uppercase tracking-[0.3em] font-medium mb-3">Every candle holds a moment</p>
+        <h1 class="font-display text-4xl md:text-5xl text-charcoal dark:text-ivory mb-3">The Collection</h1>
+        <p class="text-gray-500 text-base max-w-xl mx-auto">Each one is hand-poured in small batches and made to preserve a feeling. Find the moment that's yours.</p>
+    </div>
+
+    <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Sidebar Filters -->
+        <aside class="w-full lg:w-64 shrink-0" x-data="{ open: false }">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm sticky top-24">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="font-semibold text-charcoal dark:text-ivory">Filters</h3>
+                    <a href="/shop/" class="text-xs text-gold hover:underline">Clear All</a>
+                </div>
+                <form method="GET" id="filter-form">
+                    <!-- Search -->
+                    <div class="mb-6">
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Search</label>
+                        <input type="text" name="q" value="{{ search_query }}" placeholder="Search candles..."
+                               class="w-full border border-line dark:border-white/10 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-gold bg-ivory dark:bg-gray-700 dark:text-ivory">
+                    </div>
+                    <!-- Categories -->
+                    <div class="mb-6">
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Category</label>
+                        <div class="space-y-2">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="category" value="" {% if not current_category %}checked{% endif %} class="text-gold" onchange="this.form.submit()">
+                                <span class="text-sm">All</span>
+                            </label>
+                            {% for category in categories %}
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="category" value="{{ category.slug }}" {% if current_category == category.slug %}checked{% endif %} class="text-gold" onchange="this.form.submit()">
+                                <span class="text-sm">{{ category.name }}</span>
+                                <span class="ml-auto text-xs text-gray-400">{{ category.product_count }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <!-- Price Range -->
+                    <div class="mb-6">
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Price Range</label>
+                        <div class="flex gap-2">
+                            <input type="number" name="price_min" placeholder="Min" value="{{ request.GET.price_min }}"
+                                   class="w-full border border-line dark:border-white/10 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-gold bg-ivory dark:bg-gray-700">
+                            <input type="number" name="price_max" placeholder="Max" value="{{ request.GET.price_max }}"
+                                   class="w-full border border-line dark:border-white/10 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-gold bg-ivory dark:bg-gray-700">
+                        </div>
+                        <button type="submit" class="w-full mt-2 bg-gold text-white rounded-full py-2 text-sm font-medium hover:bg-opacity-90">Apply</button>
+                    </div>
+                    <!-- Tags -->
+                    {% if tags %}
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Tags</label>
+                        <div class="flex flex-wrap gap-2">
+                            {% for tag in tags %}
+                            <a href="?tag={{ tag.slug }}" class="text-xs border border-line dark:border-white/10 rounded-full px-3 py-1 hover:border-gold hover:text-gold transition-colors {% if request.GET.tag == tag.slug %}bg-gold text-white border-gold{% endif %}">{{ tag.name }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </form>
+            </div>
+        </aside>
+
+        <!-- Products Grid -->
+        <div class="flex-1">
+            <!-- Toolbar -->
+            <div class="flex items-center justify-between mb-6 bg-white dark:bg-gray-800 rounded-2xl px-5 py-3 shadow-sm">
+                <p class="text-sm text-gray-500">
+                    {% if page_obj %}{{ page_obj.paginator.count }}{% else %}{{ products|length }}{% endif %} products
+                    {% if search_query %}for "<strong>{{ search_query }}</strong>"{% endif %}
+                </p>
+                <div class="flex items-center gap-3">
+                    <label class="text-xs text-gray-500">Sort:</label>
+                    <select name="sort" class="text-sm border border-line dark:border-white/10 rounded-full px-3 py-1.5 focus:outline-none focus:border-gold bg-ivory dark:bg-gray-700 dark:text-ivory" onchange="window.location.href='?sort='+this.value+'{% if current_category %}&category={{ current_category }}{% endif %}'">
+                        <option value="newest" {% if current_sort == 'newest' %}selected{% endif %}>Newest</option>
+                        <option value="price_asc" {% if current_sort == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                        <option value="price_desc" {% if current_sort == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+                        <option value="bestseller" {% if current_sort == 'bestseller' %}selected{% endif %}>Bestsellers</option>
+                        <option value="name" {% if current_sort == 'name' %}selected{% endif %}>Name A-Z</option>
+                    </select>
+                </div>
+            </div>
+
+            {% if products %}
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-5">
+                {% for product in products %}
+                {% include "components/product_card.html" %}
+                {% endfor %}
+            </div>
+            <!-- Pagination -->
+            {% if page_obj.has_other_pages %}
+            <div class="flex items-center justify-center gap-2 mt-12">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}" class="px-4 py-2 border border-line dark:border-white/10 rounded-full text-sm hover:border-gold hover:text-gold transition-colors">Previous</a>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                <a href="?page={{ num }}{% if current_category %}&category={{ current_category }}{% endif %}" class="w-9 h-9 flex items-center justify-center rounded-full text-sm {% if page_obj.number == num %}bg-gold text-white{% else %}border border-line dark:border-white/10 hover:border-gold hover:text-gold{% endif %} transition-colors">{{ num }}</a>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}" class="px-4 py-2 border border-line dark:border-white/10 rounded-full text-sm hover:border-gold hover:text-gold transition-colors">Next</a>
+                {% endif %}
+            </div>
+            {% endif %}
+            {% else %}
+            <div class="text-center py-20">
+                <div class="text-6xl mb-4 anim-flicker inline-block">🕯️</div>
+                <h3 class="font-display text-2xl text-charcoal dark:text-ivory mb-2">No moment quite like that — yet</h3>
+                <p class="text-gray-500 mb-6">We couldn't find a candle to match. Try a softer filter, or let the whole collection tell its story.</p>
+                <a href="/shop/" class="btn-shimmer bg-gold text-white px-6 py-3 rounded-full text-sm font-medium">View the Whole Collection</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% include "components/recently_viewed.html" %}
+
+<script>
+function addToCart(productId, variantId=null) {
+    fetch('/shop/cart/add/', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')},
+        body: JSON.stringify({product_id: productId, variant_id: variantId, quantity: 1})
+    }).then(r => r.json()).then(data => {
+        if (data.success) {
+            showToast(data.message);
+            const badge = document.getElementById('cart-badge');
+            if (badge) badge.textContent = data.cart_count;
+        }
+    });
+}
+function toggleWishlist(productId) {
+    {% if user.is_authenticated %}
+    fetch('/wishlist/toggle/', {method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':getCookie('csrftoken')},body:JSON.stringify({product_id:productId})}).then(r=>r.json()).then(d=>showToast(d.message));
+    {% else %}window.location.href='/accounts/login/?next=/shop/';{% endif %}
+}
+</script>
+{% endblock %}

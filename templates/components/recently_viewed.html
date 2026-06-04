@@ -1,0 +1,36 @@
+{# Recently-viewed rail. Optionally pass `exclude_pk` to hide the current product. #}
+{% with rail=recently_viewed_products %}
+{% if rail %}
+{% comment %}Count how many remain after excluding current product{% endcomment %}
+<section class="py-14 bg-ivory dark:bg-gray-900 border-t border-line dark:border-white/10/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-reveal>
+        <div class="flex items-end justify-between mb-7">
+            <div>
+                <p class="text-gold text-xs uppercase tracking-[0.3em] font-medium mb-2">Picking up where you left off</p>
+                <h2 class="font-display text-2xl md:text-3xl text-charcoal dark:text-ivory">Recently Viewed</h2>
+            </div>
+            <a href="/shop/" class="link-grow hidden sm:flex items-center gap-1 text-sm text-gold">Browse all
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
+        </div>
+        <div class="flex gap-4 overflow-x-auto pb-3 -mx-1 px-1 snap-x">
+            {% for product in rail %}
+            {% if product.pk != exclude_pk %}
+            <a href="{{ product.get_absolute_url }}" class="snap-start shrink-0 w-40 sm:w-48 group">
+                <div class="img-zoom rounded-2xl overflow-hidden bg-[#EFE9E1] aspect-square mb-3 shadow-sm hover-lift">
+                    {% if product.primary_image %}
+                    <img src="{{ product.primary_image.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+                    {% else %}
+                    <div class="w-full h-full flex items-center justify-center text-4xl">🕯️</div>
+                    {% endif %}
+                </div>
+                <h3 class="font-serif text-sm font-semibold text-charcoal dark:text-ivory line-clamp-1 group-hover:text-gold transition-colors">{{ product.name }}</h3>
+                <p class="text-xs text-gray-400 mt-0.5">Rs.{{ product.price }}</p>
+            </a>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endwith %}

@@ -1,0 +1,24 @@
+{% extends "admin/login.html" %}
+{% load static %}
+
+{% block extrastyle %}{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/aura-admin.css' %}">
+<style>
+  body.login { display:flex; align-items:center; min-height:100vh; }
+  .login #container { max-width: 380px; }
+  .login #header { padding: 28px 20px 22px; }
+  .login #header #site-name a { font-size: 24px; }
+  .login .aura-tag { text-align:center; font-style:italic; color:#9c8a6a; font-size:12px; margin:-8px 0 0; padding-bottom:6px; background:#2B2B2B; }
+  .login #content { padding: 28px 30px; }
+  .login form .submit-row { padding: 14px 0 0; }
+  .login .submit-row input { background:#2B2B2B; border-radius:999px; padding:12px; letter-spacing:.05em; }
+  .login .submit-row input:hover { background:#B8945A; }
+</style>
+{% endblock %}
+
+{% block content_title %}{% endblock %}
+
+{% block content %}
+<p class="aura-tag">Light That Preserves Moments</p>
+{{ block.super }}
+{% endblock %}

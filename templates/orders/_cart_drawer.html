@@ -1,0 +1,120 @@
+<div class="flex flex-col h-full">
+    <!-- Header -->
+    <div class="flex items-center justify-between px-6 py-5 border-b border-line dark:border-white/10">
+        <div>
+            <p class="eyebrow text-gold">Your bag</p>
+            <h2 class="font-display text-xl text-charcoal dark:text-ivory">{{ cart|length }} item{{ cart|length|pluralize }}</h2>
+        </div>
+        <button onclick="closeCartDrawer()" aria-label="Close" class="text-charcoal/50 dark:text-ivory/50 hover:text-gold transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+    </div>
+
+    {% if cart|length > 0 %}
+    {% if ship.threshold > 0 %}
+    <!-- Free-shipping meter -->
+    <div class="px-6 py-3 bg-gold/[0.07] dark:bg-gold/[0.08] border-b border-line dark:border-white/10">
+        {% if ship.qualifies %}
+        <p class="text-xs text-gold tracking-wide flex items-center gap-1.5">
+            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            You've unlocked <span class="font-semibold">free shipping</span>
+        </p>
+        {% else %}
+        <p class="text-xs text-charcoal/70 dark:text-ivory/70 tracking-wide mb-2">Add <span class="font-semibold text-charcoal dark:text-ivory">Rs.{{ ship.remaining|floatformat:0 }}</span> more for <span class="text-gold">free shipping</span></p>
+        <div class="h-1 bg-line dark:bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-gold rounded-full transition-all duration-500" style="width: {{ ship.percent }}%"></div></div>
+        {% endif %}
+    </div>
+    {% endif %}
+    <!-- Items -->
+    <div class="flex-1 overflow-y-auto px-6 py-4 space-y-5">
+        {% for item in cart %}
+        <div class="flex gap-4">
+            <a href="{{ item.product.get_absolute_url }}" class="img-zoom shrink-0 w-16 h-20 rounded-xl overflow-hidden bg-[#EFE9E1]">
+                {% if item.product.primary_image %}<img src="{{ item.product.primary_image.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-cover">{% endif %}
+            </a>
+            <div class="flex-1 min-w-0">
+                <a href="{{ item.product.get_absolute_url }}" class="font-display text-charcoal dark:text-ivory hover:text-gold transition-colors leading-tight block">{{ item.product.name }}</a>
+                {% if item.variant %}<p class="text-xs text-charcoal/40 mt-0.5">{{ item.variant.name }}: {{ item.variant.value }}</p>{% endif %}
+                <div class="flex items-center justify-between mt-2">
+                    <div class="flex items-center border border-line dark:border-white/15 rounded-full overflow-hidden text-sm">
+                        <button onclick="cartDrawerQty({{ item.product.pk }}, '{{ item.variant.pk|default:'none' }}', {{ item.quantity|add:'-1' }})" class="px-2.5 py-1 hover:text-gold">−</button>
+                        <span class="px-1.5 min-w-6 text-center">{{ item.quantity }}</span>
+                        <button onclick="cartDrawerQty({{ item.product.pk }}, '{{ item.variant.pk|default:'none' }}', {{ item.quantity|add:'1' }})" class="px-2.5 py-1 hover:text-gold">+</button>
+                    </div>
+                    <span class="text-charcoal dark:text-ivory text-sm">Rs.{{ item.total_price|floatformat:0 }}</span>
+                </div>
+            </div>
+            <button onclick="cartDrawerRemove({{ item.product.pk }}, '{{ item.variant.pk|default:'none' }}')" aria-label="Remove" class="text-charcoal/25 hover:text-charcoal transition-colors self-start">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        {% endfor %}
+
+        {% if not cart.qualifies_for_bundle %}
+        <div class="bg-charcoal/[0.04] dark:bg-white/5 border border-line dark:border-white/10 rounded-xl px-4 py-3">
+            <p class="text-xs text-charcoal/70 dark:text-ivory/70 tracking-wide mb-2">Add {{ cart.items_to_next_bundle }} more candle{{ cart.items_to_next_bundle|pluralize }} to save {{ cart.bundle_rate_percent }}%</p>
+            <div class="h-1 bg-line dark:bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-gold rounded-full" style="width: {% widthratio cart|length 3 100 %}%"></div></div>
+        </div>
+        {% else %}
+        <p class="text-xs text-gold tracking-wide">Bundle unlocked — saving {{ cart.bundle_rate_percent }}% 🎉</p>
+        {% endif %}
+    </div>
+
+    {% if drawer_rail %}
+    <!-- Recently viewed -->
+    <div class="border-t border-line dark:border-white/10 px-6 py-4">
+        <p class="eyebrow text-charcoal/40 dark:text-ivory/40 mb-3">Recently viewed</p>
+        <div class="flex gap-3 overflow-x-auto -mx-1 px-1 pb-1 snap-x">
+            {% for product in drawer_rail %}
+            <a href="{{ product.get_absolute_url }}" class="snap-start shrink-0 w-20 group">
+                <div class="img-zoom w-20 h-24 rounded-xl overflow-hidden bg-[#EFE9E1] mb-1.5">
+                    {% if product.primary_image %}<img src="{{ product.primary_image.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover">{% endif %}
+                </div>
+                <p class="text-[11px] leading-tight text-charcoal/70 dark:text-ivory/70 line-clamp-2 group-hover:text-gold transition-colors">{{ product.name }}</p>
+                <p class="text-[11px] text-charcoal/40 dark:text-ivory/40 mt-0.5">Rs.{{ product.price|floatformat:0 }}</p>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Footer -->
+    <div class="border-t border-line dark:border-white/10 px-6 py-5 space-y-3">
+        <div class="flex items-center justify-between">
+            <span class="text-charcoal/60 dark:text-ivory/60 text-sm">{% if cart.bundle_discount %}Subtotal (after bundle){% else %}Subtotal{% endif %}</span>
+            <span class="font-display text-2xl text-charcoal dark:text-ivory">Rs.{{ cart.total_after_bundle|floatformat:0 }}</span>
+        </div>
+        <p class="text-xs text-charcoal/40 dark:text-ivory/40">Shipping &amp; taxes calculated at checkout.</p>
+        <a href="/orders/checkout/" class="block w-full bg-charcoal dark:bg-ivory text-ivory dark:text-charcoal text-center py-4 rounded-full text-[13px] tracking-wide hover:bg-gold dark:hover:bg-gold dark:hover:text-white transition-colors">Checkout</a>
+        <div class="flex items-center justify-between">
+            <a href="/orders/cart/" class="text-[13px] text-charcoal/60 dark:text-ivory/60 hover:text-gold transition-colors">View full bag</a>
+            <button onclick="closeCartDrawer()" class="text-[13px] text-charcoal/60 dark:text-ivory/60 hover:text-gold transition-colors">Keep shopping</button>
+        </div>
+    </div>
+    {% else %}
+    <!-- Empty -->
+    <div class="flex-1 flex flex-col items-center justify-center text-center px-8">
+        <div class="w-12 h-px bg-gold/50 mb-6"></div>
+        <p class="font-display text-xl text-charcoal dark:text-ivory mb-2">Your bag is empty</p>
+        <p class="text-charcoal/50 dark:text-ivory/50 text-sm mb-6">Every candle here is hand-poured to preserve a moment.</p>
+        <a href="/shop/" onclick="closeCartDrawer()" class="btn-gold">Explore the Collection</a>
+
+        {% if drawer_rail %}
+        <div class="w-full mt-10 text-left">
+            <p class="eyebrow text-charcoal/40 dark:text-ivory/40 mb-3">Recently viewed</p>
+            <div class="flex gap-3 overflow-x-auto -mx-1 px-1 pb-1 snap-x">
+                {% for product in drawer_rail %}
+                <a href="{{ product.get_absolute_url }}" class="snap-start shrink-0 w-20 group">
+                    <div class="img-zoom w-20 h-24 rounded-xl overflow-hidden bg-[#EFE9E1] mb-1.5">
+                        {% if product.primary_image %}<img src="{{ product.primary_image.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover">{% endif %}
+                    </div>
+                    <p class="text-[11px] leading-tight text-charcoal/70 dark:text-ivory/70 line-clamp-2 group-hover:text-gold transition-colors">{{ product.name }}</p>
+                    <p class="text-[11px] text-charcoal/40 dark:text-ivory/40 mt-0.5">Rs.{{ product.price|floatformat:0 }}</p>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>

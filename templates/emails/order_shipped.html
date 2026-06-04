@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"></head>
+<body style="font-family: Georgia, serif; background: #F8F4EF; margin: 0; padding: 20px;">
+    <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 16px; overflow: hidden;">
+        <div style="background: #333333; padding: 32px; text-align: center;">
+            <h1 style="color: white; margin: 0; font-size: 28px;">Aura <span style="color: #C9A86A;">Archives</span></h1>
+            <p style="color: #C9A86A; margin: 8px 0 0; font-style: italic; font-size: 14px;">Light That Preserves Moments</p>
+        </div>
+        <div style="padding: 40px;">
+
+            <div style="text-align:center; font-size:44px; margin-bottom:8px;">📦</div>
+            <h2 style="color: #333; font-size: 24px; margin-bottom: 8px; text-align:center;">It's on its way!</h2>
+            <p style="color: #666; margin-bottom: 24px; text-align:center;">Your candles have left our studio and are heading to you, hand-wrapped with care.</p>
+            <div style="background: #F8F4EF; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                <p style="margin: 0 0 8px; font-size: 14px;"><strong>Order Number:</strong> #{{ order.order_number }}</p>
+                {% if order.tracking_number %}<p style="margin: 0 0 8px; font-size: 14px;"><strong>Tracking:</strong> {{ order.tracking_number }}{% if order.courier_name %} via {{ order.courier_name }}{% endif %}</p>{% endif %}
+                {% if order.estimated_delivery %}<p style="margin: 0; font-size: 14px;"><strong>Estimated delivery:</strong> {{ order.estimated_delivery|date:"F d, Y" }}</p>{% endif %}
+            </div>
+            <div style="text-align:center;">
+                {% if order.tracking_url %}<a href="{{ order.tracking_url }}" style="display: inline-block; background: #C9A86A; color: white; padding: 14px 32px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 14px;">Track Your Package</a>
+                {% else %}<a href="{{ site_url }}/orders/{{ order.pk }}/" style="display: inline-block; background: #C9A86A; color: white; padding: 14px 32px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 14px;">View Your Order</a>{% endif %}
+            </div>
+            <p style="color:#999; font-size:13px; text-align:center; margin-top:24px; font-style:italic;">A little ritual tip: trim the wick to 1/4 inch before that very first light.</p>
+
+        </div>
+        <div style="background: #F8F4EF; padding: 20px; text-align: center;">
+            <p style="color: #999; font-size: 12px; margin: 0;">Aura Archives | Handmade with love in India</p>
+        </div>
+    </div>
+</body></html>

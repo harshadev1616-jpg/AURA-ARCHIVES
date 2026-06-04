@@ -1,0 +1,157 @@
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.db.models import Avg, Count
+import json
+from apps.products.models import Product, Category
+from apps.cms.models import Banner, Announcement
+from apps.blog.models import BlogPost
+from apps.reviews.models import Review
+from apps.accounts.models import User
+
+
+def home(request):
+    featured_products = Product.objects.filter(is_active=True, is_featured=True).prefetch_related('images')[:8]
+    bestsellers = Product.objects.filter(is_active=True, is_bestseller=True).prefetch_related('images')[:6]
+    new_arrivals = Product.objects.filter(is_active=True, is_new=True).prefetch_related('images')[:4]
+    categories = Category.objects.filter(is_active=True, parent=None).order_by('sort_order')[:6]
+    hero_banners = Banner.objects.filter(is_active=True, position='hero').order_by('sort_order')
+    featured_banners = Banner.objects.filter(is_active=True, position='home_featured').order_by('sort_order')[:4]
+    reviews = Review.objects.filter(is_approved=True).select_related('user', 'product').order_by('-helpful_count')[:6]
+    blog_posts = BlogPost.objects.filter(status='published').order_by('-published_at')[:3]
+    insta_products = Product.objects.filter(is_active=True, images__isnull=False).distinct().prefetch_related('images')[:6]
+    context = {
+        'featured_products': featured_products,
+        'bestsellers': bestsellers,
+        'new_arrivals': new_arrivals,
+        'categories': categories,
+        'hero_banners': hero_banners,
+        'featured_banners': featured_banners,
+        'reviews': reviews,
+        'blog_posts': blog_posts,
+        'insta_products': insta_products,
+    }
+    return render(request, 'home/index.html', context)
+
+
+def about(request):
+    return render(request, 'home/about.html')
+
+
+def contact(request):
+    if request.method == 'POST':
+        # Handle contact form
+        return JsonResponse({'success': True, 'message': 'Thank you! We will get back to you soon.'})
+    return render(request, 'home/contact.html')
+
+
+def search(request):
+    q = request.GET.get('q', '')
+    products = []
+    if q:
+        from django.db.models import Q
+        products = Product.objects.filter(
+            is_active=True
+        ).filter(
+            Q(name__icontains=q) | Q(description__icontains=q) | Q(fragrance_notes__icontains=q)
+        ).prefetch_related('images')[:20]
+    return render(request, 'products/search.html', {'products': products, 'query': q})
+
+
+@require_POST
+def newsletter_signup(request):
+    data = json.loads(request.body)
+    email = data.get('email', '')
+    if email:
+        try:
+            user = User.objects.get(email=email)
+            user.newsletter_subscribed = True
+            user.save(update_fields=['newsletter_subscribed'])
+        except User.DoesNotExist:
+            pass
+        return JsonResponse({'success': True, 'message': 'Thank you for subscribing!'})
+    return JsonResponse({'success': False, 'message': 'Please provide a valid email'})
+
+
+# ============================================================
+#  PWA — manifest, service worker, offline fallback
+# ============================================================
+from django.http import HttpResponse
+from django.templatetags.static import static as static_url
+
+
+def offline(request):
+    return render(request, 'offline.html')
+
+
+def manifest(request):
+    icon = static_url('images/icon-512.png')
+    data = {
+        "name": "Aura Archives",
+        "short_name": "Aura",
+        "description": "Handmade luxury soy candles — Light That Preserves Moments.",
+        "start_url": "/",
+        "display": "standalone",
+        "background_color": "#F8F4EF",
+        "theme_color": "#C9A86A",
+        "orientation": "portrait-primary",
+        "categories": ["shopping", "lifestyle"],
+        "icons": [
+            {"src": static_url('images/icon-192.png'), "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+            {"src": icon, "sizes": "512x512", "type": "image/png", "purpose": "any maskable"},
+        ],
+        "shortcuts": [
+            {"name": "Shop Candles", "url": "/shop/"},
+            {"name": "Find Your Scent", "url": "/shop/quiz/"},
+            {"name": "My Orders", "url": "/orders/"},
+        ],
+    }
+    return JsonResponse(data, content_type='application/manifest+json')
+
+
+def service_worker(request):
+    sw = """
+const CACHE = 'aura-v1';
+const PRECACHE = ['/', '/offline/', '/static/css/main.css', '/static/js/main.js'];
+
+self.addEventListener('install', (e) => {
+    e.waitUntil(caches.open(CACHE).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting()));
+});
+
+self.addEventListener('activate', (e) => {
+    e.waitUntil(
+        caches.keys().then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim())
+    );
+});
+
+self.addEventListener('fetch', (e) => {
+    const req = e.request;
+    if (req.method !== 'GET') return;
+    const url = new URL(req.url);
+    // Never cache admin or auth-sensitive paths
+    if (url.pathname.startsWith('/aura-admin') || url.pathname.startsWith('/accounts') || url.pathname.startsWith('/orders')) return;
+
+    if (req.mode === 'navigate') {
+        // Network-first for pages, fall back to cache then offline page
+        e.respondWith(
+            fetch(req).then((res) => {
+                const copy = res.clone();
+                caches.open(CACHE).then((c) => c.put(req, copy));
+                return res;
+            }).catch(() => caches.match(req).then((r) => r || caches.match('/offline/')))
+        );
+        return;
+    }
+    // Cache-first for static assets
+    if (url.pathname.startsWith('/static/') || url.pathname.startsWith('/media/')) {
+        e.respondWith(
+            caches.match(req).then((cached) => cached || fetch(req).then((res) => {
+                const copy = res.clone();
+                caches.open(CACHE).then((c) => c.put(req, copy));
+                return res;
+            }))
+        );
+    }
+});
+"""
+    return HttpResponse(sw, content_type='application/javascript')
