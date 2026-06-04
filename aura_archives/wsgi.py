@@ -18,15 +18,19 @@ except Exception:
     print(f"WSGI STARTUP FAILED:\n{_startup_error}", file=sys.stderr)
     _django_app = None
 
-# Serve media files through WhiteNoise so /media/* works via the Lambda
-# even if the Vercel CDN static route doesn't intercept first.
+# Serve static and media files via WhiteNoise from the Lambda filesystem.
+# static/ → /static/*  (CSS, JS, images)
+# media/  → /media/*   (uploaded product images)
 if _django_app is not None:
     try:
         from whitenoise import WhiteNoise
-        _django_app = WhiteNoise(_django_app, root=str(BASE_DIR / 'static'), prefix='static')
-        _django_app.add_files(str(BASE_DIR / 'media'), prefix='media')
+        _static_dir = str(BASE_DIR / 'static')
+        _media_dir = str(BASE_DIR / 'media')
+        _django_app = WhiteNoise(_django_app, root=_static_dir, prefix='static', max_age=86400)
+        _django_app.add_files(_media_dir, prefix='media')
+        print(f"[wsgi] WhiteNoise serving static={_static_dir} media={_media_dir}", file=sys.stderr)
     except Exception:
-        pass
+        print(f"[wsgi] WhiteNoise init failed: {traceback.format_exc()}", file=sys.stderr)
 
 _err = _startup_error
 
