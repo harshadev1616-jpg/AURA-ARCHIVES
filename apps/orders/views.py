@@ -249,25 +249,21 @@ def order_invoice(request, pk):
     else:
         order = get_object_or_404(Order, pk=pk, user=request.user)
 
-    from django.template.loader import render_to_string
-    from apps.core.models import SiteSettings
-    html = render_to_string("orders/invoice.html", {"order": order, "site": SiteSettings.get_settings()})
-
-    try:
-        from xhtml2pdf import pisa
-        import io
-        buf = io.BytesIO()
-        result = pisa.CreatePDF(io.StringIO(html), dest=buf)
-        if not result.err:
-            from django.http import HttpResponse
-            resp = HttpResponse(buf.getvalue(), content_type="application/pdf")
-            resp["Content-Disposition"] = f'attachment; filename="AuraArchives-Invoice-{order.order_number}.pdf"'
-            return resp
-    except Exception as e:
-        print(f"Invoice PDF error: {e}")
-
-    # Fallback: render the printable HTML if PDF generation is unavailable
     from django.http import HttpResponse
+    from apps.core.models import SiteSettings
+    from .pdf_utils import generate_invoice_pdf
+
+    # Generate PDF using reportlab
+    pdf_buffer = generate_invoice_pdf(order, SiteSettings.get_settings())
+    
+    if pdf_buffer:
+        resp = HttpResponse(pdf_buffer.getvalue(), content_type="application/pdf")
+        resp["Content-Disposition"] = f'attachment; filename="AuraArchives-Invoice-{order.order_number}.pdf"'
+        return resp
+    
+    # Fallback: if PDF generation fails, render the printable HTML
+    from django.template.loader import render_to_string
+    html = render_to_string("orders/invoice.html", {"order": order, "site": SiteSettings.get_settings()})
     return HttpResponse(html)
 
 

@@ -111,18 +111,21 @@ class OrderAdmin(admin.ModelAdmin):
 
     @admin.action(description="🧾 Download packing slips (PDF)")
     def packing_slips(self, request, queryset):
-        html = render_to_string("orders/packing_slip.html", {"orders": queryset})
-        try:
-            from xhtml2pdf import pisa
-            import io
-            buf = io.BytesIO()
-            pisa.CreatePDF(io.StringIO(html), dest=buf)
-            resp = HttpResponse(buf.getvalue(), content_type="application/pdf")
+        from django.http import HttpResponse
+        from django.template.loader import render_to_string
+        from .pdf_utils import generate_packing_slip_pdf
+        
+        # Generate PDF using reportlab
+        pdf_buffer = generate_packing_slip_pdf(queryset)
+        
+        if pdf_buffer:
+            resp = HttpResponse(pdf_buffer.getvalue(), content_type="application/pdf")
             resp["Content-Disposition"] = 'attachment; filename="aura-packing-slips.pdf"'
             return resp
-        except Exception as e:
-            print(f"Packing slip PDF error: {e}")
-            return HttpResponse(html)
+        
+        # Fallback: if PDF generation fails, render the printable HTML
+        html = render_to_string("orders/packing_slip.html", {"orders": queryset})
+        return HttpResponse(html)
 
     def _bulk_status(self, request, queryset, new_status, verb):
         """Apply a status to each order via save() so signals fire (emails, stock, loyalty)."""
