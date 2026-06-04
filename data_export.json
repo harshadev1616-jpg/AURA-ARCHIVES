@@ -1,0 +1,1158 @@
+[
+{
+  "model": "products.category",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-06-03T16:20:48.468Z",
+    "updated_at": "2026-06-04T04:51:19.353Z",
+    "name": "Gift Sets",
+    "slug": "gift-sets",
+    "parent": null,
+    "tagline": "For the people who deserve more than one candle.",
+    "description": "Curated candle gift sets for every occasion",
+    "story": "Some moments are too big for a single flame. Our gift sets gather two, three, sometimes more candles into one keepsake box — each chosen to tell a fuller story. We design them to be the kind of present that's remembered long after the wax is gone.",
+    "image": "categories/7fd8da90-8fbd-4dc7-bb61-81054e38dab0.jpg",
+    "icon": "",
+    "is_active": true,
+    "sort_order": 1,
+    "meta_title": "",
+    "meta_description": ""
+  }
+},
+{
+  "model": "products.category",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-06-03T16:20:48.474Z",
+    "updated_at": "2026-06-04T04:51:19.370Z",
+    "name": "Floral",
+    "slug": "floral",
+    "parent": null,
+    "tagline": "A garden you can light.",
+    "description": "Beautiful floral-scented soy candles",
+    "story": "We grew up around flowers — markets at dawn, gardens after rain, the jasmine that drifts in through an open window at night. The Floral collection is our attempt to keep those blooms alive past their season, pressing whole gardens into soy wax so you can light them whenever you need them.",
+    "image": "categories/fd76f858-3800-404e-b82c-c6d6ef409026.jpg",
+    "icon": "",
+    "is_active": true,
+    "sort_order": 2,
+    "meta_title": "",
+    "meta_description": ""
+  }
+},
+{
+  "model": "products.category",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-06-03T16:20:48.480Z",
+    "updated_at": "2026-06-04T04:51:19.388Z",
+    "name": "Gift Candles",
+    "slug": "gift-candles",
+    "parent": null,
+    "tagline": "The thing you say when words won't do.",
+    "description": "Perfect candles for gifting",
+    "story": "A candle is a quiet kind of love letter. These are the ones we reach for when we want to say 'thinking of you' or 'I'm glad you exist' — hand-shaped, gift-ready, and made to carry a feeling across any distance.",
+    "image": "categories/4a1d9141-f8ad-4c45-aef5-76d96719655e.jpg",
+    "icon": "",
+    "is_active": true,
+    "sort_order": 3,
+    "meta_title": "",
+    "meta_description": ""
+  }
+},
+{
+  "model": "products.category",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-06-03T16:20:48.485Z",
+    "updated_at": "2026-06-04T04:51:19.407Z",
+    "name": "Wellness",
+    "slug": "wellness",
+    "parent": null,
+    "tagline": "Permission to slow down.",
+    "description": "Calming candles for relaxation and meditation",
+    "story": "We built this collection during our own burnout, when we needed a scent that felt like a deep breath. Lavender, chamomile, clean cotton — grounding fragrances designed to lower your shoulders and tell your body the day is finally over.",
+    "image": "categories/f870918f-da6f-48ed-a135-34baffa059f6.jpg",
+    "icon": "",
+    "is_active": true,
+    "sort_order": 4,
+    "meta_title": "",
+    "meta_description": ""
+  }
+},
+{
+  "model": "products.category",
+  "pk": 5,
+  "fields": {
+    "created_at": "2026-06-03T16:20:48.492Z",
+    "updated_at": "2026-06-04T04:51:19.425Z",
+    "name": "Classic",
+    "slug": "classic",
+    "parent": null,
+    "tagline": "The ones that started it all.",
+    "description": "Our signature classic fragrances",
+    "story": "Every studio has its first loves. Vanilla and amber, deep and warm and endlessly comforting — these are the scents we blended at the very beginning, refined over the years but never reinvented. Familiar, dependable, and quietly luxurious.",
+    "image": "categories/fe9c5f63-3c5f-40e7-af9c-885e07705e39.jpg",
+    "icon": "",
+    "is_active": true,
+    "sort_order": 5,
+    "meta_title": "",
+    "meta_description": ""
+  }
+},
+{
+  "model": "products.product",
+  "pk": 8,
+  "fields": {
+    "created_at": "2026-06-03T16:21:02.704Z",
+    "updated_at": "2026-06-04T07:55:19.294Z",
+    "deleted_at": null,
+    "name": "Midnight Bloom",
+    "slug": "midnight-bloom",
+    "category": 5,
+    "short_description": "Night jasmine and black rose over dark amber — for the after-dark you.",
+    "description": "Some flowers only open after dark. Midnight Bloom is night jasmine and black rose over dark amber and cedar — mysterious, a little dramatic, and unforgettable. The candle for the version of you that comes alive at night.",
+    "ingredients": "100% Natural Soy Wax, Premium Cotton Wick, Fragrance Oil, Natural Botanicals",
+    "fragrance_notes": "Night Jasmine, Black Rose, Dark Amber, Cedarwood",
+    "fragrance_strength": "",
+    "moment": "Late, the city quiet, a glass of something good in your hand.",
+    "story": "Midnight Bloom came from a single evening — windows open, jasmine drifting in from somewhere we couldn't see, the day's noise finally gone. We chased that scent for months. This is as close as we've come to bottling the dark.",
+    "ritual": "Light it after everyone's asleep, when the house is yours again and the night feels wide open.",
+    "notes_top": "Black rose",
+    "notes_heart": "Night-blooming jasmine",
+    "notes_base": "Dark amber & cedarwood",
+    "burn_time_min": 40,
+    "burn_time_max": 50,
+    "wax_type": "100% Natural Soy Wax",
+    "wick_type": "Cotton Wick",
+    "weight": null,
+    "dimensions": "",
+    "price": "800.00",
+    "compare_price": "1000.00",
+    "cost_price": null,
+    "sku": "AA-7EB01D63",
+    "stock": 20,
+    "low_stock_threshold": 5,
+    "track_inventory": true,
+    "is_active": true,
+    "is_featured": false,
+    "is_bestseller": false,
+    "is_new": true,
+    "is_gift_ready": true,
+    "meta_title": "",
+    "meta_description": "",
+    "care_instructions": "Trim wick to 1/4 inch before each use. Keep away from drafts. Never leave unattended.",
+    "sort_order": 0,
+    "tags": []
+  }
+},
+{
+  "model": "products.product",
+  "pk": 7,
+  "fields": {
+    "created_at": "2026-06-03T16:21:02.699Z",
+    "updated_at": "2026-06-03T16:21:02.699Z",
+    "deleted_at": null,
+    "name": "Rose Garden Gift Box",
+    "slug": "rose-garden-gift-box",
+    "category": 1,
+    "short_description": "A lavish trio of roses in a keepsake box — for spoiling someone properly.",
+    "description": "Three roses, three moods, one keepsake box. Turkish rose, Bulgarian rose, and a smoky breath of oud — our most lavish gift, made for the people who deserve to be spoiled.",
+    "ingredients": "100% Natural Soy Wax, Premium Cotton Wick, Fragrance Oil, Natural Botanicals",
+    "fragrance_notes": "Turkish Rose, Bulgarian Rose, White Jasmine, Oud",
+    "fragrance_strength": "",
+    "moment": "The anniversary you actually remembered — and went all out for.",
+    "story": "We sourced three different roses for this set because no single rose could say everything. Together they tell a fuller story: the bright bloom, the deep velvet centre, and the smoke that lingers after. The box is built to be kept long after the candles are gone.",
+    "ritual": "Burn them in order — Bulgarian, then Turkish, then oud — to follow a rose from first light to dusk.",
+    "notes_top": "Bulgarian rose",
+    "notes_heart": "Turkish rose & jasmine",
+    "notes_base": "Smoky oud",
+    "burn_time_min": 35,
+    "burn_time_max": 45,
+    "wax_type": "100% Natural Soy Wax",
+    "wick_type": "Cotton Wick",
+    "weight": null,
+    "dimensions": "",
+    "price": "2199.00",
+    "compare_price": "2599.00",
+    "cost_price": null,
+    "sku": "AA-9F6EE14E",
+    "stock": 20,
+    "low_stock_threshold": 5,
+    "track_inventory": true,
+    "is_active": true,
+    "is_featured": true,
+    "is_bestseller": false,
+    "is_new": true,
+    "is_gift_ready": true,
+    "meta_title": "",
+    "meta_description": "",
+    "care_instructions": "Trim wick to 1/4 inch before each use. Keep away from drafts. Never leave unattended.",
+    "sort_order": 0,
+    "tags": []
+  }
+},
+{
+  "model": "products.product",
+  "pk": 6,
+  "fields": {
+    "created_at": "2026-06-03T16:21:02.692Z",
+    "updated_at": "2026-06-03T16:21:02.692Z",
+    "deleted_at": null,
+    "name": "Vanilla Amber Luxe",
+    "slug": "vanilla-amber-luxe",
+    "category": 5,
+    "short_description": "Madagascar vanilla and warm amber — cashmere for the room.",
+    "description": "Our most-loved scent, and the easiest to fall for. Madagascar vanilla melts into warm amber and sandalwood — rich, enveloping, and quietly luxurious, like cashmere for a room.",
+    "ingredients": "100% Natural Soy Wax, Premium Cotton Wick, Fragrance Oil, Natural Botanicals",
+    "fragrance_notes": "Madagascar Vanilla, Warm Amber, Sandalwood, Tonka Bean",
+    "fragrance_strength": "",
+    "moment": "Rain against the window, a book, and absolutely nowhere to be.",
+    "story": "Vanilla Amber Luxe is the candle that started the whole studio. It was the first scent we ever blended — and the one customers kept coming back for. We've refined the recipe a dozen times, but its heart has never changed.",
+    "ritual": "A first-burn candle: give it three full hours so the wax pools to the very edge and the amber blooms.",
+    "notes_top": "Tonka bean",
+    "notes_heart": "Madagascar vanilla",
+    "notes_base": "Warm amber & sandalwood",
+    "burn_time_min": 50,
+    "burn_time_max": 60,
+    "wax_type": "100% Natural Soy Wax",
+    "wick_type": "Cotton Wick",
+    "weight": null,
+    "dimensions": "",
+    "price": "899.00",
+    "compare_price": "1099.00",
+    "cost_price": null,
+    "sku": "AA-B4B5E554",
+    "stock": 35,
+    "low_stock_threshold": 5,
+    "track_inventory": true,
+    "is_active": true,
+    "is_featured": false,
+    "is_bestseller": true,
+    "is_new": true,
+    "is_gift_ready": true,
+    "meta_title": "",
+    "meta_description": "",
+    "care_instructions": "Trim wick to 1/4 inch before each use. Keep away from drafts. Never leave unattended.",
+    "sort_order": 0,
+    "tags": []
+  }
+},
+{
+  "model": "products.product",
+  "pk": 5,
+  "fields": {
+    "created_at": "2026-06-03T16:21:02.686Z",
+    "updated_at": "2026-06-03T16:21:02.686Z",
+    "deleted_at": null,
+    "name": "Petal Crown Collection",
+    "slug": "petal-crown-collection",
+    "category": 2,
+    "short_description": "Hand-placed dried flowers crowning a soft botanical glow.",
+    "description": "A crown of real dried flowers, hand-placed one petal at a time around a soft botanical glow. Part candle, part keepsake — too lovely to rush, made to be lingered over.",
+    "ingredients": "100% Natural Soy Wax, Premium Cotton Wick, Fragrance Oil, Natural Botanicals",
+    "fragrance_notes": "Wildflower, Rose Hip, Bergamot, Green Tea",
+    "fragrance_strength": "",
+    "moment": "The afternoon you finally make a corner of your home just for you.",
+    "story": "Each crown is built by hand, petal by petal, by our studio florist — roughly forty minutes of quiet, careful work per candle. We pick the blooms ourselves at the start of each season, so the collection is never quite the same twice.",
+    "ritual": "Let the flower crown burn down slowly the first time; it releases the botanicals like a garden waking up.",
+    "notes_top": "Bergamot & green tea",
+    "notes_heart": "Wild meadow flowers",
+    "notes_base": "Rose hip & soft moss",
+    "burn_time_min": 30,
+    "burn_time_max": 40,
+    "wax_type": "100% Natural Soy Wax",
+    "wick_type": "Cotton Wick",
+    "weight": null,
+    "dimensions": "",
+    "price": "1099.00",
+    "compare_price": "1299.00",
+    "cost_price": null,
+    "sku": "AA-8B493957",
+    "stock": 15,
+    "low_stock_threshold": 5,
+    "track_inventory": true,
+    "is_active": true,
+    "is_featured": true,
+    "is_bestseller": false,
+    "is_new": true,
+    "is_gift_ready": true,
+    "meta_title": "",
+    "meta_description": "",
+    "care_instructions": "Trim wick to 1/4 inch before each use. Keep away from drafts. Never leave unattended.",
+    "sort_order": 0,
+    "tags": []
+  }
+},
+{
+  "model": "products.product",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-06-03T16:21:02.679Z",
+    "updated_at": "2026-06-03T16:21:02.679Z",
+    "deleted_at": null,
+    "name": "Lavender Dreams",
+    "slug": "lavender-dreams",
+    "category": 4,
+    "short_description": "French lavender and chamomile — a candle that lowers your shoulders.",
+    "description": "The deep breath you keep forgetting to take. French lavender drifts over chamomile and clean cotton — a quiet, grounding calm we built for the end of long days and the start of slow mornings.",
+    "ingredients": "100% Natural Soy Wax, Premium Cotton Wick, Fragrance Oil, Natural Botanicals",
+    "fragrance_notes": "French Lavender, Chamomile, Eucalyptus, Clean Cotton",
+    "fragrance_strength": "",
+    "moment": "9 p.m., phone face-down, the day finally letting go of you.",
+    "story": "Lavender Dreams was born out of our own burnout. We wanted a scent that felt like permission — to stop, to rest, to do nothing at all. We tested it during the studio's hardest month, and it's been our nightly full-stop ever since.",
+    "ritual": "Light it twenty minutes before bed, dim the lights, and let the room tell your body it's safe to slow down.",
+    "notes_top": "Cool eucalyptus",
+    "notes_heart": "French lavender",
+    "notes_base": "Chamomile & clean cotton",
+    "burn_time_min": 40,
+    "burn_time_max": 50,
+    "wax_type": "100% Natural Soy Wax",
+    "wick_type": "Cotton Wick",
+    "weight": null,
+    "dimensions": "",
+    "price": "599.00",
+    "compare_price": "749.00",
+    "cost_price": null,
+    "sku": "AA-8000DFBC",
+    "stock": 50,
+    "low_stock_threshold": 5,
+    "track_inventory": true,
+    "is_active": true,
+    "is_featured": false,
+    "is_bestseller": true,
+    "is_new": true,
+    "is_gift_ready": true,
+    "meta_title": "",
+    "meta_description": "",
+    "care_instructions": "Trim wick to 1/4 inch before each use. Keep away from drafts. Never leave unattended.",
+    "sort_order": 0,
+    "tags": []
+  }
+},
+{
+  "model": "products.product",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-06-03T16:21:02.673Z",
+    "updated_at": "2026-06-03T16:21:02.673Z",
+    "deleted_at": null,
+    "name": "Blush Heart Candle",
+    "slug": "blush-heart-candle",
+    "category": 3,
+    "short_description": "A hand-shaped blush heart — for saying the unsayable thing.",
+    "description": "Shaped by hand into a soft blush heart, this little candle says the thing you can't always find words for. Rose and peony bloom over a whisper of pink sugar — tender, romantic, and entirely sincere.",
+    "ingredients": "100% Natural Soy Wax, Premium Cotton Wick, Fragrance Oil, Natural Botanicals",
+    "fragrance_notes": "Rose, Peony, Pink Sugar, Soft Musk",
+    "fragrance_strength": "",
+    "moment": "The pause before you say 'I'm glad it's you.'",
+    "story": "Every Blush Heart is shaped by hand, which means no two are quite alike — a little lopsided, a little perfect, exactly like the love it's meant to carry. We made the first one for a wedding and haven't stopped since.",
+    "ritual": "Gift it unlit, so they get to strike the first match themselves — the start of their own small ritual.",
+    "notes_top": "Pink sugar",
+    "notes_heart": "Rose & peony",
+    "notes_base": "Soft skin musk",
+    "burn_time_min": 25,
+    "burn_time_max": 35,
+    "wax_type": "100% Natural Soy Wax",
+    "wick_type": "Cotton Wick",
+    "weight": null,
+    "dimensions": "",
+    "price": "649.00",
+    "compare_price": "849.00",
+    "cost_price": null,
+    "sku": "AA-4B3421EF",
+    "stock": 30,
+    "low_stock_threshold": 5,
+    "track_inventory": true,
+    "is_active": true,
+    "is_featured": true,
+    "is_bestseller": false,
+    "is_new": true,
+    "is_gift_ready": true,
+    "meta_title": "",
+    "meta_description": "",
+    "care_instructions": "Trim wick to 1/4 inch before each use. Keep away from drafts. Never leave unattended.",
+    "sort_order": 0,
+    "tags": []
+  }
+},
+{
+  "model": "products.product",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-06-03T16:21:02.647Z",
+    "updated_at": "2026-06-03T16:21:02.647Z",
+    "deleted_at": null,
+    "name": "Sunlit Bloom",
+    "slug": "sunlit-bloom",
+    "category": 2,
+    "short_description": "Warm florals and golden amber — the long exhale at the end of a good day.",
+    "description": "A garden at the golden hour, caught in wax. Sunlit Bloom opens like petals turning to face the late afternoon — warm, unhurried, generous. It is the candle we reach for when we want the room to feel like a long, slow exhale.",
+    "ingredients": "100% Natural Soy Wax, Premium Cotton Wick, Fragrance Oil, Natural Botanicals",
+    "fragrance_notes": "Sunflower, Jasmine, Warm Amber, Vanilla",
+    "fragrance_strength": "",
+    "moment": "Golden hour on a Sunday, when there is nowhere else you need to be.",
+    "story": "Sunlit Bloom began as an attempt to bottle 6 p.m. in late June — that fleeting half-hour when the light goes amber and everything softens. It took nineteen pours to get the warmth right. We knew we had it when the studio fell quiet and someone simply said, 'oh.'",
+    "ritual": "Best lit an hour before guests arrive, so the warmth has time to settle into the corners of the room.",
+    "notes_top": "Sunflower & bergamot",
+    "notes_heart": "Jasmine petals",
+    "notes_base": "Warm amber & vanilla",
+    "burn_time_min": 45,
+    "burn_time_max": 55,
+    "wax_type": "100% Natural Soy Wax",
+    "wick_type": "Cotton Wick",
+    "weight": null,
+    "dimensions": "",
+    "price": "799.00",
+    "compare_price": "999.00",
+    "cost_price": null,
+    "sku": "AA-AC82A304",
+    "stock": 40,
+    "low_stock_threshold": 5,
+    "track_inventory": true,
+    "is_active": true,
+    "is_featured": true,
+    "is_bestseller": true,
+    "is_new": true,
+    "is_gift_ready": true,
+    "meta_title": "",
+    "meta_description": "",
+    "care_instructions": "Trim wick to 1/4 inch before each use. Keep away from drafts. Never leave unattended.",
+    "sort_order": 0,
+    "tags": []
+  }
+},
+{
+  "model": "products.product",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-06-03T16:20:48.500Z",
+    "updated_at": "2026-06-04T03:37:20.271Z",
+    "deleted_at": null,
+    "name": "Daisy Glow Set",
+    "slug": "daisy-glow-set",
+    "category": 1,
+    "short_description": "A trio of hand-poured daisy candles — bottled sunshine for someone you love.",
+    "description": "Three little suns in a box. Our Daisy Glow Set gathers three hand-poured soy candles, each one capturing the open-hearted cheer of a daisy field in June — the kind you'd run through as a child, arms wide, certain the summer would never end.",
+    "ingredients": "100% Natural Soy Wax, Premium Cotton Wick, Fragrance Oil, Natural Botanicals",
+    "fragrance_notes": "Fresh Daisy, White Musk, Light Citrus",
+    "fragrance_strength": "",
+    "moment": "The first warm morning when the windows finally come open again.",
+    "story": "We poured the very first Daisy Glow on a friend's kitchen table, the week she moved into a home of her own. We wanted to gift her light — something small enough to hold, bright enough to fill a room. The set has been our way of saying 'new beginnings' ever since.",
+    "ritual": "Light all three at once for a celebration, or one at a time to stretch the joy across three slow weekends.",
+    "notes_top": "Sun-warmed citrus zest",
+    "notes_heart": "Fresh daisy & green stem",
+    "notes_base": "Soft white musk",
+    "burn_time_min": 35,
+    "burn_time_max": 45,
+    "wax_type": "100% Natural Soy Wax",
+    "wick_type": "Cotton Wick",
+    "weight": null,
+    "dimensions": "",
+    "price": "1299.00",
+    "compare_price": "1599.00",
+    "cost_price": null,
+    "sku": "AA-01BB22CD",
+    "stock": 25,
+    "low_stock_threshold": 5,
+    "track_inventory": true,
+    "is_active": true,
+    "is_featured": true,
+    "is_bestseller": true,
+    "is_new": true,
+    "is_gift_ready": true,
+    "meta_title": "",
+    "meta_description": "",
+    "care_instructions": "Trim wick to 1/4 inch before each use. Keep away from drafts. Never leave unattended.",
+    "sort_order": 0,
+    "tags": []
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-06-04T04:50:28.096Z",
+    "updated_at": "2026-06-04T04:50:28.096Z",
+    "product": 8,
+    "image": "products/df243a85-24ba-4aaf-b7e1-6f104d64c48c.jpg",
+    "alt_text": "Midnight Bloom",
+    "is_primary": true,
+    "sort_order": 0
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-06-04T04:50:31.644Z",
+    "updated_at": "2026-06-04T04:50:31.644Z",
+    "product": 7,
+    "image": "products/4e1f6207-fd7f-440c-8152-111392320764.jpg",
+    "alt_text": "Rose Garden Gift Box",
+    "is_primary": true,
+    "sort_order": 0
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-06-04T04:50:34.591Z",
+    "updated_at": "2026-06-04T04:50:34.591Z",
+    "product": 6,
+    "image": "products/45aa7746-dd15-4233-9620-ed9029073d90.jpg",
+    "alt_text": "Vanilla Amber Luxe",
+    "is_primary": true,
+    "sort_order": 0
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-06-04T04:50:37.047Z",
+    "updated_at": "2026-06-04T04:50:37.047Z",
+    "product": 5,
+    "image": "products/aa37793f-ece5-4796-85a0-094456ef0fda.jpg",
+    "alt_text": "Petal Crown Collection",
+    "is_primary": true,
+    "sort_order": 0
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 5,
+  "fields": {
+    "created_at": "2026-06-04T04:50:39.819Z",
+    "updated_at": "2026-06-04T04:50:39.819Z",
+    "product": 4,
+    "image": "products/84cfb4ae-bab7-4f11-b55d-6a4d071b62ca.jpg",
+    "alt_text": "Lavender Dreams",
+    "is_primary": true,
+    "sort_order": 0
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 6,
+  "fields": {
+    "created_at": "2026-06-04T04:50:41.841Z",
+    "updated_at": "2026-06-04T04:50:41.841Z",
+    "product": 3,
+    "image": "products/925360ab-f97e-44a8-b660-354d3c763847.jpg",
+    "alt_text": "Blush Heart Candle",
+    "is_primary": true,
+    "sort_order": 0
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 7,
+  "fields": {
+    "created_at": "2026-06-04T04:50:43.686Z",
+    "updated_at": "2026-06-04T04:50:43.686Z",
+    "product": 2,
+    "image": "products/5a73acb3-e31c-4963-8932-611882549366.jpg",
+    "alt_text": "Sunlit Bloom",
+    "is_primary": true,
+    "sort_order": 0
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 8,
+  "fields": {
+    "created_at": "2026-06-04T04:50:54.486Z",
+    "updated_at": "2026-06-04T04:50:54.486Z",
+    "product": 1,
+    "image": "products/7014ee03-3e22-45c8-aa94-8cb78112155e.jpg",
+    "alt_text": "Daisy Glow Set",
+    "is_primary": true,
+    "sort_order": 0
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 9,
+  "fields": {
+    "created_at": "2026-06-04T11:21:11.518Z",
+    "updated_at": "2026-06-04T11:21:11.518Z",
+    "product": 8,
+    "image": "products/ce319333-8a3e-4318-a216-7fcd00b01c88.jpg",
+    "alt_text": "Midnight Bloom — styled",
+    "is_primary": false,
+    "sort_order": 1
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 11,
+  "fields": {
+    "created_at": "2026-06-04T11:21:11.550Z",
+    "updated_at": "2026-06-04T11:21:11.550Z",
+    "product": 7,
+    "image": "products/3ecb01d1-f05c-4fc5-acb6-c5d9650eba30.jpg",
+    "alt_text": "Rose Garden Gift Box — styled",
+    "is_primary": false,
+    "sort_order": 1
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 13,
+  "fields": {
+    "created_at": "2026-06-04T11:21:11.565Z",
+    "updated_at": "2026-06-04T11:21:11.565Z",
+    "product": 6,
+    "image": "products/2ab7e656-92b0-4f96-b81f-c033452aec06.jpg",
+    "alt_text": "Vanilla Amber Luxe — styled",
+    "is_primary": false,
+    "sort_order": 1
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 15,
+  "fields": {
+    "created_at": "2026-06-04T11:21:11.579Z",
+    "updated_at": "2026-06-04T11:21:11.579Z",
+    "product": 5,
+    "image": "products/a3cf6dd2-f9ad-4a95-8dd3-9024c04f37ba.jpg",
+    "alt_text": "Petal Crown Collection — styled",
+    "is_primary": false,
+    "sort_order": 1
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 17,
+  "fields": {
+    "created_at": "2026-06-04T11:21:11.591Z",
+    "updated_at": "2026-06-04T11:21:11.591Z",
+    "product": 4,
+    "image": "products/b5b2f968-b10a-4194-a3e2-47c8edec5ac5.jpg",
+    "alt_text": "Lavender Dreams — styled",
+    "is_primary": false,
+    "sort_order": 1
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 19,
+  "fields": {
+    "created_at": "2026-06-04T11:21:11.606Z",
+    "updated_at": "2026-06-04T11:21:11.606Z",
+    "product": 3,
+    "image": "products/d3339ec3-75f2-4199-abaf-e8a244864643.jpg",
+    "alt_text": "Blush Heart Candle — styled",
+    "is_primary": false,
+    "sort_order": 1
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 21,
+  "fields": {
+    "created_at": "2026-06-04T11:21:11.621Z",
+    "updated_at": "2026-06-04T11:21:11.621Z",
+    "product": 2,
+    "image": "products/83bfb552-5f22-4394-9b1d-272943ef01a7.jpg",
+    "alt_text": "Sunlit Bloom — styled",
+    "is_primary": false,
+    "sort_order": 1
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 23,
+  "fields": {
+    "created_at": "2026-06-04T11:21:11.635Z",
+    "updated_at": "2026-06-04T11:21:11.635Z",
+    "product": 1,
+    "image": "products/6552f517-af09-4341-b301-265b5afb89fc.jpg",
+    "alt_text": "Daisy Glow Set — styled",
+    "is_primary": false,
+    "sort_order": 1
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 10,
+  "fields": {
+    "created_at": "2026-06-04T11:21:11.543Z",
+    "updated_at": "2026-06-04T11:21:11.543Z",
+    "product": 8,
+    "image": "products/9464b1b7-a7b9-4a64-8d14-0dede989f2f4.jpg",
+    "alt_text": "Midnight Bloom — styled",
+    "is_primary": false,
+    "sort_order": 2
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 12,
+  "fields": {
+    "created_at": "2026-06-04T11:21:11.556Z",
+    "updated_at": "2026-06-04T11:21:11.556Z",
+    "product": 7,
+    "image": "products/8de1861f-4d39-4761-8eb6-51cc15b2a08a.jpg",
+    "alt_text": "Rose Garden Gift Box — styled",
+    "is_primary": false,
+    "sort_order": 2
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 14,
+  "fields": {
+    "created_at": "2026-06-04T11:21:11.570Z",
+    "updated_at": "2026-06-04T11:21:11.570Z",
+    "product": 6,
+    "image": "products/f4956545-bfbf-47a8-90bb-d2e0070a085b.jpg",
+    "alt_text": "Vanilla Amber Luxe — styled",
+    "is_primary": false,
+    "sort_order": 2
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 16,
+  "fields": {
+    "created_at": "2026-06-04T11:21:11.584Z",
+    "updated_at": "2026-06-04T11:21:11.584Z",
+    "product": 5,
+    "image": "products/9192b1fe-5f64-4326-b826-6a212ef47f23.jpg",
+    "alt_text": "Petal Crown Collection — styled",
+    "is_primary": false,
+    "sort_order": 2
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 18,
+  "fields": {
+    "created_at": "2026-06-04T11:21:11.598Z",
+    "updated_at": "2026-06-04T11:21:11.598Z",
+    "product": 4,
+    "image": "products/2153d2fb-757a-4604-87fb-9428cfa70308.jpg",
+    "alt_text": "Lavender Dreams — styled",
+    "is_primary": false,
+    "sort_order": 2
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 20,
+  "fields": {
+    "created_at": "2026-06-04T11:21:11.612Z",
+    "updated_at": "2026-06-04T11:21:11.612Z",
+    "product": 3,
+    "image": "products/ad1dbc1c-30a7-47ac-af26-2fec113170ff.jpg",
+    "alt_text": "Blush Heart Candle — styled",
+    "is_primary": false,
+    "sort_order": 2
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 22,
+  "fields": {
+    "created_at": "2026-06-04T11:21:11.628Z",
+    "updated_at": "2026-06-04T11:21:11.628Z",
+    "product": 2,
+    "image": "products/7840fb20-f937-41ea-96f7-f3595b5da54c.jpg",
+    "alt_text": "Sunlit Bloom — styled",
+    "is_primary": false,
+    "sort_order": 2
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 24,
+  "fields": {
+    "created_at": "2026-06-04T11:21:11.641Z",
+    "updated_at": "2026-06-04T11:21:11.641Z",
+    "product": 1,
+    "image": "products/2573285e-a2f5-48b6-bc49-f2e74266889e.jpg",
+    "alt_text": "Daisy Glow Set — styled",
+    "is_primary": false,
+    "sort_order": 2
+  }
+},
+{
+  "model": "products.stocknotification",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-06-04T03:34:13.605Z",
+    "updated_at": "2026-06-04T03:34:13.605Z",
+    "product": 8,
+    "email": "waiter@test.com",
+    "user": null,
+    "is_notified": true,
+    "notified_at": "2026-06-04T03:34:49.840Z"
+  }
+},
+{
+  "model": "core.sitesettings",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-06-03T16:20:46.313Z",
+    "updated_at": "2026-06-04T09:47:39.830Z",
+    "site_name": "Aura Archives",
+    "tagline": "Light That Preserves Moments",
+    "logo": "",
+    "favicon": "",
+    "contact_email": "hello@aura-archives.com",
+    "contact_phone": "+91 98765 43210",
+    "address": "",
+    "whatsapp_number": "919876543210",
+    "facebook_url": "https://facebook.com/auraarchives",
+    "instagram_url": "https://instagram.com/auraarchives",
+    "twitter_url": "",
+    "pinterest_url": "",
+    "youtube_url": "",
+    "google_analytics_id": "",
+    "razorpay_enabled": true,
+    "cod_enabled": true,
+    "currency": "INR",
+    "currency_symbol": "₹",
+    "free_shipping_threshold": "500.00",
+    "flat_shipping_rate": "49.00",
+    "tax_enabled": false,
+    "tax_label": "GST",
+    "tax_percentage": "18.00",
+    "prices_include_tax": true,
+    "maintenance_mode": false,
+    "maintenance_message": "",
+    "meta_title": "Aura Archives - Handmade Luxury Soy Candles",
+    "meta_description": "Handcrafted luxury soy candles. Light That Preserves Moments. Floral, gift & home decor candles made in small batches.",
+    "meta_keywords": ""
+  }
+},
+{
+  "model": "cms.page",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-06-03T16:20:46.323Z",
+    "updated_at": "2026-06-03T16:20:46.323Z",
+    "title": "About Us",
+    "slug": "about-us",
+    "page_type": "about",
+    "content": "Aura Archives crafts handmade luxury soy candles...",
+    "is_active": true,
+    "show_in_footer": true,
+    "show_in_header": false,
+    "sort_order": 0,
+    "meta_title": "",
+    "meta_description": ""
+  }
+},
+{
+  "model": "cms.page",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-06-03T16:20:46.329Z",
+    "updated_at": "2026-06-03T16:20:46.329Z",
+    "title": "Shipping Policy",
+    "slug": "shipping-policy",
+    "page_type": "shipping",
+    "content": "We ship across India. Free shipping on orders above Rs.500. Delivery in 3-7 business days.",
+    "is_active": true,
+    "show_in_footer": true,
+    "show_in_header": false,
+    "sort_order": 0,
+    "meta_title": "",
+    "meta_description": ""
+  }
+},
+{
+  "model": "cms.page",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-06-03T16:20:46.334Z",
+    "updated_at": "2026-06-03T16:20:46.334Z",
+    "title": "Return Policy",
+    "slug": "return-policy",
+    "page_type": "refund",
+    "content": "Returns accepted within 7 days of delivery for defective products. Contact us to initiate a return.",
+    "is_active": true,
+    "show_in_footer": true,
+    "show_in_header": false,
+    "sort_order": 0,
+    "meta_title": "",
+    "meta_description": ""
+  }
+},
+{
+  "model": "cms.page",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-06-03T16:20:46.339Z",
+    "updated_at": "2026-06-03T16:20:46.339Z",
+    "title": "Privacy Policy",
+    "slug": "privacy-policy",
+    "page_type": "privacy",
+    "content": "Your privacy matters. We never share your personal data with third parties.",
+    "is_active": true,
+    "show_in_footer": true,
+    "show_in_header": false,
+    "sort_order": 0,
+    "meta_title": "",
+    "meta_description": ""
+  }
+},
+{
+  "model": "cms.page",
+  "pk": 5,
+  "fields": {
+    "created_at": "2026-06-03T16:20:46.344Z",
+    "updated_at": "2026-06-03T16:20:46.344Z",
+    "title": "Terms of Service",
+    "slug": "terms-of-service",
+    "page_type": "terms",
+    "content": "By using Aura Archives you agree to our terms and conditions.",
+    "is_active": true,
+    "show_in_footer": true,
+    "show_in_header": false,
+    "sort_order": 0,
+    "meta_title": "",
+    "meta_description": ""
+  }
+},
+{
+  "model": "cms.page",
+  "pk": 6,
+  "fields": {
+    "created_at": "2026-06-03T16:20:46.349Z",
+    "updated_at": "2026-06-03T16:20:46.349Z",
+    "title": "FAQ",
+    "slug": "faq",
+    "page_type": "faq",
+    "content": "Q: How long do candles burn?\nA: Our candles burn for 25-60 hours depending on size.\n\nQ: Are they natural?\nA: Yes, 100% natural soy wax with cotton wicks.",
+    "is_active": true,
+    "show_in_footer": true,
+    "show_in_header": false,
+    "sort_order": 0,
+    "meta_title": "",
+    "meta_description": ""
+  }
+},
+{
+  "model": "cms.announcement",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-06-03T16:20:46.354Z",
+    "updated_at": "2026-06-03T16:20:46.354Z",
+    "message": "Free shipping on all orders above Rs.500",
+    "link_url": "/shop/",
+    "link_text": "Shop Now",
+    "background_color": "#C9A86A",
+    "text_color": "#FFFFFF",
+    "is_active": true,
+    "sort_order": 0,
+    "valid_until": null
+  }
+},
+{
+  "model": "blog.blogcategory",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-06-03T16:20:46.379Z",
+    "updated_at": "2026-06-03T16:20:46.379Z",
+    "name": "Candle Care",
+    "slug": "candle-care"
+  }
+},
+{
+  "model": "blog.blogcategory",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-06-03T23:51:06.782Z",
+    "updated_at": "2026-06-03T23:51:06.782Z",
+    "name": "Behind the Studio",
+    "slug": "behind-the-studio"
+  }
+},
+{
+  "model": "blog.blogcategory",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-06-03T23:51:06.799Z",
+    "updated_at": "2026-06-03T23:51:06.799Z",
+    "name": "Fragrance Guide",
+    "slug": "fragrance-guide"
+  }
+},
+{
+  "model": "blog.blogcategory",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-06-03T23:51:06.817Z",
+    "updated_at": "2026-06-03T23:51:06.817Z",
+    "name": "Slow Living",
+    "slug": "slow-living"
+  }
+},
+{
+  "model": "blog.blogpost",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-06-03T23:51:06.825Z",
+    "updated_at": "2026-06-04T05:28:41.930Z",
+    "title": "The Quiet Ritual of Lighting a Candle",
+    "slug": "the-quiet-ritual-of-lighting-a-candle",
+    "author": null,
+    "category": 4,
+    "excerpt": "In a world built for speed, striking a single match might be the smallest, most radical pause you take all day.",
+    "content": "We named our studio Aura Archives because we believe a scent can archive a moment — store it, the way a photograph stores light, and hand it back to you whenever you light the wick.\n\nBut there's something quieter happening too, in the act of lighting itself.\n\nThink about it: to light a candle, you have to stop. You find the matches. You trim the wick. You strike, you wait for the flame to catch, you watch it settle. For thirty seconds, you're doing exactly one thing — and in a day built for doing five things at once, thirty seconds of single-mindedness is almost a luxury.\n\nWe've started treating it as a small ceremony. Morning coffee gets a candle. The end of the workday gets a different one — a deliberate full-stop between the part of the day that belonged to other people and the part that belongs to us. Sunday evenings, when the week ahead starts pressing in, get Lavender Dreams and a hard rule: nothing urgent gets decided while it's burning.\n\nNone of this is precious. It's just a way of marking time with intention instead of letting it blur. A flame is a small thing. But lighting one on purpose — choosing the scent, choosing the moment — turns an ordinary evening into one you'll actually remember.\n\nThat's the whole idea, really. Light that preserves moments. Strike a match tonight and see what it keeps for you.",
+    "featured_image": "blog/e1379684-226a-4be4-9775-bf658d6f7b9a.jpg",
+    "status": "published",
+    "is_featured": false,
+    "published_at": "2026-06-03T23:51:06.822Z",
+    "meta_title": "",
+    "meta_description": "In a world built for speed, striking a single match might be the smallest, most radical pause you take all day.",
+    "view_count": 6
+  }
+},
+{
+  "model": "blog.blogpost",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-06-03T23:51:06.808Z",
+    "updated_at": "2026-06-04T05:28:42.708Z",
+    "title": "Finding Your Signature Scent",
+    "slug": "finding-your-signature-scent",
+    "author": null,
+    "category": 3,
+    "excerpt": "Floral, warm, or quiet and grounding? A short guide to discovering the candle that feels most like you.",
+    "content": "Choosing a candle isn't really about choosing a fragrance — it's about choosing a mood you want to live inside. Here's how we'd guide a friend through it.\n\nIf you love an open window in spring.\nYou're drawn to brightness and air. Start with our Floral collection — Sunlit Bloom for warmth, Petal Crown for something softer and more romantic. These are the scents that make a room feel awake.\n\nIf your idea of luxury is doing nothing.\nYou want comfort you can sink into. Reach for the Classic collection: Vanilla Amber Luxe wraps a room like cashmere, all warm vanilla and sandalwood. It's the candle for rain on the window and a book you're in no hurry to finish.\n\nIf you're trying to slow your mind down.\nYou need grounding, not excitement. Our Wellness candles — led by Lavender Dreams — are blended to lower your shoulders. Light one twenty minutes before bed and let the room do the rest.\n\nIf you come alive after dark.\nYou want a little drama. Midnight Bloom is night jasmine and black rose over dark amber — mysterious, elegant, and unforgettable. It's the scent for the version of you that the daytime never quite sees.\n\nStill unsure? Trust the moment, not the notes. Read the line under each candle's name — the moment it was made to preserve. The right scent is usually the one whose moment you wish you were living right now.",
+    "featured_image": "blog/8168ebb4-fe9e-454e-9f4e-8ba61c52c4fd.jpg",
+    "status": "published",
+    "is_featured": false,
+    "published_at": "2026-06-03T23:51:06.805Z",
+    "meta_title": "",
+    "meta_description": "Floral, warm, or quiet and grounding? A short guide to discovering the candle that feels most like you.",
+    "view_count": 0
+  }
+},
+{
+  "model": "blog.blogpost",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-06-03T23:51:06.791Z",
+    "updated_at": "2026-06-04T05:28:43.477Z",
+    "title": "Why We Pour in Small Batches",
+    "slug": "why-we-pour-in-small-batches",
+    "author": null,
+    "category": 2,
+    "excerpt": "We could make more, faster. We choose not to. Here's the quiet philosophy behind every batch we pour.",
+    "content": "People ask us why we don't simply scale up — pour a thousand candles at once, fill a warehouse, move on. The honest answer is that something gets lost when you do.\n\nA small batch is usually twenty to forty candles. It's small enough that one person can watch over the whole pour: checking the wax temperature by feel, adjusting the fragrance load when the season's humidity shifts, catching the candle that didn't set quite right before it ever reaches you.\n\nIt means we can change our minds. When a fragrance isn't singing, we can pull it and reblend the next batch without unwinding a mountain of inventory. Our Vanilla Amber Luxe has been quietly refined more than a dozen times this way — each batch a little truer than the last.\n\nIt also means every candle is a little bit human. Hand-poured wax is never perfectly identical; a Petal Crown candle's flower arrangement is never repeated twice. We've come to love those small variations. They're proof that a person made this, not a machine.\n\nSmall batches are slower and they cost us more. But they let us keep our promise: that every candle leaving the studio is one we'd happily light in our own home. That's a promise that only survives at this scale — so this is the scale we've chosen to stay.",
+    "featured_image": "blog/d7a3ba57-dad4-482a-aaef-7b0e8f69d67c.jpg",
+    "status": "published",
+    "is_featured": true,
+    "published_at": "2026-06-03T23:51:06.788Z",
+    "meta_title": "",
+    "meta_description": "We could make more, faster. We choose not to. Here's the quiet philosophy behind every batch we pour.",
+    "view_count": 2
+  }
+},
+{
+  "model": "blog.blogpost",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-06-03T16:20:46.385Z",
+    "updated_at": "2026-06-04T05:28:47.816Z",
+    "title": "How to Make Your Candle Last Longer",
+    "slug": "how-to-make-your-candle-last-longer",
+    "author": null,
+    "category": 1,
+    "excerpt": "The first burn matters more than you think. A few small rituals will double the life — and the glow — of every candle you own.",
+    "content": "There's a small heartbreak in watching a beautiful candle tunnel down the middle, leaving a ring of unburned wax clinging to the glass. The good news: it's almost always preventable, and the fixes take seconds.\n\nThe first burn sets the memory.\nSoy wax has a memory. The very first time you light a candle, let it burn long enough for the melted pool to reach all the way to the edge of the vessel — usually two to three hours. Blow it out too early and the wax \"remembers\" that smaller pool, tunnelling inward every burn after. Give the first light the time it deserves and the rest take care of themselves.\n\nTrim the wick, every single time.\nBefore each burn, trim the cotton wick down to about a quarter of an inch. A long wick burns hot and fast, throws soot, and flickers in a way that eats through your candle. A trimmed wick burns clean, steady, and slow. We keep a tiny pair of scissors beside ours; you'll be surprised how much it matters.\n\nKeep it out of the draft.\nAn open window or a busy fan makes the flame dance — which looks lovely, but burns the wax unevenly and shortens the life of the candle. Set yours somewhere still.\n\nKnow when to stop.\nNever burn a candle for more than four hours at a stretch, and always leave at least a centimetre of wax at the bottom. Past that point, the glass gets too hot and the scent fades anyway.\n\nTreat your candle like the small, slow luxury it is, and a single Aura Archives soy candle will keep its glow — and its fragrance — for the full fifty hours we poured into it.",
+    "featured_image": "blog/4d23b976-a270-4aaf-92cb-d26ff4ab4a37.jpg",
+    "status": "published",
+    "is_featured": true,
+    "published_at": "2026-06-03T16:20:46.383Z",
+    "meta_title": "",
+    "meta_description": "",
+    "view_count": 0
+  }
+},
+{
+  "model": "coupons.coupon",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-06-03T16:20:46.365Z",
+    "updated_at": "2026-06-03T16:20:46.365Z",
+    "code": "AURA100",
+    "description": "Flat Rs.100 off",
+    "discount_type": "fixed",
+    "discount_value": "100.00",
+    "min_order_amount": "1000.00",
+    "max_discount": null,
+    "usage_limit": null,
+    "usage_limit_per_user": 1,
+    "times_used": 0,
+    "is_active": true,
+    "valid_from": "2026-06-03T16:20:46.365Z",
+    "valid_until": "2027-06-03T16:20:46.364Z",
+    "applicable_categories": [],
+    "applicable_products": []
+  }
+},
+{
+  "model": "coupons.coupon",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-06-03T16:20:46.360Z",
+    "updated_at": "2026-06-03T16:20:46.360Z",
+    "code": "WELCOME10",
+    "description": "10% off for new customers",
+    "discount_type": "percentage",
+    "discount_value": "10.00",
+    "min_order_amount": "500.00",
+    "max_discount": "200.00",
+    "usage_limit": null,
+    "usage_limit_per_user": 1,
+    "times_used": 0,
+    "is_active": true,
+    "valid_from": "2026-06-03T16:20:46.360Z",
+    "valid_until": "2027-06-03T16:20:46.358Z",
+    "applicable_categories": [],
+    "applicable_products": []
+  }
+},
+{
+  "model": "shipping.shippingmethod",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-06-03T16:20:46.369Z",
+    "updated_at": "2026-06-03T16:20:46.369Z",
+    "name": "Standard Delivery",
+    "description": "",
+    "zone": null,
+    "base_price": "49.00",
+    "min_order_for_free": "500.00",
+    "estimated_days_min": 3,
+    "estimated_days_max": 7,
+    "is_active": true,
+    "is_cod_available": true
+  }
+},
+{
+  "model": "shipping.shippingmethod",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-06-03T16:20:46.374Z",
+    "updated_at": "2026-06-03T16:20:46.374Z",
+    "name": "Express Delivery",
+    "description": "",
+    "zone": null,
+    "base_price": "99.00",
+    "min_order_for_free": "2000.00",
+    "estimated_days_min": 1,
+    "estimated_days_max": 3,
+    "is_active": true,
+    "is_cod_available": true
+  }
+}
+]

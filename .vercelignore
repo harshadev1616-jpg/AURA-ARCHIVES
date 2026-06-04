@@ -14,7 +14,6 @@ env/
 *.md
 !README.md
 staticfiles/
-media/
 node_modules/
 .claude/
 tests/

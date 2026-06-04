@@ -46,8 +46,3 @@ if settings.DEBUG:
     except ImportError:
         pass
 
-# Serve media files in all environments (WhiteNoise handles static, Django serves media)
-from django.views.static import serve as _serve
-urlpatterns += [
-    path('media/<path:path>', _serve, {'document_root': settings.MEDIA_ROOT}),
-]

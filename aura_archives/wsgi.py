@@ -18,20 +18,6 @@ except Exception:
     print(f"WSGI STARTUP FAILED:\n{_startup_error}", file=sys.stderr)
     _django_app = None
 
-# Serve static and media files via WhiteNoise from the Lambda filesystem.
-# static/ → /static/*  (CSS, JS, images)
-# media/  → /media/*   (uploaded product images)
-if _django_app is not None:
-    try:
-        from whitenoise import WhiteNoise
-        _static_dir = str(BASE_DIR / 'static')
-        _media_dir = str(BASE_DIR / 'media')
-        _django_app = WhiteNoise(_django_app, root=_static_dir, prefix='static', max_age=86400)
-        _django_app.add_files(_media_dir, prefix='media')
-        print(f"[wsgi] WhiteNoise serving static={_static_dir} media={_media_dir}", file=sys.stderr)
-    except Exception:
-        print(f"[wsgi] WhiteNoise init failed: {traceback.format_exc()}", file=sys.stderr)
-
 _err = _startup_error
 
 
