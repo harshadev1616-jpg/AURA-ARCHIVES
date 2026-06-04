@@ -166,22 +166,52 @@ RAZORPAY_KEY_SECRET = env('RAZORPAY_KEY_SECRET', default='')
 # Redis
 REDIS_URL = env('REDIS_URL', default='redis://localhost:6379/0')
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': REDIS_URL,
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+# Cache configuration with fallback support
+try:
+    # Try Redis cache first
+    if REDIS_URL and REDIS_URL.startswith('redis://'):
+        CACHES = {
+            'default': {
+                'BACKEND': 'django_redis.cache.RedisCache',
+                'LOCATION': REDIS_URL,
+                'OPTIONS': {
+                    'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+                    'CONNECTION_POOL_KWARGS': {'max_connections': 5},
+                    'SOCKET_CONNECT_TIMEOUT': 5,
+                    'SOCKET_TIMEOUT': 5,
+                }
+            }
+        }
+        SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+        SESSION_CACHE_ALIAS = 'default'
+    else:
+        raise ValueError("REDIS_URL not configured")
+except Exception as e:
+    # Fallback to database cache if Redis unavailable
+    print(f"Redis cache unavailable ({e}), using database cache")
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+            'LOCATION': 'django_cache_table',
         }
     }
-}
+    SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-SESSION_CACHE_ALIAS = 'default'
+# Celery configuration
+try:
+    # Use Redis for Celery if available
+    if REDIS_URL and REDIS_URL.startswith('redis://'):
+        CELERY_BROKER_URL = REDIS_URL
+        CELERY_RESULT_BACKEND = REDIS_URL
+    else:
+        # Fallback broker
+        CELERY_BROKER_URL = 'memory://'
+        CELERY_RESULT_BACKEND = 'db+sqlite:////tmp/celery.db'
+except Exception as e:
+    print(f"Celery Redis configuration failed ({e}), using memory broker")
+    CELERY_BROKER_URL = 'memory://'
+    CELERY_RESULT_BACKEND = 'cache+db://default/'
 
-# Celery
-CELERY_BROKER_URL = REDIS_URL
-CELERY_RESULT_BACKEND = REDIS_URL
 CELERY_TIMEZONE = TIME_ZONE
 
 # API Keys

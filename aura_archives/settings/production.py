@@ -1,22 +1,38 @@
 from .base import *
+import os
 
 DEBUG = False
 
-# --- Security hardening (active in production only) ---
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
-SECURE_HSTS_SECONDS = 31536000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_REFERRER_POLICY = 'same-origin'
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-X_FRAME_OPTIONS = 'DENY'
+# Vercel serverless environment detection
+IS_VERCEL = os.getenv('VERCEL') == '1'
 
-# CSRF trusted origins (set ALLOWED_HOSTS / this for your domain)
-CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', default=[SITE_URL])
+# --- Security hardening (relaxed for Vercel) ---
+if not IS_VERCEL:
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_REFERRER_POLICY = 'same-origin'
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    X_FRAME_OPTIONS = 'DENY'
+else:
+    # Vercel handles SSL/HTTPS, so relax security settings
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+    X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+# CSRF trusted origins
+csrf_origins = env.list('CSRF_TRUSTED_ORIGINS', default=[])
+if not csrf_origins:
+    csrf_origins = ['https://aura-archives.vercel.app', SITE_URL]
+CSRF_TRUSTED_ORIGINS = csrf_origins
 
 # --- Sentry (optional — only if installed AND a DSN is configured) ---
 SENTRY_DSN = env('SENTRY_DSN', default='')
