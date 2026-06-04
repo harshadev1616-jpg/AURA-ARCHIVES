@@ -33,9 +33,11 @@ except Exception as exc:
 if IS_VERCEL:
     try:
         from django.core.management import call_command
+        call_command('migrate', '--run-syncdb', verbosity=0)
         call_command('createcachetable', verbosity=0)
     except Exception:
-        pass
+        import traceback
+        print("Vercel startup migration failed:", traceback.format_exc(), file=sys.stderr)
 
 try:
     from whitenoise.wsgi import WhiteNoise
