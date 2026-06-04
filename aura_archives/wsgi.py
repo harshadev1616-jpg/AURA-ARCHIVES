@@ -1,7 +1,7 @@
 import os
 import sys
+import traceback
 from pathlib import Path
-from django.core.wsgi import get_wsgi_application
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(BASE_DIR))
@@ -14,7 +14,21 @@ if IS_VERCEL or not DEBUG_MODE:
 else:
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'aura_archives.settings.development')
 
-application = get_wsgi_application()
+# On Vercel, ensure DATABASE_URL points to writable /tmp if not set
+if IS_VERCEL and not os.getenv('DATABASE_URL'):
+    os.environ['DATABASE_URL'] = 'sqlite:////tmp/db.sqlite3'
+
+try:
+    from django.core.wsgi import get_wsgi_application
+    application = get_wsgi_application()
+except Exception as exc:
+    # Surface the full traceback so Vercel logs show the real cause
+    tb = traceback.format_exc()
+    print(f"WSGI STARTUP FAILED:\n{tb}", file=sys.stderr)
+
+    def application(environ, start_response):
+        start_response('500 Internal Server Error', [('Content-Type', 'text/plain')])
+        return [f"Server startup error:\n{tb}".encode()]
 
 if IS_VERCEL:
     try:
