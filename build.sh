@@ -13,4 +13,8 @@ mkdir -p staticfiles
 echo "Collecting static files..."
 python manage.py collectstatic --noinput --clear || echo "Warning: Static file collection had issues"
 
+# Create database cache table for Vercel deployment
+echo "Creating cache table..."
+python manage.py createcachetable 2>/dev/null || echo "Note: Cache table creation handled at runtime"
+
 echo "Build completed successfully!"

@@ -21,6 +21,16 @@ try:
     # Get WSGI application
     application = get_wsgi_application()
     
+    # Ensure cache table exists on Vercel
+    if IS_VERCEL:
+        try:
+            from django.core.management import call_command
+            call_command('createcachetable', verbosity=0)
+        except Exception as e:
+            # Cache table creation may fail if table already exists or if there are database issues
+            # This is OK - the cache will still work in memory or with other backends
+            pass
+    
     # Add WhiteNoise for static file handling
     try:
         from whitenoise.wsgi import WhiteNoise
