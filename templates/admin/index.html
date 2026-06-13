@@ -1,5 +1,5 @@
 {% extends "admin/base_site.html" %}
-{% load aura_admin i18n log %}
+{% load i18n log %}
 
 {% block coltype %}colMS{% endblock %}
 
@@ -11,7 +11,6 @@
 
 {% block content %}
 <div id="content-main">
-  {% aura_dashboard %}
   {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
 </div>
 {% endblock %}
