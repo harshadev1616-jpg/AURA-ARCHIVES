@@ -21,6 +21,24 @@ except Exception:
 _err = _startup_error
 
 
+def _bootstrap_seed_reviews():
+    """One-time seed of approved customer reviews on the live DB (whose
+    DATABASE_URL is a Sensitive Vercel env var, unreachable locally).
+    Runs only the fixed, idempotent `seed_reviews` command when SEED_REVIEWS=1.
+    Remove the env var after the reviews appear. Fully guarded."""
+    if os.environ.get('SEED_REVIEWS') != '1' or _django_app is None:
+        return
+    try:
+        from django.core import management
+        management.call_command('seed_reviews')
+        print("SEED_REVIEWS bootstrap: done", file=sys.stderr)
+    except Exception:
+        print(f"SEED_REVIEWS bootstrap FAILED:\n{traceback.format_exc()}", file=sys.stderr)
+
+
+_bootstrap_seed_reviews()
+
+
 def application(environ, start_response):
     if _django_app is None:
         start_response('500 Internal Server Error', [('Content-Type', 'text/plain')])
