@@ -173,16 +173,33 @@ a:hover, a:focus { color: var(--link-hover-color); }
 .aura-chip .n { font-size:20px; font-weight:700; }
 .aura-chip .t { font-size:12px; color:#888; }
 
-/* ---- Dashboard: use full page width (kill narrow left column + empty right gutter) ---- */
-.dashboard #content { margin-right: 0; }
-/* App list flows in a responsive multi-column grid that fills the width */
+/* ---- Dashboard: override Django's fixed 600px content width → full width ---- */
+.dashboard #content { width: auto !important; max-width: none; margin-right: 0 !important; }
 .dashboard #content-main {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 16px;
-  align-items: start;
+  float: none;
+  width: 100%;
+  column-width: 340px;
+  column-gap: 16px;
 }
-.dashboard #content-main > .module { margin: 0; width: auto; }
-/* Recent actions: a normal full-width card below the grid, not a reserved 300px gutter */
-.dashboard #content-related { float: none; width: 100%; margin: 16px 0 0; }
+.dashboard #content-main > .module,
+.dashboard #content-main > div {
+  display: inline-block;
+  width: 100%;
+  break-inside: avoid;
+  margin: 0 0 16px;
+  vertical-align: top;
+}
+/* Recent actions: compact full-width card below, not a reserved 300px gutter */
+.dashboard #content-related { float: none; clear: both; width: 100%; margin: 16px 0 0; }
 .dashboard #content-related .module { width: 100%; margin: 0; }
+
+/* ---- Change-list: don't wrap the whole list in a tall white card ---- */
+/* (#changelist is a .module; the card bg stretched to the filter height,
+   leaving big empty white space below short result tables) */
+#changelist.module {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  overflow: visible;
+}
