@@ -67,7 +67,18 @@ class CategoryAdmin(admin.ModelAdmin):
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
     extra = 1
-    fields = ["image", "is_primary", "alt_text", "sort_order"]
+    fields = ["thumb", "image", "is_primary", "alt_text", "sort_order"]
+    readonly_fields = ["thumb"]
+
+    def thumb(self, obj):
+        if obj and obj.pk and obj.image:
+            return format_html(
+                "<img src='{}' style='height:56px;width:56px;object-fit:cover;"
+                "border-radius:6px;border:1px solid #ddd' />",
+                obj.image.url,
+            )
+        return format_html("<span style='color:#bbb'>—</span>")
+    thumb.short_description = "Preview"
 
 
 class ProductVariantInline(admin.TabularInline):
