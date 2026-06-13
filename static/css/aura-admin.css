@@ -335,7 +335,27 @@ input[type=url]:focus, input[type=number]:focus, textarea:focus, select:focus,
 
 /* Selector (m2m) + calendar/clock widgets */
 .selector, .calendarbox, .clockbox { border-radius: 12px; }
-.selector-available h2, .selector-chosen h2 { border-radius: 8px 8px 0 0; }
+.selector-available, .selector-chosen {
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.selector-available h2, .selector-chosen h2 {
+  background: #2B2B2B;
+  color: #F8F4EF;
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  border-radius: 0;
+}
+.selector .selector-filter { border-bottom: 1px solid var(--hairline-color); }
+.selector-chosen .selector-filter { background: var(--darkened-bg); }
+.selector ul.selector-chooser {
+  background: var(--darkened-bg);
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+}
+.selector-add, .selector-remove { filter: saturate(.85); }
 
 /* ---------- Sidebar nav ---------- */
 #nav-sidebar {
@@ -724,3 +744,297 @@ hr { border-color: var(--hairline-color); }
     padding-right: 20px;
   }
 }
+
+/* ============================================================
+   EVERY-ELEMENT COVERAGE — exhaustive component pass
+   Anything the stock admin can render is themed below.
+   ============================================================ */
+
+/* ---------- Accessibility: focus-visible ---------- */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+.button:focus-visible,
+.object-tools a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ---------- Selection + scrollbars (match storefront) ---------- */
+::selection { background: var(--accent); color: #fff; }
+* { scrollbar-color: #cdbfa8 transparent; }
+::-webkit-scrollbar { width: 11px; height: 11px; }
+::-webkit-scrollbar-track { background: var(--darkened-bg); }
+::-webkit-scrollbar-thumb { background: #d8cbb6; border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ---------- All text-ish inputs (complete the set) ---------- */
+input[type=search], input[type=date], input[type=datetime-local],
+input[type=time], input[type=month], input[type=week],
+input[type=color], select[multiple] {
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 9px 12px;
+  background: #fff;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+input[type=search]:focus, input[type=date]:focus, input[type=datetime-local]:focus,
+input[type=time]:focus, input[type=month]:focus, input[type=week]:focus,
+select[multiple]:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(184,148,90,.18);
+  outline: none;
+}
+textarea { line-height: 1.55; }
+input::placeholder, textarea::placeholder { color: #b3a895; }
+
+/* ---------- Checkboxes & radios ---------- */
+input[type=checkbox], input[type=radio] {
+  accent-color: var(--accent);
+  width: 16px; height: 16px;
+  cursor: pointer;
+}
+.vCheckboxLabel, label[for] { cursor: pointer; }
+
+/* ---------- File upload widget ---------- */
+input[type=file] { font-size: 13px; color: var(--body-quiet-color); }
+input[type=file]::file-selector-button {
+  border: none;
+  background: #2B2B2B;
+  color: #F8F4EF;
+  border-radius: 999px;
+  padding: 8px 16px;
+  margin-right: 12px;
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .25s ease;
+}
+input[type=file]::file-selector-button:hover { background: var(--accent); }
+.clearable-file-input { color: var(--body-quiet-color); font-size: 13px; }
+p.file-upload a { color: var(--link-fg); }
+
+/* ---------- Select2 / autocomplete widgets ---------- */
+.select2-container--admin-autocomplete .select2-selection,
+.select2-container .select2-selection--single,
+.select2-container .select2-selection--multiple {
+  border: 1px solid var(--border-color) !important;
+  border-radius: 10px !important;
+  min-height: 40px;
+  background: #fff;
+}
+.select2-container--admin-autocomplete.select2-container--focus .select2-selection,
+.select2-container--admin-autocomplete.select2-container--open .select2-selection {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px rgba(184,148,90,.18);
+}
+.select2-container--admin-autocomplete .select2-selection--single .select2-selection__rendered {
+  line-height: 38px; color: var(--body-fg);
+}
+.select2-container--admin-autocomplete .select2-selection--single .select2-selection__arrow { height: 38px; }
+.select2-dropdown {
+  border: 1px solid var(--border-color) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 24px 50px -28px rgba(43,43,43,.5);
+  overflow: hidden;
+}
+.select2-search--dropdown .select2-search__field {
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+.select2-container--admin-autocomplete .select2-results__option--highlighted[aria-selected],
+.select2-results__option--highlighted {
+  background: var(--accent) !important;
+  color: #fff !important;
+}
+.select2-container--admin-autocomplete .select2-results__option[aria-selected=true] {
+  background: var(--selected-bg) !important;
+  color: var(--body-loud-color) !important;
+}
+.select2-container--admin-autocomplete .select2-selection--multiple .select2-selection__choice {
+  background: #2B2B2B !important;
+  color: #F8F4EF !important;
+  border: none !important;
+  border-radius: 999px !important;
+  padding: 2px 10px;
+}
+.select2-selection--multiple .select2-selection__choice__remove { color: #C9A86A !important; }
+
+/* ---------- Related-field widget icons (add / change / delete / view) ---------- */
+.related-widget-wrapper { display: inline-flex; align-items: center; gap: 4px; }
+.related-widget-wrapper-link {
+  opacity: .75;
+  border-radius: 8px;
+  padding: 2px;
+  transition: opacity .2s ease, transform .2s ease;
+}
+.related-widget-wrapper-link:hover { opacity: 1; transform: translateY(-1px); }
+.add-related, .change-related, .view-related, .delete-related { filter: saturate(.85); }
+
+/* ---------- Date / time shortcuts + popup calendars ---------- */
+.datetimeshortcuts a:link, .datetimeshortcuts a:visited { color: var(--link-fg); font-weight: 500; }
+.datetimeshortcuts a:hover { color: var(--accent); }
+.calendarbox, .clockbox {
+  border: 1px solid var(--border-color) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 24px 50px -26px rgba(43,43,43,.55) !important;
+  overflow: hidden;
+}
+.calendarbox h2, .clockbox h2,
+.calendar caption, .calendarnav {
+  background: #2B2B2B !important;
+  color: #F8F4EF !important;
+}
+.calendar td a:hover, .timelist a:hover {
+  background: var(--accent) !important;
+  color: #fff !important;
+  border-radius: 6px;
+}
+.calendar td.selected a { background: #2B2B2B !important; color: #fff !important; border-radius: 6px; }
+.calendar td.today a { font-weight: 700; color: var(--accent); }
+.calendarnav-previous, .calendarnav-next { color: #C9A86A !important; }
+.calendar-cancel { background: var(--darkened-bg); }
+
+/* ---------- Collapsible fieldsets ---------- */
+fieldset.collapsed .collapse-toggle,
+.collapse-toggle {
+  color: var(--accent) !important;
+  font-weight: 500;
+}
+details.module summary,
+fieldset.module > h2 { cursor: pointer; }
+fieldset .description {
+  color: var(--body-quiet-color);
+  font-size: 13px;
+  padding: 10px 18px 0;
+}
+
+/* ---------- Readonly fields ---------- */
+.form-row .readonly, div.readonly {
+  color: var(--body-loud-color);
+  background: var(--darkened-bg);
+  border: 1px solid var(--hairline-color);
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: inline-block;
+}
+
+/* ---------- Inlines (tabular + stacked) ---------- */
+.inline-group .tabular table { border-radius: 0; }
+.inline-group .tabular thead th {
+  background: #3a342e;
+  color: #F1E9DD;
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  border: none;
+}
+.inline-group .tabular tr.row1, .inline-group .tabular tr.row2 { background: #fff; }
+.inline-group .tabular tr:hover { background: var(--selected-row); }
+.inline-related h3 {
+  background: var(--darkened-bg);
+  border-bottom: 1px solid var(--hairline-color);
+  letter-spacing: .04em;
+}
+.inline-related h3 .inline_label { color: var(--body-loud-color); font-weight: 600; }
+.inline-related h3 .delete label { color: var(--delete-button-bg); }
+.inline-deletelink, .inline-related .delete a { color: var(--delete-button-bg); }
+
+/* "Add another" row */
+.add-row a, tr.add-row td a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+  font-weight: 600;
+  letter-spacing: .02em;
+}
+.add-row a:hover { color: var(--body-loud-color); }
+
+/* Sortable inline drag handle */
+.inline-group .sortable-handle, .djn-drag-handler { color: var(--body-quiet-color); }
+
+/* ---------- Date hierarchy drill-down ---------- */
+.xfull, #changelist .xfull {
+  background: var(--darkened-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 8px 14px;
+  margin-bottom: 14px;
+}
+#toolbar + .xfull, .xfull li a { color: var(--link-fg); }
+.xfull .toplinks a { color: var(--accent); }
+
+/* ---------- Sort options / column sorting ---------- */
+.sortoptions .sortremove, .sortoptions .toggle { opacity: .8; }
+.sortoptions .toggle:hover { opacity: 1; }
+#changelist table thead th.sorted { background: #221f1c; }
+.column-sorting, th.sortable a { position: relative; }
+
+/* ---------- Sticky submit row (Django 5) ---------- */
+.submit-row {
+  position: sticky;
+  bottom: 12px;
+  box-shadow: 0 -6px 30px -18px rgba(43,43,43,.5), 0 14px 40px -30px rgba(43,43,43,.5);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+.submit-row p.deletelink-box { margin: 0; }
+
+/* ---------- Delete confirmation page ---------- */
+.delete-confirmation #content > h1 { color: var(--delete-button-bg); }
+.delete-confirmation ul.deletelist { background: var(--darkened-bg); border-radius: 12px; padding: 14px 18px 14px 36px; }
+.delete-confirmation .cancel-link {
+  border-radius: 999px;
+  background: var(--close-button-bg);
+  color: #fff;
+  padding: 10px 20px;
+}
+.delete-confirmation .cancel-link:hover { background: var(--body-loud-color); }
+.delete-confirmation form input[type=submit] { background: var(--delete-button-bg); color: #fff; }
+.delete-confirmation form input[type=submit]:hover { background: var(--delete-button-hover-bg); }
+.delete-summary { color: var(--body-quiet-color); }
+
+/* ---------- Object history page ---------- */
+#change-history table { border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; background: #fff; }
+#change-history table thead th { background: #2B2B2B; color: #F1E9DD; text-transform: uppercase; letter-spacing: .1em; font-size: 11px; }
+#change-history table tbody tr:hover { background: var(--selected-row); }
+
+/* ---------- Form errors ---------- */
+.form-row.errors { border-radius: 10px; background: #fdf1ef; }
+ul.errorlist {
+  color: var(--delete-button-bg);
+  background: var(--message-error-bg);
+  border: 1px solid #ecc4bf;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin: 0 0 8px;
+  list-style: none;
+}
+.login .errornote { margin-bottom: 16px; }
+
+/* ---------- Action counter / changelist niceties ---------- */
+.actions .action-counter, .actions .all, .actions .question { color: var(--body-quiet-color); }
+.actions a { color: var(--link-fg); }
+.actions .button { padding: 6px 16px; }
+.paginator .showall { color: var(--accent); font-weight: 600; }
+
+/* ---------- Disabled state ---------- */
+.button[disabled], input[type=submit][disabled], .button.disabled {
+  opacity: .5; cursor: not-allowed; transform: none;
+}
+
+/* ---------- Prepopulated slug hint ---------- */
+.prepopulated_field .help { color: var(--body-quiet-color); }
+
+/* ---------- Help block + tooltips ---------- */
+div.help, .help-tooltip, img.help, .helptext {
+  color: var(--body-quiet-color) !important;
+}
+.help--popup { background: #2B2B2B; color: #F8F4EF; border-radius: 8px; }
