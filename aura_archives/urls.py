@@ -36,7 +36,6 @@ urlpatterns = [
 admin.site.site_header = 'Aura Archives Admin'
 admin.site.site_title = 'Aura Archives'
 admin.site.index_title = 'Welcome to Aura Archives Admin'
-admin.site.index_template = 'admin/aura_index.html'
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
