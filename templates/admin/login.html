@@ -4,8 +4,10 @@
 {% block extrastyle %}{{ block.super }}
 <link rel="stylesheet" href="{% static 'css/aura-admin.css' %}">
 <style>
-  body.login { display:flex; align-items:center; min-height:100vh; }
-  .login #container { max-width: 380px; }
+  body.login { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; margin:0; }
+  /* Keep the a11y skip-link out of the centred layout */
+  body.login .skip-to-content-link { position:absolute; left:-9999px; top:auto; }
+  .login #container { max-width: 380px; width:100%; }
   .login #header { padding: 28px 20px 22px; }
   .login #header #site-name a { font-size: 24px; }
   .login .aura-tag { text-align:center; font-style:italic; color:#9c8a6a; font-size:12px; margin:-8px 0 0; padding-bottom:6px; background:#2B2B2B; }
