@@ -1,9 +1,43 @@
 from decimal import Decimal
+from django import forms
 from django.contrib import admin
 from django.db.models import F
 from django.utils.html import format_html
 from import_export.admin import ImportExportModelAdmin
 from .models import Category, Product, ProductImage, ProductVariant, Tag, StockNotification
+
+
+class MultipleFileInput(forms.ClearableFileInput):
+    """A file input that accepts several files at once."""
+    allow_multiple_selected = True
+
+
+class MultipleFileField(forms.FileField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("widget", MultipleFileInput(attrs={"multiple": True}))
+        super().__init__(*args, **kwargs)
+
+    def clean(self, data, initial=None):
+        single = super().clean
+        if isinstance(data, (list, tuple)):
+            return [single(d, initial) for d in data if d]
+        if data:
+            return [single(data, initial)]
+        return []
+
+
+class ProductAdminForm(forms.ModelForm):
+    """Adds a bulk multi-image upload field to the product change form."""
+    bulk_images = MultipleFileField(
+        required=False,
+        label="Upload images",
+        help_text="Select several photos at once — each becomes an image for this "
+                  "product. Manage order / primary / alt text in “Product images” below.",
+    )
+
+    class Meta:
+        model = Product
+        fields = "__all__"
 
 
 @admin.register(StockNotification)
@@ -67,11 +101,16 @@ class ProductAdmin(ImportExportModelAdmin):
     list_filter = [OnOfferFilter, "is_active", "is_featured", "is_bestseller", "is_new", "category"]
     search_fields = ["name", "sku", "description"]
     prepopulated_fields = {"slug": ["name"]}
+    form = ProductAdminForm
     inlines = [ProductImageInline, ProductVariantInline]
     readonly_fields = ["sku", "created_at", "updated_at", "average_rating", "review_count", "live_discount"]
     save_on_top = True
     fieldsets = (
         ("Basic Info", {"fields": ("name", "slug", "category", "tags", "sku")}),
+        ("Images", {
+            "fields": ("bulk_images",),
+            "description": "Upload several photos at once for this product. The first one becomes the primary image if none is set.",
+        }),
         ("Description", {"fields": ("short_description", "description", "ingredients", "care_instructions")}),
         ("Storytelling", {"fields": ("moment", "story", "ritual"), "description": "The narrative that makes each candle feel personal."}),
         ("Candle Details", {"fields": ("fragrance_notes", "notes_top", "notes_heart", "notes_base", "fragrance_strength", "burn_time_min", "burn_time_max", "wax_type", "wick_type", "weight", "dimensions")}),
@@ -90,6 +129,23 @@ class ProductAdmin(ImportExportModelAdmin):
         "mark_featured", "mark_bestseller", "mark_new",
         "activate", "deactivate",
     ]
+
+    def save_related(self, request, form, formsets, change):
+        super().save_related(request, form, formsets, change)
+        files = form.cleaned_data.get("bulk_images") or []
+        if not files:
+            return
+        product = form.instance
+        start = product.images.count()
+        has_primary = product.images.filter(is_primary=True).exists()
+        for i, f in enumerate(files):
+            ProductImage.objects.create(
+                product=product,
+                image=f,
+                is_primary=(not has_primary and i == 0),
+                sort_order=start + i,
+            )
+        self.message_user(request, f"Uploaded {len(files)} image(s) for {product.name}.")
 
     # ---- display helpers ----
     def product_image_preview(self, obj):
