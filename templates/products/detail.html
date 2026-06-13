@@ -231,6 +231,32 @@
             </div>
             {% endif %}
 
+            <!-- Buy with confidence — trust & reassurance -->
+            <div class="mt-7 rounded-2xl border border-line dark:border-white/10 bg-cream/70 dark:bg-white/[0.04] p-5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3.5">
+                    <div class="flex items-start gap-2.5">
+                        <svg class="w-4 h-4 text-gold shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                        <div><p class="text-[13px] font-medium text-charcoal dark:text-ivory leading-tight">Hand-poured in small batches</p><p class="text-[11px] text-charcoal/45 dark:text-ivory/45">Made with care, never mass-produced</p></div>
+                    </div>
+                    <div class="flex items-start gap-2.5">
+                        <svg class="w-4 h-4 text-gold shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                        <div><p class="text-[13px] font-medium text-charcoal dark:text-ivory leading-tight">100% natural soy wax</p><p class="text-[11px] text-charcoal/45 dark:text-ivory/45">A clean, slow, soot-free burn</p></div>
+                    </div>
+                    <div class="flex items-start gap-2.5">
+                        <svg class="w-4 h-4 text-gold shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                        <div><p class="text-[13px] font-medium text-charcoal dark:text-ivory leading-tight">Free shipping over Rs.{{ site_settings.free_shipping_threshold|floatformat:0|default:"500" }}</p><p class="text-[11px] text-charcoal/45 dark:text-ivory/45">Dispatched in 1–2 business days</p></div>
+                    </div>
+                    <div class="flex items-start gap-2.5">
+                        <svg class="w-4 h-4 text-gold shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                        <div><p class="text-[13px] font-medium text-charcoal dark:text-ivory leading-tight">7-day easy returns</p><p class="text-[11px] text-charcoal/45 dark:text-ivory/45">Love it, or send it back</p></div>
+                    </div>
+                </div>
+                <div class="flex items-center justify-center gap-2 mt-4 pt-4 border-t border-line/70 dark:border-white/5 text-[11px] tracking-wide text-charcoal/50 dark:text-ivory/50">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                    Secure checkout · UPI, cards &amp; netbanking via Razorpay
+                </div>
+            </div>
+
             <!-- Stock Badge -->
             {% if product.is_low_stock %}
             <p class="text-orange-500 text-sm mb-4 flex items-center gap-1">
