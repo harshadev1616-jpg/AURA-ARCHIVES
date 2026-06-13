@@ -21,39 +21,6 @@ except Exception:
 _err = _startup_error
 
 
-def _bootstrap_admin():
-    """One-time superuser bootstrap for environments (e.g. Vercel) where you
-    can't run `createsuperuser` interactively.
-
-    Set BOOTSTRAP_ADMIN_PASSWORD (and optionally BOOTSTRAP_ADMIN_EMAIL) as env
-    vars and redeploy: on the next cold start this creates the admin or resets
-    its password — idempotently. Remove the env var once you've logged in.
-    Wrapped so it can never take the app down.
-    """
-    password = os.environ.get('BOOTSTRAP_ADMIN_PASSWORD')
-    if not password or _django_app is None:
-        return
-    try:
-        from django.contrib.auth import get_user_model
-        email = os.environ.get('BOOTSTRAP_ADMIN_EMAIL', 'apexpredatoradmins64@gmail.com')
-        User = get_user_model()
-        user, created = User.objects.get_or_create(
-            email=email,
-            defaults={'first_name': 'Aura', 'last_name': 'Admin'},
-        )
-        user.is_staff = True
-        user.is_superuser = True
-        user.is_active = True
-        user.set_password(password)
-        user.save()
-        print(f"ADMIN BOOTSTRAP ok: email={email} created={created}", file=sys.stderr)
-    except Exception:
-        print(f"ADMIN BOOTSTRAP FAILED:\n{traceback.format_exc()}", file=sys.stderr)
-
-
-_bootstrap_admin()
-
-
 def application(environ, start_response):
     if _django_app is None:
         start_response('500 Internal Server Error', [('Content-Type', 'text/plain')])
