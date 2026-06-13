@@ -10,20 +10,20 @@
 {# Cache-bust the admin CSS. These files were 404 before being committed, so
    browsers cached the failed responses and (with nosniff) refuse to apply
    them as CSS now. Versioned URLs force a fresh fetch. Bump ?v= if changed. #}
-{% block stylesheet %}{% static "admin/css/base.css" %}?v=20260613{% endblock %}
+{% block stylesheet %}{% static "admin/css/base.css" %}?v=20260613b{% endblock %}
 
 {% block responsive %}
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{% static 'admin/css/responsive.css' %}?v=20260613">
-  {% if LANGUAGE_BIDI %}<link rel="stylesheet" href="{% static 'admin/css/responsive_rtl.css' %}?v=20260613">{% endif %}
+  <link rel="stylesheet" href="{% static 'admin/css/responsive.css' %}?v=20260613b">
+  {% if LANGUAGE_BIDI %}<link rel="stylesheet" href="{% static 'admin/css/responsive_rtl.css' %}?v=20260613b">{% endif %}
 {% endblock %}
 
 {% block extrastyle %}{{ block.super }}
-  <link rel="stylesheet" href="{% static 'admin/css/nav_sidebar.css' %}?v=20260613">
-  <link rel="stylesheet" href="{% static 'admin/css/dashboard.css' %}?v=20260613">
-  <link rel="stylesheet" href="{% static 'admin/css/changelists.css' %}?v=20260613">
-  <link rel="stylesheet" href="{% static 'admin/css/forms.css' %}?v=20260613">
-  <link rel="stylesheet" href="{% static 'css/aura-admin.css' %}?v=20260613">
+  <link rel="stylesheet" href="{% static 'admin/css/nav_sidebar.css' %}?v=20260613b">
+  <link rel="stylesheet" href="{% static 'admin/css/dashboard.css' %}?v=20260613b">
+  <link rel="stylesheet" href="{% static 'admin/css/changelists.css' %}?v=20260613b">
+  <link rel="stylesheet" href="{% static 'admin/css/forms.css' %}?v=20260613b">
+  <link rel="stylesheet" href="{% static 'css/aura-admin.css' %}?v=20260613b">
 {% endblock %}
 
 {% block title %}{{ title }} | Aura Archives{% endblock %}
