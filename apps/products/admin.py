@@ -80,6 +80,9 @@ class ProductImageInline(admin.TabularInline):
         return format_html("<span style='color:#bbb'>—</span>")
     thumb.short_description = "Preview"
 
+    class Media:
+        js = ("admin/js/primary_image_radio.js",)
+
 
 class ProductVariantInline(admin.TabularInline):
     model = ProductVariant
