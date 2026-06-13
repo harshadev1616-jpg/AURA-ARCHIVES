@@ -5,6 +5,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
 
 :root {
+  color-scheme: light;            /* keep native controls light even in OS dark mode */
   --primary: #2B2B2B;
   --primary-fg: #F8F4EF;
   --secondary: #2B2B2B;

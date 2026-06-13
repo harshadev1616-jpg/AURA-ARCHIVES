@@ -1,6 +1,12 @@
 {% extends "admin/base.html" %}
 {% load static %}
 
+{# Disable Django's dark mode: the custom Aura skin is light-only, and the
+   browser's dark mode otherwise overrides only some variables, producing a
+   half-dark/half-light mess. Dropping dark_mode.css + theme.js forces the
+   intended light theme everywhere. #}
+{% block dark-mode-vars %}{% endblock %}
+
 {% block extrastyle %}{{ block.super }}
   <link rel="stylesheet" href="{% static 'css/aura-admin.css' %}">
 {% endblock %}
