@@ -13,6 +13,11 @@ function getCookie(name) {
             }
         }
     }
+    // Fallback: read the CSRF token from the <meta> tag if the cookie is unavailable.
+    if (!cookieValue && name === 'csrftoken') {
+        const meta = document.querySelector('meta[name="csrf-token"]');
+        if (meta) cookieValue = meta.getAttribute('content');
+    }
     return cookieValue;
 }
 
@@ -56,7 +61,7 @@ function toggleWishlist(productId) {
     })
         .then(r => {
             if (r.status === 403 || r.redirected) {
-                window.location.href = '/accounts/login/';
+                window.location.href = '/accounts/login/?next=' + encodeURIComponent(window.location.pathname);
                 return;
             }
             return r.json();

@@ -11,12 +11,9 @@
     {% if products %}
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">{% for product in products %}{% include "components/product_card.html" %}{% endfor %}</div>
     {% else %}
-    <div class="text-center py-16"><div class="text-6xl mb-4">&#128269;</div><p class="text-gray-500 mb-4">Try different keywords like "lavender", "rose", "gift set"</p><a href="/shop/" class="text-gold hover:underline">Browse all candles &rarr;</a></div>
+    <div class="text-center py-16"><div class="text-6xl mb-4">&#128269;</div><p class="text-charcoal/55 dark:text-ivory/55 mb-4">Try different keywords like "lavender", "rose", "gift set"</p><a href="/shop/" class="link-grow text-gold">Browse all candles &rarr;</a></div>
     {% endif %}
     {% endif %}
 </div>
-<script>
-function addToCart(productId) { fetch('/shop/cart/add/', {method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':getCookie('csrftoken')},body:JSON.stringify({product_id:productId,quantity:1})}).then(r=>r.json()).then(d=>{if(d.success)showToast(d.message);}); }
-function toggleWishlist(productId) { {% if user.is_authenticated %}fetch('/wishlist/toggle/', {method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':getCookie('csrftoken')},body:JSON.stringify({product_id:productId})}).then(r=>r.json()).then(d=>showToast(d.message));{% else %}window.location.href='/accounts/login/';{% endif %} }
-</script>
+{# addToCart() and toggleWishlist() come from main.js (cart-drawer + badge wired). #}
 {% endblock %}

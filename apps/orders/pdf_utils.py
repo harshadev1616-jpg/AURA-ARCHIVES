@@ -71,7 +71,7 @@ def generate_invoice_pdf(order, site_settings):
         # Header info
         header_data = [
             [f"Invoice #: {order.order_number}", f"Date: {order.created_at.strftime('%Y-%m-%d')}"],
-            [f"Status: {order.status.upper()}", f"Amount: ₹{order.total_amount:.2f}"],
+            [f"Status: {order.status.upper()}", f"Amount: ₹{order.total:.2f}"],
         ]
         header_table = Table(header_data, colWidths=[3 * inch, 3 * inch])
         header_table.setStyle(TableStyle([
@@ -130,7 +130,7 @@ def generate_invoice_pdf(order, site_settings):
             ['Shipping:', f"₹{order.shipping_cost:.2f}"],
             ['Tax:', f"₹{order.tax_amount:.2f}"],
             ['Discount:', f"₹{order.discount_amount:.2f}"],
-            ['TOTAL:', f"₹{order.total_amount:.2f}"],
+            ['TOTAL:', f"₹{order.total:.2f}"],
         ]
         summary_table = Table(summary_data, colWidths=[3 * inch, 2.5 * inch])
         summary_table.setStyle(TableStyle([
@@ -202,7 +202,7 @@ def generate_packing_slip_pdf(orders):
             elements.append(Paragraph("ORDER DETAILS", heading_style))
             order_data = [
                 [f"Order #: {order.order_number}", f"Date: {order.created_at.strftime('%Y-%m-%d')}"],
-                [f"Status: {order.status.upper()}", f"Total: ₹{order.total_amount:.2f}"],
+                [f"Status: {order.status.upper()}", f"Total: ₹{order.total:.2f}"],
             ]
             order_table = Table(order_data, colWidths=[3 * inch, 3 * inch])
             order_table.setStyle(TableStyle([

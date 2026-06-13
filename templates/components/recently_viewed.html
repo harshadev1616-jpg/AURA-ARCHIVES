@@ -2,11 +2,11 @@
 {% with rail=recently_viewed_products %}
 {% if rail %}
 {% comment %}Count how many remain after excluding current product{% endcomment %}
-<section class="py-14 bg-ivory dark:bg-gray-900 border-t border-line dark:border-white/10/50">
+<section class="py-24 bg-ivory dark:bg-d-bg border-t border-line dark:border-white/10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-reveal>
         <div class="flex items-end justify-between mb-7">
             <div>
-                <p class="text-gold text-xs uppercase tracking-[0.3em] font-medium mb-2">Picking up where you left off</p>
+                <p class="eyebrow text-gold mb-2">Picking up where you left off</p>
                 <h2 class="font-display text-2xl md:text-3xl text-charcoal dark:text-ivory">Recently Viewed</h2>
             </div>
             <a href="/shop/" class="link-grow hidden sm:flex items-center gap-1 text-sm text-gold">Browse all
@@ -25,7 +25,7 @@
                     {% endif %}
                 </div>
                 <h3 class="font-serif text-sm font-semibold text-charcoal dark:text-ivory line-clamp-1 group-hover:text-gold transition-colors">{{ product.name }}</h3>
-                <p class="text-xs text-gray-400 mt-0.5">Rs.{{ product.price }}</p>
+                <p class="text-xs text-charcoal/45 dark:text-ivory/45 mt-0.5">Rs.{{ product.price }}</p>
             </a>
             {% endif %}
             {% endfor %}

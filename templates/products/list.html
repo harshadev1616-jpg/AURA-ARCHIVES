@@ -4,9 +4,9 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <!-- Page Header -->
     <div class="text-center mb-10">
-        <p class="text-gold text-xs uppercase tracking-[0.3em] font-medium mb-3">Every candle holds a moment</p>
+        <p class="eyebrow text-gold mb-3">Every candle holds a moment</p>
         <h1 class="font-display text-4xl md:text-5xl text-charcoal dark:text-ivory mb-3">The Collection</h1>
-        <p class="text-gray-500 text-base max-w-xl mx-auto">Each one is hand-poured in small batches and made to preserve a feeling. Find the moment that's yours.</p>
+        <p class="text-charcoal/55 dark:text-ivory/55 text-base max-w-xl mx-auto">Each one is hand-poured in small batches and made to preserve a feeling. Find the moment that's yours.</p>
     </div>
 
     <div class="flex flex-col lg:flex-row gap-8">
@@ -128,25 +128,5 @@
 </div>
 
 {% include "components/recently_viewed.html" %}
-
-<script>
-function addToCart(productId, variantId=null) {
-    fetch('/shop/cart/add/', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')},
-        body: JSON.stringify({product_id: productId, variant_id: variantId, quantity: 1})
-    }).then(r => r.json()).then(data => {
-        if (data.success) {
-            showToast(data.message);
-            const badge = document.getElementById('cart-badge');
-            if (badge) badge.textContent = data.cart_count;
-        }
-    });
-}
-function toggleWishlist(productId) {
-    {% if user.is_authenticated %}
-    fetch('/wishlist/toggle/', {method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':getCookie('csrftoken')},body:JSON.stringify({product_id:productId})}).then(r=>r.json()).then(d=>showToast(d.message));
-    {% else %}window.location.href='/accounts/login/?next=/shop/';{% endif %}
-}
-</script>
+{# addToCart() and toggleWishlist() come from main.js (cart-drawer + badge wired). #}
 {% endblock %}

@@ -15,6 +15,13 @@ DEBUG_TOOLBAR_CONFIG = {
     'IS_RUNNING_TESTS': False,
 }
 
+# This project serves media from within STATIC_URL (MEDIA_URL = /static/media/).
+# debug_toolbar's StaticFilesPanel instantiates StaticFilesStorage at startup,
+# which calls check_settings() and rejects that layout under DEBUG. Drop just
+# that panel so the toolbar (and runserver) work with this media-under-static setup.
+from debug_toolbar.settings import PANELS_DEFAULTS as _DJDT_PANELS  # noqa: E402
+DEBUG_TOOLBAR_PANELS = [p for p in _DJDT_PANELS if 'StaticFilesPanel' not in p]
+
 # Use console email in dev
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 

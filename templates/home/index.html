@@ -126,7 +126,7 @@
 
 <!-- Featured Products -->
 {% if featured_products %}
-<section class="py-20 bg-white dark:bg-gray-800">
+<section class="py-24 bg-cream dark:bg-d-surface">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-end justify-between mb-12" data-reveal>
             <div>
@@ -151,7 +151,7 @@
 {% endif %}
 
 <!-- Why Choose Aura Archives -->
-<section class="py-24 bg-cream dark:bg-gray-900">
+<section class="py-24 bg-ivory dark:bg-d-bg">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16" data-reveal>
             <p class="eyebrow text-gold mb-3">Our Promise</p>
@@ -159,19 +159,19 @@
         </div>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
             {% for feature in features %}
-            <div data-reveal data-reveal-delay="{{ forloop.counter0 }}" class="hover-lift text-center p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-sm transition-shadow">
+            <div data-reveal data-reveal-delay="{{ forloop.counter0 }}" class="hover-lift text-center p-6 bg-white dark:bg-d-card rounded-2xl shadow-sm transition-shadow">
                 <div class="text-4xl mb-4">{{ feature.icon }}</div>
                 <h3 class="font-display text-charcoal dark:text-ivory mb-2 text-sm">{{ feature.title }}</h3>
-                <p class="text-xs text-gray-500">{{ feature.description }}</p>
+                <p class="text-xs text-charcoal/55 dark:text-ivory/55">{{ feature.description }}</p>
             </div>
             {% empty %}
             {% for f in "12345" %}
-            <div data-reveal data-reveal-delay="{{ forloop.counter0 }}" class="hover-lift group text-center p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-sm transition-shadow [&_div.text-4xl]:group-hover:scale-125 [&_div.text-4xl]:transition-transform [&_div.text-4xl]:duration-300">
-                {% if forloop.counter == 1 %}<div class="text-4xl mb-4">🤍</div><h3 class="font-display text-charcoal dark:text-ivory mb-2 text-sm">Handmade with Love</h3><p class="text-xs text-gray-500">Every candle hand-poured in small batches</p>{% endif %}
-                {% if forloop.counter == 2 %}<div class="text-4xl mb-4">🌿</div><h3 class="font-display text-charcoal dark:text-ivory mb-2 text-sm">Premium Soy Wax</h3><p class="text-xs text-gray-500">100% natural, clean burning soy wax</p>{% endif %}
-                {% if forloop.counter == 3 %}<div class="text-4xl mb-4">🌸</div><h3 class="font-display text-charcoal dark:text-ivory mb-2 text-sm">Long Lasting Fragrance</h3><p class="text-xs text-gray-500">Premium fragrance oils that last for hours</p>{% endif %}
-                {% if forloop.counter == 4 %}<div class="text-4xl mb-4">🎁</div><h3 class="font-display text-charcoal dark:text-ivory mb-2 text-sm">Gift Ready Packaging</h3><p class="text-xs text-gray-500">Beautiful boxes perfect for gifting</p>{% endif %}
-                {% if forloop.counter == 5 %}<div class="text-4xl mb-4">✨</div><h3 class="font-display text-charcoal dark:text-ivory mb-2 text-sm">Small Batch Production</h3><p class="text-xs text-gray-500">Limited quantities for exclusivity</p>{% endif %}
+            <div data-reveal data-reveal-delay="{{ forloop.counter0 }}" class="hover-lift group text-center p-6 bg-white dark:bg-d-card rounded-2xl shadow-sm transition-shadow [&_div.text-4xl]:group-hover:scale-125 [&_div.text-4xl]:transition-transform [&_div.text-4xl]:duration-300">
+                {% if forloop.counter == 1 %}<div class="text-4xl mb-4">🤍</div><h3 class="font-display text-charcoal dark:text-ivory mb-2 text-sm">Handmade with Love</h3><p class="text-xs text-charcoal/55 dark:text-ivory/55">Every candle hand-poured in small batches</p>{% endif %}
+                {% if forloop.counter == 2 %}<div class="text-4xl mb-4">🌿</div><h3 class="font-display text-charcoal dark:text-ivory mb-2 text-sm">Premium Soy Wax</h3><p class="text-xs text-charcoal/55 dark:text-ivory/55">100% natural, clean burning soy wax</p>{% endif %}
+                {% if forloop.counter == 3 %}<div class="text-4xl mb-4">🌸</div><h3 class="font-display text-charcoal dark:text-ivory mb-2 text-sm">Long Lasting Fragrance</h3><p class="text-xs text-charcoal/55 dark:text-ivory/55">Premium fragrance oils that last for hours</p>{% endif %}
+                {% if forloop.counter == 4 %}<div class="text-4xl mb-4">🎁</div><h3 class="font-display text-charcoal dark:text-ivory mb-2 text-sm">Gift Ready Packaging</h3><p class="text-xs text-charcoal/55 dark:text-ivory/55">Beautiful boxes perfect for gifting</p>{% endif %}
+                {% if forloop.counter == 5 %}<div class="text-4xl mb-4">✨</div><h3 class="font-display text-charcoal dark:text-ivory mb-2 text-sm">Small Batch Production</h3><p class="text-xs text-charcoal/55 dark:text-ivory/55">Limited quantities for exclusivity</p>{% endif %}
             </div>
             {% endfor %}
             {% endfor %}
@@ -181,14 +181,14 @@
 
 <!-- Bestsellers -->
 {% if bestsellers %}
-<section class="py-20 bg-white dark:bg-gray-800">
+<section class="py-24 bg-cream dark:bg-d-surface">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-end justify-between mb-12">
             <div>
-                <p class="text-gold text-xs uppercase tracking-[0.3em] font-medium mb-3">Most Loved</p>
+                <p class="eyebrow text-gold mb-3">Most Loved</p>
                 <h2 class="font-display text-4xl text-charcoal dark:text-ivory">Bestsellers</h2>
             </div>
-            <a href="/shop/?sort=bestseller" class="hidden md:flex items-center gap-2 text-sm font-medium text-gold hover:underline">
+            <a href="/shop/?sort=bestseller" class="link-grow hidden md:flex items-center gap-2 text-[13px] tracking-wide text-charcoal/70 dark:text-ivory/70 hover:text-gold">
                 View All <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
             </a>
         </div>
@@ -202,19 +202,19 @@
 {% endif %}
 
 <!-- About Strip -->
-<section class="py-20 bg-charcoal dark:bg-black text-white">
+<section class="py-24 bg-charcoal dark:bg-d-bg text-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div data-reveal="left">
-                <p class="text-gold text-xs uppercase tracking-[0.3em] font-medium mb-4">Our Story</p>
+                <p class="eyebrow text-gold mb-4">Our Story</p>
                 <h2 class="font-display text-4xl md:text-5xl text-ivory leading-tight mb-6">
                     Every Candle is a<br>
                     <span class="text-gold-shine italic">Preserved Moment</span>
                 </h2>
-                <p class="text-gray-400 text-base leading-relaxed mb-6">
+                <p class="text-ivory/55 text-base leading-relaxed mb-6">
                     Aura Archives was born from a love of fragrance, ritual, and the quiet magic of candlelight. Each candle is hand-poured in small batches using 100% natural soy wax, premium cotton wicks, and carefully curated fragrance blends.
                 </p>
-                <p class="text-gray-400 text-base leading-relaxed mb-8">
+                <p class="text-ivory/55 text-base leading-relaxed mb-8">
                     We believe that scent has the power to transport you — to a memory, a feeling, a place. That is why every Aura Archives candle is crafted to preserve moments.
                 </p>
                 <a href="/about/" class="inline-flex items-center gap-2 border-2 border-gold text-gold px-6 py-3 rounded-full font-semibold hover:bg-gold hover:text-white transition-all duration-200 text-sm">
@@ -223,22 +223,22 @@
                 </a>
             </div>
             <div class="grid grid-cols-2 gap-4" data-reveal="right">
-                <div class="hover-lift bg-gray-800 rounded-2xl aspect-square flex items-center justify-center p-8 text-center">
+                <div class="hover-lift bg-d-card rounded-2xl aspect-square flex items-center justify-center p-8 text-center">
                     <div>
                         <div class="font-display text-4xl text-gold">100%</div>
-                        <div class="text-sm text-gray-400 mt-2">Natural Soy Wax</div>
+                        <div class="text-sm text-ivory/55 mt-2">Natural Soy Wax</div>
                     </div>
                 </div>
-                <div class="hover-lift bg-gray-800 rounded-2xl aspect-square flex items-center justify-center p-8 text-center mt-8">
+                <div class="hover-lift bg-d-card rounded-2xl aspect-square flex items-center justify-center p-8 text-center mt-8">
                     <div>
                         <div class="font-display text-4xl text-gold">50h</div>
-                        <div class="text-sm text-gray-400 mt-2">Max Burn Time</div>
+                        <div class="text-sm text-ivory/55 mt-2">Max Burn Time</div>
                     </div>
                 </div>
-                <div class="hover-lift bg-gray-800 rounded-2xl aspect-square flex items-center justify-center p-8 text-center -mt-8">
+                <div class="hover-lift bg-d-card rounded-2xl aspect-square flex items-center justify-center p-8 text-center -mt-8">
                     <div>
                         <div class="font-display text-4xl text-gold">500+</div>
-                        <div class="text-sm text-gray-400 mt-2">Happy Customers</div>
+                        <div class="text-sm text-ivory/55 mt-2">Happy Customers</div>
                     </div>
                 </div>
                 <div class="hover-lift bg-gold/20 border border-gold/30 rounded-2xl aspect-square flex items-center justify-center p-8 text-center anim-glow">
@@ -254,15 +254,15 @@
 
 <!-- Customer Reviews -->
 {% if reviews %}
-<section class="py-20 bg-ivory dark:bg-gray-900">
+<section class="py-24 bg-ivory dark:bg-d-bg">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-14">
-            <p class="text-gold text-xs uppercase tracking-[0.3em] font-medium mb-3">Testimonials</p>
+            <p class="eyebrow text-gold mb-3">Testimonials</p>
             <h2 class="font-display text-4xl text-charcoal dark:text-ivory mb-4">What Our Customers Say</h2>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {% for review in reviews %}
-            <div data-reveal data-reveal-delay="{{ forloop.counter0 }}" class="hover-lift bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm">
+            <div data-reveal data-reveal-delay="{{ forloop.counter0 }}" class="hover-lift bg-white dark:bg-d-card rounded-2xl p-6 shadow-sm">
                 <div class="flex items-center gap-1 mb-4">
                     {% for i in "12345" %}
                     <svg class="w-4 h-4 {% if forloop.counter <= review.rating %}text-gold fill-gold{% else %}text-gray-300 fill-gray-300{% endif %}" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
@@ -271,7 +271,7 @@
                 {% if review.title %}
                 <h4 class="font-display text-charcoal dark:text-ivory mb-2">{{ review.title }}</h4>
                 {% endif %}
-                <p class="text-gray-500 text-sm leading-relaxed mb-4">{{ review.body|truncatewords:30 }}</p>
+                <p class="text-charcoal/55 dark:text-ivory/55 text-sm leading-relaxed mb-4">{{ review.body|truncatewords:30 }}</p>
                 <div class="flex items-center gap-3">
                     <div class="w-9 h-9 bg-gradient-to-br from-blush to-lavender rounded-full flex items-center justify-center text-sm font-semibold text-charcoal">{{ review.user.first_name|first }}</div>
                     <div>
@@ -288,14 +288,14 @@
 
 <!-- Blog Preview -->
 {% if blog_posts %}
-<section class="py-20 bg-white dark:bg-gray-800">
+<section class="py-24 bg-cream dark:bg-d-surface">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-end justify-between mb-12">
             <div>
-                <p class="text-gold text-xs uppercase tracking-[0.3em] font-medium mb-3">From the Journal</p>
+                <p class="eyebrow text-gold mb-3">From the Journal</p>
                 <h2 class="font-display text-4xl text-charcoal dark:text-ivory">Candle Stories</h2>
             </div>
-            <a href="/blog/" class="hidden md:flex items-center gap-2 text-sm font-medium text-gold hover:underline">View All <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></a>
+            <a href="/blog/" class="link-grow hidden md:flex items-center gap-2 text-[13px] tracking-wide text-charcoal/70 dark:text-ivory/70 hover:text-gold">View All <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></a>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             {% for post in blog_posts %}
@@ -309,7 +309,7 @@
                 </a>
                 {% if post.category %}<p class="text-xs text-gold uppercase tracking-wider mb-2">{{ post.category.name }}</p>{% endif %}
                 <a href="{{ post.get_absolute_url }}"><h3 class="font-serif text-xl font-semibold text-charcoal dark:text-ivory mb-2 hover:text-gold transition-colors">{{ post.title }}</h3></a>
-                <p class="text-sm text-gray-500 line-clamp-2">{{ post.excerpt }}</p>
+                <p class="text-sm text-charcoal/55 dark:text-ivory/55 line-clamp-2">{{ post.excerpt }}</p>
             </article>
             {% endfor %}
         </div>
@@ -321,7 +321,7 @@
 
 <!-- Instagram Gallery -->
 {% if insta_products %}
-<section class="py-24 bg-cream dark:bg-gray-900">
+<section class="py-24 bg-ivory dark:bg-d-bg">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12" data-reveal>
             <p class="eyebrow text-gold mb-3">As seen on Instagram</p>
@@ -351,12 +351,12 @@
 {% endif %}
 
 <!-- Newsletter Section -->
-<section class="py-20 aura-gradient-bg relative overflow-hidden">
+<section class="py-24 aura-gradient-bg relative overflow-hidden">
     <div class="absolute top-0 left-1/4 w-48 h-48 rounded-full bg-gold/20 blur-3xl anim-float pointer-events-none"></div>
     <div class="absolute bottom-0 right-1/4 w-48 h-48 rounded-full bg-white/30 blur-3xl anim-float-slow pointer-events-none"></div>
     <div class="max-w-2xl mx-auto px-4 text-center relative" data-reveal="scale">
         <div class="text-5xl mb-4 anim-flicker inline-block">🕯️</div>
-        <p class="text-gold text-xs uppercase tracking-[0.3em] font-medium mb-3">Stay Connected</p>
+        <p class="eyebrow text-gold mb-3">Stay Connected</p>
         <h2 class="font-display text-4xl text-charcoal dark:text-ivory mb-4">Join the Aura Family</h2>
         <p class="text-gray-600 dark:text-gray-300 text-base mb-8">Subscribe for exclusive offers, new launches, and candle care tips. Get 10% off your first order.</p>
         <div class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
@@ -366,7 +366,7 @@
                 Subscribe Now
             </button>
         </div>
-        <p class="text-xs text-gray-500 mt-3">No spam. Unsubscribe anytime.</p>
+        <p class="text-xs text-charcoal/55 dark:text-ivory/55 mt-3">No spam. Unsubscribe anytime.</p>
     </div>
 </section>
 
@@ -380,45 +380,9 @@ function subscribeHero() {
         body: JSON.stringify({email})
     }).then(r => r.json()).then(d => showToast(d.message));
 }
-
-function addToCart(productId, variantId=null) {
-    fetch('/shop/cart/add/', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')},
-        body: JSON.stringify({product_id: productId, variant_id: variantId, quantity: 1})
-    }).then(r => r.json()).then(data => {
-        if (data.success) {
-            showToast(data.message);
-            const badge = document.getElementById('cart-badge');
-            if (badge) badge.textContent = data.cart_count;
-            else {
-                const cartLink = document.querySelector('a[href="/orders/cart/"]');
-                if (cartLink) {
-                    const span = document.createElement('span');
-                    span.id = 'cart-badge';
-                    span.className = 'absolute -top-0.5 -right-0.5 bg-gold text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-bold';
-                    span.textContent = data.cart_count;
-                    cartLink.style.position = 'relative';
-                    cartLink.appendChild(span);
-                }
-            }
-        }
-    });
-}
-
-function toggleWishlist(productId) {
-    {% if user.is_authenticated %}
-    fetch('/wishlist/toggle/', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')},
-        body: JSON.stringify({product_id: productId})
-    }).then(r => r.json()).then(data => {
-        if (data.success) showToast(data.message);
-    });
-    {% else %}
-    window.location.href = '/accounts/login/?next=' + window.location.pathname;
-    {% endif %}
-}
+// Note: addToCart() and toggleWishlist() are provided globally by main.js
+// (with cart-drawer + badge integration). Don't redefine them here, or the
+// homepage would silently lose the drawer/badge wiring.
 </script>
 
 {% endblock %}

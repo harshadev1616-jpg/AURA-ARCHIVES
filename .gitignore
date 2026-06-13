@@ -43,3 +43,4 @@ htmlcov/
 _gen_templates*.py
 
 .vercel
+django-dev.pid

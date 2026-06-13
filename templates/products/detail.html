@@ -288,12 +288,12 @@
             <div class="relative max-w-3xl mx-auto text-center">
                 <div class="w-10 h-px bg-gold/50 mx-auto mb-6"></div>
                 {% if product.story %}
-                <p class="text-gold text-xs uppercase tracking-[0.3em] font-medium mb-5">The Story</p>
+                <p class="eyebrow text-gold mb-5">The Story</p>
                 <p class="font-serif text-2xl md:text-3xl leading-relaxed text-ivory mb-10">{{ product.story }}</p>
                 {% endif %}
                 {% if product.ritual %}
                 <div class="inline-flex flex-col items-center border-t border-gold/30 pt-8 max-w-xl">
-                    <p class="text-gold text-xs uppercase tracking-[0.3em] font-medium mb-3">The Ritual</p>
+                    <p class="eyebrow text-gold mb-3">The Ritual</p>
                     <p class="text-gray-300 text-base leading-relaxed italic">{{ product.ritual }}</p>
                 </div>
                 {% endif %}
@@ -387,7 +387,7 @@
     <section class="mb-20">
         <div class="rounded-3xl bg-gradient-to-br from-blush/30 to-lavender/20 dark:from-gray-800 dark:to-gray-800 p-8 md:p-12">
             <div class="text-center mb-10">
-                <p class="text-gold text-xs uppercase tracking-[0.3em] font-medium mb-2">Pairs beautifully with</p>
+                <p class="eyebrow text-gold mb-2">Pairs beautifully with</p>
                 <h2 class="font-display text-3xl text-charcoal dark:text-ivory">Complete the Ritual</h2>
                 <p class="text-gray-500 text-sm mt-2 max-w-md mx-auto">Candles from across the studio that set the mood alongside {{ product.name }}.</p>
             </div>
@@ -467,8 +467,9 @@
     const bar = document.getElementById('sticky-buy');
     if (!buyBox || !bar) return;
     const fab = document.getElementById('whatsapp-fab');
-    const show = () => { bar.classList.remove('translate-y-full'); if (fab) fab.style.transform = 'translateY(-72px)'; };
-    const hide = () => { bar.classList.add('translate-y-full'); if (fab) fab.style.transform = ''; };
+    const mnav = document.getElementById('mobile-bottom-nav');
+    const show = () => { bar.classList.remove('translate-y-full'); if (fab) fab.style.transform = 'translateY(-72px)'; if (mnav) mnav.classList.add('translate-y-full'); };
+    const hide = () => { bar.classList.add('translate-y-full'); if (fab) fab.style.transform = ''; if (mnav) mnav.classList.remove('translate-y-full'); };
     if ('IntersectionObserver' in window && window.innerHeight > 0) {
         const io = new IntersectionObserver((entries) => {
             entries.forEach(e => {
@@ -487,24 +488,9 @@
     }
 })();
 
-function addToCart(productId, variantId=null, qty=1) {
-    fetch('/shop/cart/add/', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')},
-        body: JSON.stringify({product_id: productId, variant_id: variantId, quantity: qty})
-    }).then(r => r.json()).then(data => {
-        if (data.success) {
-            showToast(data.message);
-            const badge = document.getElementById('cart-badge');
-            if (badge) badge.textContent = data.cart_count;
-        }
-    });
-}
-function toggleWishlist(productId) {
-    {% if user.is_authenticated %}
-    fetch('/wishlist/toggle/', {method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':getCookie('csrftoken')},body:JSON.stringify({product_id:productId})}).then(r=>r.json()).then(d=>showToast(d.message));
-    {% else %}window.location.href='/accounts/login/?next={{ request.path }}';{% endif %}
-}
+// addToCart() and toggleWishlist() come from main.js — global versions open the
+// cart drawer and sync both the navbar and mobile-nav badges. The detail page's
+// "Add to Cart" / "Buy Now" already call addToCart(pk, null, qty).
 function submitReview(productId, rating) {
     const title = document.getElementById('review-title').value;
     const body = document.getElementById('review-body').value;

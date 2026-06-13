@@ -1,29 +1,31 @@
 {% extends "admin/base_site.html" %}
 {% block content %}
-<div style="max-width:760px;">
-    <h1 style="font-family:'Playfair Display',serif;">📦 Ship orders with tracking</h1>
-    <p style="color:#8a8175;">Add a tracking number for each order and a shared courier. Each customer is emailed their tracking when you ship.</p>
+<div class="aura-admin-page aura-admin-page--narrow">
+    <div class="aura-admin-page__intro">
+        <h1>Ship orders with tracking</h1>
+        <p>Add a tracking number for each order and a shared courier. Each customer is emailed their tracking when you ship.</p>
+    </div>
 
     <form action="" method="post">{% csrf_token %}
-        <div class="module" style="padding:0;margin-top:18px;">
+        <div class="module">
             <h2>Selected orders ({{ orders|length }})</h2>
-            <table style="width:100%;border-collapse:collapse;">
+            <table class="aura-admin-table">
                 <thead>
                     <tr>
-                        <th style="text-align:left;padding:10px 14px;">Order</th>
-                        <th style="text-align:left;padding:10px 14px;">Customer</th>
-                        <th style="text-align:left;padding:10px 14px;">City</th>
-                        <th style="text-align:left;padding:10px 14px;">Tracking number</th>
+                        <th>Order</th>
+                        <th>Customer</th>
+                        <th>City</th>
+                        <th>Tracking number</th>
                     </tr>
                 </thead>
                 <tbody>
                 {% for o in orders %}
                     <tr>
-                        <td style="padding:9px 14px;border-top:1px solid #eee;"><strong>#{{ o.order_number }}</strong></td>
-                        <td style="padding:9px 14px;border-top:1px solid #eee;">{{ o.shipping_full_name }}</td>
-                        <td style="padding:9px 14px;border-top:1px solid #eee;">{{ o.shipping_city }}</td>
-                        <td style="padding:9px 14px;border-top:1px solid #eee;">
-                            <input type="text" name="tracking_{{ o.pk }}" value="{{ o.tracking_number }}" placeholder="e.g. 1Z999AA1..." style="width:200px;">
+                        <td><strong>#{{ o.order_number }}</strong></td>
+                        <td>{{ o.shipping_full_name }}</td>
+                        <td>{{ o.shipping_city }}</td>
+                        <td>
+                            <input type="text" name="tracking_{{ o.pk }}" value="{{ o.tracking_number }}" placeholder="e.g. 1Z999AA1...">
                         </td>
                     </tr>
                     <input type="hidden" name="{{ action_checkbox_name }}" value="{{ o.pk }}">
@@ -32,15 +34,15 @@
             </table>
         </div>
 
-        <div style="display:flex;gap:24px;margin-top:18px;flex-wrap:wrap;">
-            <label>Courier<br><input type="text" name="courier_name" placeholder="e.g. Bluedart, Delhivery" style="width:240px;"></label>
+        <div class="aura-admin-form-grid">
+            <label>Courier<br><input type="text" name="courier_name" placeholder="e.g. Bluedart, Delhivery"></label>
             <label>Estimated delivery (optional)<br><input type="date" name="estimated_delivery"></label>
         </div>
 
         <input type="hidden" name="action" value="ship_with_tracking">
-        <div class="submit-row" style="margin-top:22px;">
+        <div class="submit-row">
             <input type="submit" name="apply" value="Ship &amp; notify customers" class="default">
-            <a href="../" class="button" style="background:#888;">Cancel</a>
+            <a href="../" class="button">Cancel</a>
         </div>
     </form>
 </div>

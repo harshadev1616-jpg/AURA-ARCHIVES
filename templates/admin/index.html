@@ -1,0 +1,9 @@
+{% extends "admin/base_site.html" %}
+{% load aura_admin %}
+
+{% block content %}
+{% aura_dashboard %}
+<div id="content-main">
+  {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
+</div>
+{% endblock %}

@@ -25,7 +25,7 @@ class Notification(TimeStampedModel):
         ('order_placed','Order Placed'),('order_shipped','Order Shipped'),
         ('order_delivered','Order Delivered'),('order_cancelled','Order Cancelled'),
         ('review_approved','Review Approved'),('wishlist_back_in_stock','Back in Stock'),
-        ('system','System'),
+        ('admin_new_order', 'Admin New Order'), ('system','System'),
     )
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='notifications')
     notification_type = models.CharField(max_length=30, choices=TYPES)

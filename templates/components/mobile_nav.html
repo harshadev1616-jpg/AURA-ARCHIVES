@@ -1,0 +1,52 @@
+{# Sticky bottom navigation — mobile only (md:hidden). Premium app-style tab bar. #}
+{% with path=request.path %}
+<nav id="mobile-bottom-nav"
+     class="md:hidden fixed bottom-0 left-0 right-0 z-30 translate-y-0 transition-transform duration-300 ease-out
+            bg-ivory/95 dark:bg-ink/95 backdrop-blur-md border-t border-line dark:border-white/10
+            pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_30px_-20px_rgba(43,43,43,0.45)]"
+     aria-label="Primary mobile navigation">
+    <div class="grid grid-cols-5 h-[58px]">
+        {# Home #}
+        <a href="/" class="flex flex-col items-center justify-center gap-0.5 {% if path == '/' %}text-gold{% else %}text-charcoal/55 dark:text-ivory/55{% endif %} transition-colors">
+            <svg class="w-[22px] h-[22px]" fill="none" stroke="currentColor" stroke-width="{% if path == '/' %}2{% else %}1.6{% endif %}" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V10"/></svg>
+            <span class="text-[10px] tracking-wide">Home</span>
+        </a>
+        {# Shop #}
+        <a href="/shop/" class="flex flex-col items-center justify-center gap-0.5 {% if '/shop' in path or '/product' in path %}text-gold{% else %}text-charcoal/55 dark:text-ivory/55{% endif %} transition-colors">
+            <svg class="w-[22px] h-[22px]" fill="none" stroke="currentColor" stroke-width="{% if '/shop' in path or '/product' in path %}2{% else %}1.6{% endif %}" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l1-5h16l1 5M4 9v9a2 2 0 002 2h12a2 2 0 002-2V9M4 9h16M9 13h6"/></svg>
+            <span class="text-[10px] tracking-wide">Shop</span>
+        </a>
+        {# Search #}
+        <button type="button" onclick="mobileNavSearch()" class="flex flex-col items-center justify-center gap-0.5 text-charcoal/55 dark:text-ivory/55 hover:text-gold transition-colors">
+            <svg class="w-[22px] h-[22px]" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <span class="text-[10px] tracking-wide">Search</span>
+        </button>
+        {# Wishlist / Account #}
+        {% if user.is_authenticated %}
+        <a href="/accounts/wishlist/" class="flex flex-col items-center justify-center gap-0.5 {% if '/wishlist' in path %}text-gold{% else %}text-charcoal/55 dark:text-ivory/55{% endif %} transition-colors">
+            <svg class="w-[22px] h-[22px]" fill="none" stroke="currentColor" stroke-width="{% if '/wishlist' in path %}2{% else %}1.6{% endif %}" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+            <span class="text-[10px] tracking-wide">Wishlist</span>
+        </a>
+        {% else %}
+        <a href="/accounts/login/" class="flex flex-col items-center justify-center gap-0.5 {% if '/accounts' in path %}text-gold{% else %}text-charcoal/55 dark:text-ivory/55{% endif %} transition-colors">
+            <svg class="w-[22px] h-[22px]" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            <span class="text-[10px] tracking-wide">Account</span>
+        </a>
+        {% endif %}
+        {# Cart — opens drawer #}
+        <a href="/orders/cart/" onclick="if(typeof openCartDrawer==='function'){event.preventDefault();openCartDrawer();}" class="relative flex flex-col items-center justify-center gap-0.5 text-charcoal/55 dark:text-ivory/55 hover:text-gold transition-colors">
+            <span class="relative">
+                <svg class="w-[22px] h-[22px]" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                <span id="mnav-cart-badge" class="absolute -top-1.5 -right-2 bg-gold text-white text-[10px] leading-none rounded-full min-w-[16px] h-4 px-1 flex items-center justify-center font-bold {% if cart_count == 0 %}hidden{% endif %}">{{ cart_count }}</span>
+            </span>
+            <span class="text-[10px] tracking-wide">Bag</span>
+        </a>
+    </div>
+</nav>
+<script>
+function mobileNavSearch() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.dispatchEvent(new CustomEvent('open-search'));
+}
+</script>
+{% endwith %}

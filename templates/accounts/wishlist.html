@@ -19,9 +19,8 @@
     {% endif %}
 </div>
 <script>
-function addToCart(productId) {
-    fetch('/shop/cart/add/', {method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':getCookie('csrftoken')},body:JSON.stringify({product_id:productId,quantity:1})}).then(r=>r.json()).then(d=>{if(d.success)showToast(d.message);});
-}
+// addToCart() is global (main.js) — opens the cart drawer + syncs badges.
+// toggleWishlist is overridden here to reload, so removing an item updates this list.
 function toggleWishlist(productId) {
     fetch('/wishlist/toggle/', {method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':getCookie('csrftoken')},body:JSON.stringify({product_id:productId})}).then(r=>r.json()).then(d=>{if(d.success)location.reload();});
 }

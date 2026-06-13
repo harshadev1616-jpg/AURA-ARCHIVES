@@ -13,7 +13,7 @@
         <div class="absolute -top-12 -right-8 w-48 h-48 rounded-full bg-gold/20 blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-14 -left-8 w-48 h-48 rounded-full bg-lavender/30 blur-3xl pointer-events-none"></div>
         <div class="relative max-w-2xl">
-            <p class="text-gold text-xs uppercase tracking-[0.3em] font-medium mb-3">The Collection</p>
+            <p class="eyebrow text-gold mb-3">The Collection</p>
             <h1 class="font-display text-4xl md:text-5xl text-charcoal dark:text-ivory mb-3">{{ category.name }}</h1>
             {% if category.tagline %}<p class="font-serif italic text-gold text-xl mb-5">{{ category.tagline }}</p>{% endif %}
             {% if category.story %}
@@ -28,11 +28,8 @@
     {% if products %}
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">{% for product in products %}<div data-reveal data-reveal-delay="{{ forloop.counter0 }}">{% include "components/product_card.html" %}</div>{% endfor %}</div>
     {% else %}
-    <div class="text-center py-20"><div class="text-6xl mb-4">&#128367;</div><p class="text-gray-400 mb-4">No products in this category yet</p><a href="/shop/" class="text-gold hover:underline">View all candles</a></div>
+    <div class="text-center py-20"><div class="text-6xl mb-4">&#128367;</div><p class="text-charcoal/55 dark:text-ivory/55 mb-4">No products in this category yet</p><a href="/shop/" class="link-grow text-gold">View all candles</a></div>
     {% endif %}
 </div>
-<script>
-function addToCart(productId) { fetch('/shop/cart/add/', {method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':getCookie('csrftoken')},body:JSON.stringify({product_id:productId,quantity:1})}).then(r=>r.json()).then(d=>{if(d.success)showToast(d.message);}); }
-function toggleWishlist(productId) { {% if user.is_authenticated %}fetch('/wishlist/toggle/', {method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':getCookie('csrftoken')},body:JSON.stringify({product_id:productId})}).then(r=>r.json()).then(d=>showToast(d.message));{% else %}window.location.href='/accounts/login/';{% endif %} }
-</script>
+{# addToCart() and toggleWishlist() come from main.js (cart-drawer + badge wired). #}
 {% endblock %}
