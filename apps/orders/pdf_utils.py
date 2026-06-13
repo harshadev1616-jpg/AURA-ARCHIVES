@@ -240,14 +240,15 @@ def generate_packing_slip_pdf(orders):
             elements.append(items_table)
             elements.append(Spacer(1, 0.15 * inch))
             
-            # Shipping info
+            # Shipping info (Order stores a flat shipping address)
             elements.append(Paragraph("SHIPPING ADDRESS", heading_style))
-            if hasattr(order, 'shipping_address') and order.shipping_address:
-                address = order.shipping_address
-                address_text = f"{address.street}, {address.city}, {address.state} {address.zip_code}"
-            else:
-                address_text = "Address not available"
-            elements.append(Paragraph(address_text, styles['Normal']))
+            addr_bits = [order.shipping_full_name, order.shipping_address_line1]
+            if order.shipping_address_line2:
+                addr_bits.append(order.shipping_address_line2)
+            addr_bits.append(f"{order.shipping_city}, {order.shipping_state} - {order.shipping_pincode}")
+            addr_bits.append(order.shipping_country)
+            addr_bits.append(f"Phone: {order.shipping_phone}")
+            elements.append(Paragraph("<br/>".join(b for b in addr_bits if b), styles['Normal']))
             elements.append(Spacer(1, 0.2 * inch))
         
         doc.build(elements)
@@ -255,4 +256,85 @@ def generate_packing_slip_pdf(orders):
         return buffer
     except Exception as e:
         print(f"Error generating packing slip PDF: {e}")
+        return None
+
+
+def generate_shipping_labels_pdf(orders):
+    """Printable address labels to paste on the package — one per order/page.
+
+    Big DELIVER TO block (name, address, phone), a small From line, the order
+    number, and a prominent COD banner when payment is collected on delivery.
+    """
+    try:
+        from apps.core.models import SiteSettings
+        site = SiteSettings.get_settings()
+
+        buffer = io.BytesIO()
+        doc = SimpleDocTemplate(
+            buffer, pagesize=A4,
+            topMargin=0.7 * inch, bottomMargin=0.7 * inch,
+            leftMargin=0.8 * inch, rightMargin=0.8 * inch,
+        )
+        styles = getSampleStyleSheet()
+        from_style = ParagraphStyle("lblFrom", parent=styles["Normal"], fontSize=9.5, textColor=colors.HexColor("#6b6258"))
+        to_label = ParagraphStyle("lblTo", parent=styles["Normal"], fontSize=10, textColor=colors.HexColor("#B8945A"))
+        name_style = ParagraphStyle("lblName", parent=styles["Normal"], fontSize=17, leading=21, fontName="Helvetica-Bold", textColor=colors.HexColor("#161310"))
+        addr_style = ParagraphStyle("lblAddr", parent=styles["Normal"], fontSize=13, leading=19, textColor=colors.HexColor("#2B2B2B"))
+        meta_style = ParagraphStyle("lblMeta", parent=styles["Normal"], fontSize=9, textColor=colors.HexColor("#8a7f70"))
+        cod_style = ParagraphStyle("lblCod", parent=styles["Normal"], fontSize=14, fontName="Helvetica-Bold", textColor=colors.white, alignment=1)
+
+        order_list = list(orders)
+        elements = []
+        for idx, order in enumerate(order_list):
+            from_line = f"<b>From:</b> {site.site_name}"
+            if site.contact_phone:
+                from_line += f" &nbsp;·&nbsp; {site.contact_phone}"
+
+            addr_parts = [order.shipping_address_line1]
+            if order.shipping_address_line2:
+                addr_parts.append(order.shipping_address_line2)
+            addr_parts.append(f"{order.shipping_city}, {order.shipping_state} - {order.shipping_pincode}")
+            addr_parts.append(order.shipping_country)
+            addr_html = "<br/>".join(p for p in addr_parts if p)
+
+            rows = [
+                [Paragraph(from_line, from_style)],
+                [Paragraph("DELIVER TO", to_label)],
+                [Paragraph(order.shipping_full_name, name_style)],
+                [Paragraph(addr_html, addr_style)],
+                [Paragraph(f"<b>Phone:</b> {order.shipping_phone}", addr_style)],
+                [Paragraph(f"Order #{order.order_number} &nbsp;·&nbsp; {order.created_at.strftime('%d %b %Y')}", meta_style)],
+            ]
+            is_cod = order.payment_method == "cod" and order.payment_status != "paid"
+            if is_cod:
+                rows.append([Paragraph(f"CASH ON DELIVERY — COLLECT Rs.{order.total}", cod_style)])
+
+            label = Table(rows, colWidths=[6.2 * inch])
+            style = [
+                ("BOX", (0, 0), (-1, -1), 1.4, colors.HexColor("#B8945A")),
+                ("LEFTPADDING", (0, 0), (-1, -1), 20),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 20),
+                ("TOPPADDING", (0, 0), (-1, -1), 5),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
+                ("TOPPADDING", (0, 0), (0, 0), 18),
+                ("BOTTOMPADDING", (0, 1), (0, 1), 8),
+            ]
+            if is_cod:
+                style += [
+                    ("BACKGROUND", (0, -1), (-1, -1), colors.HexColor("#2B2B2B")),
+                    ("TOPPADDING", (0, -1), (-1, -1), 11),
+                    ("BOTTOMPADDING", (0, -1), (-1, -1), 11),
+                    ("LEFTPADDING", (0, -1), (-1, -1), 6),
+                    ("RIGHTPADDING", (0, -1), (-1, -1), 6),
+                ]
+            label.setStyle(TableStyle(style))
+            elements.append(label)
+            if idx < len(order_list) - 1:
+                elements.append(PageBreak())
+
+        doc.build(elements)
+        buffer.seek(0)
+        return buffer
+    except Exception as e:
+        print(f"Error generating shipping labels PDF: {e}")
         return None

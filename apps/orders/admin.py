@@ -43,10 +43,10 @@ class OrderAdmin(admin.ModelAdmin):
     list_filter = ["status", "payment_status", "payment_method", ("created_at", DateRangeFilter)]
     date_hierarchy = "created_at"
     search_fields = ["order_number", "user__email", "shipping_full_name", "shipping_phone", "items__product_name"]
-    readonly_fields = ["order_number", "razorpay_order_id", "razorpay_payment_id", "created_at", "updated_at", "invoice_button"]
+    readonly_fields = ["order_number", "razorpay_order_id", "razorpay_payment_id", "created_at", "updated_at", "invoice_button", "address_label_button"]
     inlines = [OrderItemInline, OrderStatusHistoryInline]
     fieldsets = (
-        ("Order Info", {"fields": ("order_number", "invoice_button", "user", "status", "payment_status", "payment_method")}),
+        ("Order Info", {"fields": ("order_number", ("invoice_button", "address_label_button"), "user", "status", "payment_status", "payment_method")}),
         ("Payment", {"fields": ("razorpay_order_id", "razorpay_payment_id")}),
         ("Shipping Address", {"fields": ("shipping_full_name", "shipping_phone", "shipping_address_line1", "shipping_address_line2", "shipping_city", "shipping_state", "shipping_pincode", "shipping_country")}),
         ("Amounts", {"fields": ("subtotal", "shipping_charge", "discount", "tax", "total", "coupon_code")}),
@@ -104,8 +104,21 @@ class OrderAdmin(admin.ModelAdmin):
 
     invoice_button.short_description = "Invoice"
 
+    def address_label_button(self, obj):
+        if not obj.pk:
+            return "-"
+        return format_html(
+            '<a class="button" href="/orders/{}/label/" target="_blank" '
+            'style="background:#B8945A;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none">'
+            'Download address label (PDF)</a>',
+            obj.pk,
+        )
+
+    address_label_button.short_description = "Address label"
+
     actions = [
         "ship_with_tracking",
+        "address_labels",
         "packing_slips",
         "mark_confirmed",
         "mark_processing",
@@ -154,6 +167,17 @@ class OrderAdmin(admin.ModelAdmin):
                 "title": "Ship orders with tracking",
             },
         )
+
+    @admin.action(description="Download address labels (PDF) — paste on packages")
+    def address_labels(self, request, queryset):
+        from .pdf_utils import generate_shipping_labels_pdf
+
+        pdf_buffer = generate_shipping_labels_pdf(queryset)
+        if pdf_buffer:
+            response = HttpResponse(pdf_buffer.getvalue(), content_type="application/pdf")
+            response["Content-Disposition"] = 'attachment; filename="aura-address-labels.pdf"'
+            return response
+        self.message_user(request, "Could not generate address labels.", level=messages.ERROR)
 
     @admin.action(description="Download packing slips (PDF)")
     def packing_slips(self, request, queryset):

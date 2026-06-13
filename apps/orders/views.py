@@ -268,6 +268,25 @@ def order_invoice(request, pk):
     return HttpResponse(html)
 
 
+def order_shipping_label(request, pk):
+    """Downloadable PDF address label to paste on the package (staff only)."""
+    from django.http import HttpResponse, HttpResponseServerError
+    from django.contrib.admin.views.decorators import staff_member_required
+
+    @staff_member_required
+    def _label(request, pk):
+        order = get_object_or_404(Order, pk=pk)
+        from .pdf_utils import generate_shipping_labels_pdf
+        pdf_buffer = generate_shipping_labels_pdf([order])
+        if pdf_buffer:
+            resp = HttpResponse(pdf_buffer.getvalue(), content_type="application/pdf")
+            resp["Content-Disposition"] = f'attachment; filename="AuraArchives-Label-{order.order_number}.pdf"'
+            return resp
+        return HttpResponseServerError("Could not generate label")
+
+    return _label(request, pk)
+
+
 @login_required
 @require_POST
 def request_return(request, pk):

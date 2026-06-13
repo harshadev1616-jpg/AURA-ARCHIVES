@@ -11,6 +11,7 @@ urlpatterns = [
     path("", views.order_list, name="list"),
     path("<int:pk>/", views.order_detail, name="detail"),
     path("<int:pk>/invoice/", views.order_invoice, name="invoice"),
+    path("<int:pk>/label/", views.order_shipping_label, name="shipping_label"),
     path("<int:pk>/cancel/", views.cancel_order, name="cancel"),
     path("<int:pk>/return/", views.request_return, name="request_return"),
 ]
