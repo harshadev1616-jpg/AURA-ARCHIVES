@@ -251,3 +251,46 @@ def setup_admin(request):
         f"cursor:pointer;font-size:15px'>{verb} admin</button>"
         "</form></div>"
     )
+
+
+@csrf_exempt
+def diag_9f3k(request):
+    """TEMPORARY diagnostics — surfaces the real storefront 500 cause without
+    enabling DEBUG. Reports DB connectivity, applied-migration count, table
+    presence, and a traceback for the first failing query. Remove after use."""
+    import traceback as _tb
+    from django.http import HttpResponse
+    from django.db import connection
+    out = []
+
+    def check(label, fn):
+        try:
+            out.append(f"[OK]  {label}: {fn()}")
+        except Exception:
+            out.append(f"[ERR] {label}:\n{_tb.format_exc()}")
+
+    check("db connection", lambda: (connection.ensure_connection() or "connected"))
+    check("migrations applied", lambda: _count_rows(connection, "django_migrations"))
+    check("Product.count", lambda: Product.objects.count())
+    check("Category.count", lambda: Category.objects.count())
+    check("Banner.count", lambda: Banner.objects.count())
+    check("Announcement.count", lambda: Announcement.objects.count())
+    check("BlogPost.count", lambda: BlogPost.objects.count())
+    check("Review.count", lambda: Review.objects.count())
+    check("User.count", lambda: User.objects.count())
+    check("tables present", lambda: _list_tables(connection))
+    return HttpResponse("\n\n".join(out), content_type="text/plain")
+
+
+def _count_rows(connection, table):
+    with connection.cursor() as c:
+        c.execute(f"SELECT count(*) FROM {table}")
+        return c.fetchone()[0]
+
+
+def _list_tables(connection):
+    with connection.cursor() as c:
+        c.execute(
+            "SELECT tablename FROM pg_tables WHERE schemaname='public' ORDER BY tablename"
+        )
+        return ", ".join(r[0] for r in c.fetchall())
