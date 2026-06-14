@@ -160,21 +160,48 @@ self.addEventListener('fetch', (e) => {
 
 @csrf_exempt
 def setup_admin(request):
-    """One-time bootstrap to create the first superuser on a fresh deployment.
+    """Bootstrap or repair the admin superuser.
 
-    Self-disables permanently the moment any superuser exists, so it cannot be
-    used to create extra admins later. No secrets in code; the password is
-    supplied by whoever first visits the page.
+    Two modes:
+
+    * **Bootstrap** — when no superuser exists yet, anyone may create the first
+      one, then the page locks itself.
+    * **Repair** — once a superuser exists the page is locked, *unless* the
+      request carries a ``token`` that matches the ``SETUP_ADMIN_TOKEN`` env var.
+      With a valid token you can reset an admin's email/password and force the
+      ``is_staff`` / ``is_superuser`` / ``is_active`` flags — the fix for
+      "enter a correct email and password for a staff account" when the stored
+      password isn't what you think it is. Unset SETUP_ADMIN_TOKEN once you're
+      back in.
+
+    No secrets live in code; the repair token comes from the environment.
     """
+    import os
+    import hmac
     from django.contrib.auth import get_user_model
     from django.http import HttpResponse, HttpResponseForbidden
     from django.utils.html import escape
 
     User = get_user_model()
-    if User.objects.filter(is_superuser=True).exists():
+    admin_exists = User.objects.filter(is_superuser=True).exists()
+
+    token_env = (os.environ.get("SETUP_ADMIN_TOKEN") or "").strip()
+    supplied = (request.GET.get("token") or request.POST.get("token") or "").strip()
+    token_ok = bool(token_env) and hmac.compare_digest(token_env, supplied)
+
+    # Locked once an admin exists — only a valid repair token reopens it.
+    if admin_exists and not token_ok:
         return HttpResponseForbidden(
-            "An admin already exists — this setup page is permanently disabled."
+            "An admin already exists — this setup page is locked. "
+            "To reset the admin login, set a SETUP_ADMIN_TOKEN env var on the "
+            "deployment and visit this page with ?token=<that value>."
         )
+
+    repair = admin_exists  # an admin already existed → we're resetting, not creating
+    verb = "Reset" if repair else "Create"
+    token_field = (
+        f"<input type='hidden' name='token' value='{escape(supplied)}'>" if repair else ""
+    )
 
     msg = ""
     if request.method == "POST":
@@ -189,26 +216,38 @@ def setup_admin(request):
             user.is_active = True
             user.set_password(password)
             user.save()
+            note = (
+                "This setup page is now disabled."
+                if not repair
+                else "Remove the SETUP_ADMIN_TOKEN env var to re-lock this page."
+            )
             return HttpResponse(
                 "<div style='font-family:sans-serif;max-width:480px;margin:12vh auto;text-align:center'>"
-                "<h2>&#10003; Admin created</h2>"
-                f"<p>Account <b>{escape(email)}</b> is ready.</p>"
+                f"<h2>&#10003; Admin {verb.lower()}</h2>"
+                f"<p>Account <b>{escape(email)}</b> is ready (staff + superuser, active).</p>"
                 "<p><a href='/aura-admin/' style='display:inline-block;padding:11px 22px;background:#2B2B2B;"
                 "color:#fff;text-decoration:none;border-radius:999px'>Log in to the admin &rarr;</a></p>"
-                "<p style='color:#999;font-size:13px'>This setup page is now disabled.</p></div>"
+                f"<p style='color:#999;font-size:13px'>{note}</p></div>"
             )
 
+    intro = (
+        "One-time setup. Create your admin login, then this page locks itself."
+        if not repair
+        else "Repair mode (valid token). Re-set the admin email + password below; "
+        "the staff/superuser/active flags are forced on."
+    )
     return HttpResponse(
         "<div style='font-family:sans-serif;max-width:420px;margin:10vh auto;padding:0 16px'>"
-        "<h2 style='font-family:Georgia,serif'>Aura Archives &mdash; create admin</h2>"
-        "<p style='color:#666'>One-time setup. Create your admin login, then this page locks itself.</p>"
+        f"<h2 style='font-family:Georgia,serif'>Aura Archives &mdash; {verb.lower()} admin</h2>"
+        f"<p style='color:#666'>{intro}</p>"
         f"<p style='color:#b4453a'>{escape(msg)}</p>"
         "<form method='post' style='display:grid;gap:14px'>"
+        f"{token_field}"
         "<label>Email<br><input name='email' type='email' required "
         "style='width:100%;box-sizing:border-box;padding:11px;border:1px solid #ccc;border-radius:8px'></label>"
         "<label>Password<br><input name='password' type='password' required "
         "style='width:100%;box-sizing:border-box;padding:11px;border:1px solid #ccc;border-radius:8px'></label>"
-        "<button style='padding:13px;background:#B8945A;color:#fff;border:0;border-radius:999px;"
-        "cursor:pointer;font-size:15px'>Create admin</button>"
+        f"<button style='padding:13px;background:#B8945A;color:#fff;border:0;border-radius:999px;"
+        f"cursor:pointer;font-size:15px'>{verb} admin</button>"
         "</form></div>"
     )
