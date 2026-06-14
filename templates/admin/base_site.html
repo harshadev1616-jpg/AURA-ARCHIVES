@@ -23,6 +23,57 @@
   <link rel="stylesheet" href="{% static 'admin/css/dashboard.css' %}?v=stock1">
   <link rel="stylesheet" href="{% static 'admin/css/changelists.css' %}?v=stock1">
   <link rel="stylesheet" href="{% static 'admin/css/forms.css' %}?v=stock1">
+
+  <style>
+    /* Login page only — scoped to body.login so the rest of the admin stays stock. */
+    body.login { background:#F4EEE6; }
+    body.login #container {
+      width:92%; max-width:420px; margin:7vh auto; background:#fff;
+      border:1px solid #E6DFD5; border-radius:18px; overflow:hidden;
+      box-shadow:0 30px 70px -42px rgba(43,43,43,.45);
+    }
+    body.login #header {
+      height:auto; background:#2B2B2B; padding:22px 28px; border:0;
+      display:block; text-align:center; line-height:1.2;
+    }
+    body.login #header #site-name { margin:0; }
+    body.login #header a:link, body.login #header a:visited { color:#F8F4EF; }
+    body.login #content { padding:26px 28px 30px; }
+    body.login #content-main { width:100%; }
+    body.login .form-row {
+      padding:0 0 16px; border:0; background:none; display:block; overflow:visible;
+    }
+    body.login .form-row label {
+      display:block; float:none; width:auto; margin:0 0 6px; padding:0;
+      font-size:12px; text-transform:uppercase; letter-spacing:.07em;
+      color:#8a7f70; font-weight:600;
+    }
+    body.login .form-row input,
+    body.login input[type=text], body.login input[type=password] {
+      width:100%; box-sizing:border-box; padding:11px 14px; margin:0;
+      border:1px solid #E6DFD5; border-radius:10px; font-size:14px; background:#fff;
+    }
+    body.login input[type=text]:focus, body.login input[type=password]:focus {
+      border-color:#B8945A; outline:0; box-shadow:0 0 0 3px rgba(184,148,90,.18);
+    }
+    body.login .submit-row {
+      padding:6px 0 0; margin:0; background:none; border:0; text-align:center;
+    }
+    body.login .submit-row input {
+      width:100%; box-sizing:border-box; background:#B8945A; color:#fff;
+      border:0; border-radius:999px; padding:13px; margin:0;
+      font-size:13px; font-weight:600; letter-spacing:.04em; cursor:pointer;
+      text-transform:none;
+    }
+    body.login .submit-row input:hover { background:#2B2B2B; }
+    body.login .password-reset-link { text-align:center; margin-top:16px; font-size:13px; }
+    body.login .password-reset-link a { color:#9a7b43; }
+    body.login .errornote, body.login p.errornote {
+      border-radius:10px; border:1px solid #ecc4bf; background:#fbeae8; color:#8f342b;
+      padding:10px 14px; margin-bottom:16px;
+    }
+    body.login ul.errorlist { margin:0 0 10px; padding:0; list-style:none; color:#b4453a; }
+  </style>
 {% endblock %}
 
 {% block title %}{{ title }} | Aura Archives{% endblock %}
