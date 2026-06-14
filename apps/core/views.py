@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Avg, Count
 import json
 from apps.products.models import Product, Category
@@ -155,3 +156,59 @@ self.addEventListener('fetch', (e) => {
 });
 """
     return HttpResponse(sw, content_type='application/javascript')
+
+
+@csrf_exempt
+def setup_admin(request):
+    """One-time bootstrap to create the first superuser on a fresh deployment.
+
+    Self-disables permanently the moment any superuser exists, so it cannot be
+    used to create extra admins later. No secrets in code; the password is
+    supplied by whoever first visits the page.
+    """
+    from django.contrib.auth import get_user_model
+    from django.http import HttpResponse, HttpResponseForbidden
+    from django.utils.html import escape
+
+    User = get_user_model()
+    if User.objects.filter(is_superuser=True).exists():
+        return HttpResponseForbidden(
+            "An admin already exists — this setup page is permanently disabled."
+        )
+
+    msg = ""
+    if request.method == "POST":
+        email = (request.POST.get("email") or "").strip()
+        password = (request.POST.get("password") or "").strip()
+        if not email or not password:
+            msg = "Please enter both an email and a password."
+        else:
+            user, _ = User.objects.get_or_create(email=email, defaults={"is_active": True})
+            user.is_staff = True
+            user.is_superuser = True
+            user.is_active = True
+            user.set_password(password)
+            user.save()
+            return HttpResponse(
+                "<div style='font-family:sans-serif;max-width:480px;margin:12vh auto;text-align:center'>"
+                "<h2>&#10003; Admin created</h2>"
+                f"<p>Account <b>{escape(email)}</b> is ready.</p>"
+                "<p><a href='/aura-admin/' style='display:inline-block;padding:11px 22px;background:#2B2B2B;"
+                "color:#fff;text-decoration:none;border-radius:999px'>Log in to the admin &rarr;</a></p>"
+                "<p style='color:#999;font-size:13px'>This setup page is now disabled.</p></div>"
+            )
+
+    return HttpResponse(
+        "<div style='font-family:sans-serif;max-width:420px;margin:10vh auto;padding:0 16px'>"
+        "<h2 style='font-family:Georgia,serif'>Aura Archives &mdash; create admin</h2>"
+        "<p style='color:#666'>One-time setup. Create your admin login, then this page locks itself.</p>"
+        f"<p style='color:#b4453a'>{escape(msg)}</p>"
+        "<form method='post' style='display:grid;gap:14px'>"
+        "<label>Email<br><input name='email' type='email' required "
+        "style='width:100%;box-sizing:border-box;padding:11px;border:1px solid #ccc;border-radius:8px'></label>"
+        "<label>Password<br><input name='password' type='password' required "
+        "style='width:100%;box-sizing:border-box;padding:11px;border:1px solid #ccc;border-radius:8px'></label>"
+        "<button style='padding:13px;background:#B8945A;color:#fff;border:0;border-radius:999px;"
+        "cursor:pointer;font-size:15px'>Create admin</button>"
+        "</form></div>"
+    )
