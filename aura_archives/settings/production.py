@@ -28,10 +28,11 @@ else:
     CSRF_COOKIE_SECURE = False
     X_FRAME_OPTIONS = 'SAMEORIGIN'
 
-# CSRF trusted origins
+# CSRF trusted origins — include a wildcard for Vercel preview/deployment URLs
+# so form POSTs (e.g. admin login) work on those hosts too, not just the main one.
 csrf_origins = env.list('CSRF_TRUSTED_ORIGINS', default=[])
 if not csrf_origins:
-    csrf_origins = ['https://aura-archives.vercel.app', SITE_URL]
+    csrf_origins = ['https://aura-archives.vercel.app', 'https://*.vercel.app', SITE_URL]
 CSRF_TRUSTED_ORIGINS = csrf_origins
 
 # --- Sentry (optional — only if installed AND a DSN is configured) ---

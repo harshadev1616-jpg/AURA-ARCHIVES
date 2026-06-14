@@ -6,7 +6,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 env = environ.Env(
     DEBUG=(bool, False),
-    ALLOWED_HOSTS=(list, ['localhost', '127.0.0.1', 'aura-archives.vercel.app']),
+    # '.vercel.app' (leading dot) allows the main domain AND every per-deployment
+    # preview URL (aura-archives-<hash>-...vercel.app), which otherwise 400.
+    ALLOWED_HOSTS=(list, ['localhost', '127.0.0.1', '.vercel.app']),
 )
 
 # Read .env file if it exists (development only)
@@ -16,7 +18,7 @@ if os.path.exists(env_file):
 
 SECRET_KEY = env('SECRET_KEY', default='django-insecure-change-me-in-production')
 DEBUG = env('DEBUG', default=False)
-ALLOWED_HOSTS = env('ALLOWED_HOSTS', default=['localhost', '127.0.0.1', 'aura-archives.vercel.app'])
+ALLOWED_HOSTS = env('ALLOWED_HOSTS', default=['localhost', '127.0.0.1', '.vercel.app'])
 
 DJANGO_APPS = [
     'django.contrib.admin',
