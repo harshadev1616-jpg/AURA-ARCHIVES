@@ -13,8 +13,10 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'testserver', '*']
 
-# Console email + no external services for a self-contained local preview.
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Email: use whatever EMAIL_BACKEND the environment / .env sets (base.py reads
+# it), so configuring Gmail SMTP in .env makes the preview actually send mail.
+# Falls back to the console backend when nothing is configured.
+EMAIL_BACKEND = env("EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend")
 
 CACHES = {
     'default': {'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'},
