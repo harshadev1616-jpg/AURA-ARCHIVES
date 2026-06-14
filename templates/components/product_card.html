@@ -1,6 +1,6 @@
 <div class="group relative">
     <!-- Image -->
-    <a href="{{ product.get_absolute_url }}" class="img-zoom block relative aspect-[4/5] overflow-hidden rounded-2xl bg-[#EFE9E1] dark:bg-gray-800">
+    <a href="{{ product.get_absolute_url }}" class="img-zoom block relative aspect-[4/5] overflow-hidden rounded-2xl bg-[#EFE9E1] dark:bg-gray-800 ring-1 ring-transparent group-hover:ring-gold/20 shadow-sm group-hover:shadow-[0_22px_44px_-26px_rgba(43,43,43,0.55)] transition-all duration-500">
         {% if product.primary_image %}
         <img src="{{ product.primary_image.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover">
         {% else %}
