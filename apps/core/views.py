@@ -279,7 +279,15 @@ def diag_9f3k(request):
     check("Review.count", lambda: Review.objects.count())
     check("User.count", lambda: User.objects.count())
     check("tables present", lambda: _list_tables(connection))
+    check("render home view", _render_home)
     return HttpResponse("\n\n".join(out), content_type="text/plain")
+
+
+def _render_home():
+    from django.test import Client
+    c = Client(raise_request_exception=True)
+    resp = c.get("/", HTTP_HOST="aura-archives.vercel.app", secure=True)
+    return f"status={resp.status_code}"
 
 
 def _count_rows(connection, table):
