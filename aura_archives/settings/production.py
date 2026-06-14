@@ -35,6 +35,20 @@ if not csrf_origins:
     csrf_origins = ['https://aura-archives.vercel.app', 'https://*.vercel.app', SITE_URL]
 CSRF_TRUSTED_ORIGINS = csrf_origins
 
+# --- Cache & sessions: force database-backed, never Redis ---
+# Vercel has no Redis; base.py's auto-detection can fall through to a
+# localhost:6379 Redis config, which then 500s every request that saves a
+# session (homepage, shop) with "Connection refused". Pin DB-backed cache and
+# sessions here unconditionally — both tables (django_cache_table,
+# django_session) already exist in the production DB.
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'django_cache_table',
+    }
+}
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
 # --- Sentry (optional — only if installed AND a DSN is configured) ---
 SENTRY_DSN = env('SENTRY_DSN', default='')
 if SENTRY_DSN:
