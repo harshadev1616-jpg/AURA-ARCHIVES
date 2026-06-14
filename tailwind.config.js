@@ -15,6 +15,7 @@ module.exports = {
       colors: {
         ivory: "#F8F4EF",
         cream: "#FBF8F4",
+        sand: "#F1E7D7",
         blush: "#E8CFCF",
         lavender: "#D8D0E8",
         gold: "#B8945A",
