@@ -74,6 +74,66 @@
     }
     body.login ul.errorlist { margin:0 0 10px; padding:0; list-style:none; color:#b4453a; }
   </style>
+
+  <style>
+    /* ---- Aura admin design system (dashboard + analytics) ---------------- */
+    .aura-admin-page__intro, .aura-admin-home { max-width: 1180px; }
+    .aura-admin-page__intro h1 { font-family:'Playfair Display',Georgia,serif; color:#2B2B2B; margin:0 0 4px; }
+    .aura-admin-page__intro p { color:#9c8a6a; margin:0 0 18px; }
+
+    /* Alerts banner */
+    .aura-admin-alerts { background:#fbeae8; border:1px solid #ecc4bf; border-radius:16px; padding:16px 18px; margin:0 0 20px; }
+    .aura-admin-alerts__header { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+    .aura-admin-alerts__header h2 { margin:0; font-size:15px; color:#8f342b; }
+    .aura-admin-alerts__header p { margin:2px 0 0; font-size:12px; color:#b07a72; }
+    .aura-admin-alerts__header a { font-size:13px; font-weight:600; color:#8f342b; white-space:nowrap; }
+    .aura-admin-alerts__list { display:grid; gap:8px; margin-top:12px; }
+    .aura-admin-alert { display:block; background:#fff; border:1px solid #f0d4cf; border-radius:10px; padding:9px 12px; text-decoration:none; }
+    .aura-admin-alert strong { display:block; color:#2B2B2B; font-size:13px; }
+    .aura-admin-alert span { display:block; color:#7a6f62; font-size:12px; margin:2px 0; }
+    .aura-admin-alert time { color:#b3a890; font-size:11px; }
+
+    /* KPI hero */
+    .aura-admin-hero { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; margin:0 0 18px; }
+    .aura-admin-kpi { background:#fff; border:1px solid #E6DFD5; border-radius:18px; padding:18px 20px; display:flex; flex-direction:column; gap:4px; }
+    .aura-admin-kpi__value { font-family:'Playfair Display',Georgia,serif; font-size:28px; font-weight:700; color:#2B2B2B; line-height:1.05; }
+    .aura-admin-kpi__label { font-size:11px; text-transform:uppercase; letter-spacing:.09em; color:#9c8a6a; font-weight:700; }
+    .aura-admin-kpi__meta { font-size:12px; color:#a99e8c; }
+    .aura-admin-kpi--gold { background:linear-gradient(150deg,#2B2B2B,#3a3733); border-color:#2B2B2B; }
+    .aura-admin-kpi--gold .aura-admin-kpi__value { color:#F8F4EF; }
+    .aura-admin-kpi--gold .aura-admin-kpi__label { color:#cbb98f; }
+    .aura-admin-kpi--gold .aura-admin-kpi__meta { color:#B8945A; }
+    .aura-admin-kpi--ink { background:#F4EEE6; border-color:#E6DFD5; }
+
+    /* Panels */
+    .aura-admin-panels { display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:16px; margin:0 0 16px; align-items:start; }
+    .aura-admin-panel { background:#fff; border:1px solid #E6DFD5; border-radius:18px; padding:18px 20px; }
+    .aura-admin-panel--wide { grid-column:1 / -1; }
+    .aura-admin-panel--warning { border-color:#ecc4bf; background:#fdf4f2; }
+    .aura-admin-panel__header { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin:0 0 14px; }
+    .aura-admin-panel__header h2 { font-size:14px; color:#2B2B2B; margin:0; font-weight:700; }
+    .aura-admin-panel__header p { font-size:12px; color:#9c8a6a; margin:2px 0 0; }
+    .aura-admin-panel__header a { font-size:12px; font-weight:600; color:#9a7b43; white-space:nowrap; }
+
+    /* Sales chart */
+    .aura-admin-chart { display:flex; align-items:flex-end; gap:5px; height:150px; padding:6px 0 0; }
+    .aura-admin-chart__bar-wrap { flex:1; display:flex; flex-direction:column; align-items:center; gap:5px; justify-content:flex-end; }
+    .aura-admin-chart__bar { width:100%; max-width:22px; background:linear-gradient(#cbb98f,#B8945A); border-radius:5px 5px 0 0; min-height:3px; transition:background .15s; }
+    .aura-admin-chart__bar-wrap:hover .aura-admin-chart__bar { background:#2B2B2B; }
+    .aura-admin-chart__label { font-size:10px; color:#b3a890; }
+    .aura-admin-chart__summary { font-size:12px; color:#9c8a6a; margin:12px 0 0; }
+
+    /* Action queue + stock list */
+    .aura-admin-queue, .aura-admin-stock-list { display:grid; gap:2px; }
+    .aura-admin-queue a, .aura-admin-stock-list a {
+      display:flex; justify-content:space-between; align-items:center; gap:10px;
+      padding:11px 2px; border-bottom:1px solid #f0ebe2; text-decoration:none; color:#2B2B2B; font-size:13px; font-weight:600;
+    }
+    .aura-admin-queue a:last-child, .aura-admin-stock-list a:last-child { border-bottom:0; }
+    .aura-admin-queue a:hover, .aura-admin-stock-list a:hover { color:#B8945A; }
+    .aura-admin-stock-list a strong { color:#b4453a; font-size:12px; white-space:nowrap; }
+    .aura-admin-empty { color:#a99e8c; font-size:13px; font-style:italic; margin:4px 0; }
+  </style>
 {% endblock %}
 
 {% block title %}{{ title }} | Aura Archives{% endblock %}

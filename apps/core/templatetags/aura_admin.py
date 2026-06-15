@@ -25,49 +25,62 @@ def _sales_series(paid, today, days=14):
     return series, peak
 
 
+_EMPTY_DASHBOARD = {
+    "sales_series": [], "sales_peak": 0, "sales_14": 0, "revenue": 0, "revenue_30": 0,
+    "orders_total": 0, "orders_7": 0, "aov": 0, "customers": 0, "new_customers_30": 0,
+    "orders_to_fulfil": 0, "pending_reviews": 0, "restock_requests": 0,
+    "low_stock": [], "low_stock_count": 0, "alerts": [], "alert_count": 0,
+}
+
+
 @register.inclusion_tag("admin/_aura_dashboard.html", takes_context=True)
 def aura_dashboard(context):
-    from apps.orders.models import Order
-    from apps.accounts.models import User
-    from apps.products.models import Product, StockNotification
-    from apps.reviews.models import Review
-    from apps.notifications.models import Notification
+    """Render the admin home dashboard. Fully guarded: any data error returns
+    an empty (zeroed) dashboard rather than 500-ing the admin index."""
+    try:
+        from apps.orders.models import Order
+        from apps.accounts.models import User
+        from apps.products.models import Product, StockNotification
+        from apps.reviews.models import Review
+        from apps.notifications.models import Notification
 
-    request = context.get("request")
-    today = timezone.now().date()
-    last_30 = today - timedelta(days=30)
-    last_7 = today - timedelta(days=7)
+        request = context.get("request")
+        today = timezone.now().date()
+        last_30 = today - timedelta(days=30)
+        last_7 = today - timedelta(days=7)
 
-    paid = Order.objects.filter(payment_status="paid")
-    revenue = paid.aggregate(s=Sum("total"))["s"] or 0
-    paid_count = paid.count()
+        paid = Order.objects.filter(payment_status="paid")
+        revenue = paid.aggregate(s=Sum("total"))["s"] or 0
+        paid_count = paid.count()
 
-    alerts = []
-    alert_count = 0
-    if request is not None:
-        qs = Notification.objects.filter(user=request.user, notification_type="admin_new_order", is_read=False)
-        alert_count = qs.count()
-        alerts = list(qs.order_by("-created_at")[:6])
+        alerts = []
+        alert_count = 0
+        if request is not None and getattr(request, "user", None) and request.user.is_authenticated:
+            qs = Notification.objects.filter(user=request.user, notification_type="admin_new_order", is_read=False)
+            alert_count = qs.count()
+            alerts = list(qs.order_by("-created_at")[:6])
 
-    sales_series, sales_peak = _sales_series(paid, today, days=14)
-    sales_14 = sum(s["amount"] for s in sales_series)
+        sales_series, sales_peak = _sales_series(paid, today, days=14)
+        sales_14 = sum(s["amount"] for s in sales_series)
 
-    return {
-        "sales_series": sales_series,
-        "sales_peak": sales_peak,
-        "sales_14": sales_14,
-        "revenue": revenue,
-        "revenue_30": paid.filter(created_at__date__gte=last_30).aggregate(s=Sum("total"))["s"] or 0,
-        "orders_total": Order.objects.count(),
-        "orders_7": Order.objects.filter(created_at__date__gte=last_7).count(),
-        "aov": (revenue / paid_count) if paid_count else 0,
-        "customers": User.objects.filter(is_staff=False).count(),
-        "new_customers_30": User.objects.filter(is_staff=False, date_joined__date__gte=last_30).count(),
-        "orders_to_fulfil": Order.objects.filter(status__in=["confirmed", "processing"]).count(),
-        "pending_reviews": Review.objects.filter(is_approved=False).count(),
-        "restock_requests": StockNotification.objects.filter(is_notified=False).count(),
-        "low_stock": Product.objects.filter(is_active=True, stock__lte=5, stock__gt=0).order_by("stock")[:5],
-        "low_stock_count": Product.objects.filter(is_active=True, stock__lte=5, stock__gt=0).count(),
-        "alerts": alerts,
-        "alert_count": alert_count,
-    }
+        return {
+            "sales_series": sales_series,
+            "sales_peak": sales_peak,
+            "sales_14": sales_14,
+            "revenue": revenue,
+            "revenue_30": paid.filter(created_at__date__gte=last_30).aggregate(s=Sum("total"))["s"] or 0,
+            "orders_total": Order.objects.count(),
+            "orders_7": Order.objects.filter(created_at__date__gte=last_7).count(),
+            "aov": (revenue / paid_count) if paid_count else 0,
+            "customers": User.objects.filter(is_staff=False).count(),
+            "new_customers_30": User.objects.filter(is_staff=False, date_joined__date__gte=last_30).count(),
+            "orders_to_fulfil": Order.objects.filter(status__in=["confirmed", "processing"]).count(),
+            "pending_reviews": Review.objects.filter(is_approved=False).count(),
+            "restock_requests": StockNotification.objects.filter(is_notified=False).count(),
+            "low_stock": Product.objects.filter(is_active=True, stock__lte=5, stock__gt=0).order_by("stock")[:5],
+            "low_stock_count": Product.objects.filter(is_active=True, stock__lte=5, stock__gt=0).count(),
+            "alerts": alerts,
+            "alert_count": alert_count,
+        }
+    except Exception:
+        return dict(_EMPTY_DASHBOARD)
