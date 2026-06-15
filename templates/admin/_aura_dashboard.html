@@ -52,15 +52,30 @@
         </div>
         <a href="/insights/">Open full insights</a>
       </div>
-      <div class="aura-admin-chart" aria-hidden="true">
-        {% for point in sales_series %}
-        <div class="aura-admin-chart__bar-wrap">
-          <span class="aura-admin-chart__bar" style="height: {{ point.h }}px"></span>
-          <span class="aura-admin-chart__label">{{ point.short }}</span>
+      <div class="aura-admin-graph">
+        <svg class="aura-admin-graph__svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="auraSales" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#B8945A" stop-opacity="0.35"/>
+              <stop offset="100%" stop-color="#B8945A" stop-opacity="0.02"/>
+            </linearGradient>
+          </defs>
+          {% if sales_area %}<path d="{{ sales_area }}" fill="url(#auraSales)"/>{% endif %}
+          {% if sales_line %}<polyline points="{{ sales_line }}" fill="none" stroke="#B8945A" stroke-width="2"
+                    vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/>{% endif %}
+          {% for point in sales_series %}
+            <circle cx="{{ point.x }}" cy="{{ point.y }}" r="1.1" fill="#2B2B2B" vector-effect="non-scaling-stroke">
+              <title>{{ point.label }}: Rs.{{ point.amount|floatformat:0 }}</title>
+            </circle>
+          {% endfor %}
+        </svg>
+        <div class="aura-admin-graph__axis">
+          {% for point in sales_series %}
+            {% if forloop.first or forloop.last or forloop.counter == 8 %}<span>{{ point.label }}</span>{% endif %}
+          {% endfor %}
         </div>
-        {% endfor %}
       </div>
-      <p class="aura-admin-chart__summary">Rs.{{ sales_14|floatformat:0 }} captured across the last 14 days.</p>
+      <p class="aura-admin-chart__summary">Rs.{{ sales_14|floatformat:0 }} captured across the last 14 days · peak day Rs.{{ sales_peak|floatformat:0 }}.</p>
     </section>
 
     <section class="aura-admin-panel">

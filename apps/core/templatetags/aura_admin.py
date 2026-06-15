@@ -8,7 +8,13 @@ register = template.Library()
 
 
 def _sales_series(paid, today, days=14):
-    """Daily revenue for the last `days` days as render-ready SVG bar data."""
+    """Daily revenue for the last `days` days as render-ready chart data.
+
+    Returns (series, peak, line_points, area_path) where the last two are
+    coordinate strings for an inline SVG area+line chart drawn in a 0..100
+    viewBox (stretched to the container; stroke kept crisp via
+    vector-effect:non-scaling-stroke in the template).
+    """
     start = today - timedelta(days=days - 1)
     rows = (paid.filter(created_at__date__gte=start)
             .annotate(d=TruncDate("created_at")).values("d")
@@ -19,14 +25,28 @@ def _sales_series(paid, today, days=14):
         day = start + timedelta(days=i)
         series.append({"label": day.strftime("%d %b"), "short": day.strftime("%d"), "amount": by_day.get(day, 0)})
     peak = max((s["amount"] for s in series), default=0) or 1
-    # bar geometry for an inline 100-height SVG
-    for s in series:
-        s["h"] = round(max(2, (s["amount"] / peak) * 92), 1)
-    return series, peak
+
+    n = len(series)
+    pts = []
+    for i, s in enumerate(series):
+        s["h"] = round(max(2, (s["amount"] / peak) * 92), 1)  # legacy bar height fallback
+        x = round((i / (n - 1)) * 100, 2) if n > 1 else 0
+        y = round(100 - (s["amount"] / peak) * 92 - 4, 2)     # 4% top padding
+        s["x"], s["y"] = x, y
+        pts.append((x, y))
+
+    line_points = " ".join(f"{x},{y}" for x, y in pts)
+    if pts:
+        area_path = "M " + " L ".join(f"{x},{y}" for x, y in pts)
+        area_path += f" L {pts[-1][0]},100 L {pts[0][0]},100 Z"
+    else:
+        area_path = ""
+    return series, peak, line_points, area_path
 
 
 _EMPTY_DASHBOARD = {
-    "sales_series": [], "sales_peak": 0, "sales_14": 0, "revenue": 0, "revenue_30": 0,
+    "sales_series": [], "sales_peak": 0, "sales_line": "", "sales_area": "",
+    "sales_14": 0, "revenue": 0, "revenue_30": 0,
     "orders_total": 0, "orders_7": 0, "aov": 0, "customers": 0, "new_customers_30": 0,
     "orders_to_fulfil": 0, "pending_reviews": 0, "restock_requests": 0,
     "low_stock": [], "low_stock_count": 0, "alerts": [], "alert_count": 0,
@@ -60,12 +80,14 @@ def aura_dashboard(context):
             alert_count = qs.count()
             alerts = list(qs.order_by("-created_at")[:6])
 
-        sales_series, sales_peak = _sales_series(paid, today, days=14)
+        sales_series, sales_peak, sales_line, sales_area = _sales_series(paid, today, days=14)
         sales_14 = sum(s["amount"] for s in sales_series)
 
         return {
             "sales_series": sales_series,
             "sales_peak": sales_peak,
+            "sales_line": sales_line,
+            "sales_area": sales_area,
             "sales_14": sales_14,
             "revenue": revenue,
             "revenue_30": paid.filter(created_at__date__gte=last_30).aggregate(s=Sum("total"))["s"] or 0,
