@@ -140,6 +140,13 @@
     }
     .aura-admin-queue a:last-child, .aura-admin-stock-list a:last-child { border-bottom:0; }
     .aura-admin-queue a:hover, .aura-admin-stock-list a:hover { color:#B8945A; }
+    .aura-admin-queue a span:first-child::after { content:''; }
+    .aura-admin-queue a:hover span:first-child::after { content:' →'; color:#B8945A; }
+    .aura-admin-badge {
+      min-width:26px; text-align:center; padding:2px 9px; border-radius:999px;
+      background:#F4EEE6; color:#9c8a6a; font-size:12px; font-weight:700; white-space:nowrap;
+    }
+    .aura-admin-badge--alert { background:#2B2B2B; color:#F8F4EF; }
     .aura-admin-stock-list a strong { color:#b4453a; font-size:12px; white-space:nowrap; }
     .aura-admin-empty { color:#a99e8c; font-size:13px; font-style:italic; margin:4px 0; }
   </style>

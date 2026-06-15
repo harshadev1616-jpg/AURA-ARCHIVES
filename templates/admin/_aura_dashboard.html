@@ -86,10 +86,22 @@
         </div>
       </div>
       <div class="aura-admin-queue">
-        <a href="/aura-admin/orders/order/?status__exact=confirmed">{{ orders_to_fulfil }} orders to fulfil</a>
-        <a href="/aura-admin/reviews/review/?is_approved__exact=0">{{ pending_reviews }} reviews awaiting approval</a>
-        <a href="/aura-admin/products/stocknotification/?is_notified__exact=0">{{ restock_requests }} pending restock requests</a>
-        <a href="/aura-admin/products/product/?stock__lte=5">{{ low_stock_count }} low-stock products</a>
+        <a href="/aura-admin/orders/order/?status__exact=confirmed">
+          <span>Orders to fulfil</span>
+          <span class="aura-admin-badge{% if orders_to_fulfil %} aura-admin-badge--alert{% endif %}">{{ orders_to_fulfil }}</span>
+        </a>
+        <a href="/aura-admin/reviews/review/?is_approved__exact=0">
+          <span>Reviews awaiting approval</span>
+          <span class="aura-admin-badge{% if pending_reviews %} aura-admin-badge--alert{% endif %}">{{ pending_reviews }}</span>
+        </a>
+        <a href="/aura-admin/products/stocknotification/?is_notified__exact=0">
+          <span>Pending restock requests</span>
+          <span class="aura-admin-badge{% if restock_requests %} aura-admin-badge--alert{% endif %}">{{ restock_requests }}</span>
+        </a>
+        <a href="/aura-admin/products/product/?stock__lte=5">
+          <span>Low-stock products</span>
+          <span class="aura-admin-badge{% if low_stock_count %} aura-admin-badge--alert{% endif %}">{{ low_stock_count }}</span>
+        </a>
       </div>
     </section>
 
