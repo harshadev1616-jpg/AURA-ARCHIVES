@@ -33,8 +33,15 @@
                 </ul>
             </div>
             <div>
-                <h3 class="eyebrow text-ivory/40 mb-6">Help</h3>
+                <h3 class="eyebrow text-ivory/40 mb-6">Account &amp; Help</h3>
                 <ul class="space-y-3 text-sm text-ivory/60">
+                    {% if user.is_authenticated %}
+                    <li><a href="/accounts/dashboard/" class="hover:text-gold transition-colors">My Account</a></li>
+                    <li><a href="/orders/" class="hover:text-gold transition-colors">My Orders</a></li>
+                    {% else %}
+                    <li><a href="/accounts/login/" class="hover:text-gold transition-colors">Login</a></li>
+                    <li><a href="/accounts/register/" class="hover:text-gold transition-colors">Create Account</a></li>
+                    {% endif %}
                     {% for page in footer_pages %}
                     <li><a href="{{ page.get_absolute_url }}" class="hover:text-gold transition-colors">{{ page.title }}</a></li>
                     {% endfor %}
