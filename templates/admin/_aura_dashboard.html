@@ -21,26 +21,26 @@
   {% endif %}
 
   <div class="aura-admin-hero">
-    <div class="aura-admin-kpi aura-admin-kpi--gold">
+    <a class="aura-admin-kpi aura-admin-kpi--gold" href="/insights/">
       <span class="aura-admin-kpi__value">Rs.{{ revenue|floatformat:0 }}</span>
-      <span class="aura-admin-kpi__label">Revenue</span>
+      <span class="aura-admin-kpi__label">Revenue <span class="aura-admin-kpi__go">View insights &rarr;</span></span>
       <span class="aura-admin-kpi__meta">Rs.{{ revenue_30|floatformat:0 }} in the last 30 days</span>
-    </div>
-    <div class="aura-admin-kpi aura-admin-kpi--ink">
+    </a>
+    <a class="aura-admin-kpi aura-admin-kpi--ink" href="{% url 'admin:orders_order_changelist' %}">
       <span class="aura-admin-kpi__value">{{ orders_total }}</span>
-      <span class="aura-admin-kpi__label">Orders</span>
+      <span class="aura-admin-kpi__label">Orders <span class="aura-admin-kpi__go">View all &rarr;</span></span>
       <span class="aura-admin-kpi__meta">{{ orders_7 }} placed in the last 7 days</span>
-    </div>
-    <div class="aura-admin-kpi">
+    </a>
+    <a class="aura-admin-kpi" href="/insights/">
       <span class="aura-admin-kpi__value">Rs.{{ aov|floatformat:0 }}</span>
-      <span class="aura-admin-kpi__label">Average order value</span>
+      <span class="aura-admin-kpi__label">Average order value <span class="aura-admin-kpi__go">View insights &rarr;</span></span>
       <span class="aura-admin-kpi__meta">{{ customers }} customers total</span>
-    </div>
-    <div class="aura-admin-kpi">
+    </a>
+    <a class="aura-admin-kpi" href="{% url 'admin:accounts_user_changelist' %}">
       <span class="aura-admin-kpi__value">+{{ new_customers_30 }}</span>
-      <span class="aura-admin-kpi__label">New customers</span>
+      <span class="aura-admin-kpi__label">New customers <span class="aura-admin-kpi__go">View all &rarr;</span></span>
       <span class="aura-admin-kpi__meta">Joined in the last 30 days</span>
-    </div>
+    </a>
   </div>
 
   <div class="aura-admin-panels">

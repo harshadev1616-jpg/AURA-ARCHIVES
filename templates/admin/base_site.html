@@ -96,9 +96,14 @@
     /* KPI hero */
     .aura-admin-hero { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; margin:0 0 18px; }
     .aura-admin-kpi { background:#fff; border:1px solid #E6DFD5; border-radius:18px; padding:18px 20px; display:flex; flex-direction:column; gap:4px; }
+    a.aura-admin-kpi { text-decoration:none; cursor:pointer; transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease; }
+    a.aura-admin-kpi:hover { transform:translateY(-2px); box-shadow:0 16px 32px -22px rgba(43,43,43,.5); border-color:#B8945A; }
     .aura-admin-kpi__value { font-family:'Playfair Display',Georgia,serif; font-size:28px; font-weight:700; color:#2B2B2B; line-height:1.05; }
-    .aura-admin-kpi__label { font-size:11px; text-transform:uppercase; letter-spacing:.09em; color:#9c8a6a; font-weight:700; }
+    .aura-admin-kpi__label { font-size:11px; text-transform:uppercase; letter-spacing:.09em; color:#9c8a6a; font-weight:700; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
     .aura-admin-kpi__meta { font-size:12px; color:#a99e8c; }
+    .aura-admin-kpi__go { text-transform:none; letter-spacing:0; font-size:11px; font-weight:600; color:#B8945A; opacity:0; transition:opacity .12s ease; }
+    a.aura-admin-kpi:hover .aura-admin-kpi__go { opacity:1; }
+    .aura-admin-kpi--gold .aura-admin-kpi__go { color:#cbb98f; }
     .aura-admin-kpi--gold { background:linear-gradient(150deg,#2B2B2B,#3a3733); border-color:#2B2B2B; }
     .aura-admin-kpi--gold .aura-admin-kpi__value { color:#F8F4EF; }
     .aura-admin-kpi--gold .aura-admin-kpi__label { color:#cbb98f; }
