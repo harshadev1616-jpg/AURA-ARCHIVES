@@ -104,7 +104,7 @@
 
             <!-- Price -->
             <div class="flex items-baseline gap-3 mb-7 mt-1">
-                <span class="font-display text-3xl text-charcoal dark:text-ivory">Rs.{{ product.price }}</span>
+                <span class="font-display text-3xl text-charcoal dark:text-ivory" x-data x-text="'Rs.' + $store.buy.price">Rs.{{ product.price|floatformat:0 }}</span>
                 {% if product.compare_price %}<span class="text-lg text-charcoal/35 line-through">Rs.{{ product.compare_price }}</span>{% endif %}
                 {% if product.discount_percentage > 0 %}<span class="text-gold text-[13px] tracking-wide">{{ product.discount_percentage }}% off</span>{% endif %}
             </div>
@@ -466,7 +466,7 @@
         <div class="min-w-0 flex-1">
             <p class="font-display text-base sm:text-lg text-charcoal dark:text-ivory truncate leading-tight">{{ product.name }}</p>
             <div class="flex items-baseline gap-2">
-                <span class="text-charcoal dark:text-ivory text-sm font-medium">Rs.{{ product.price }}</span>
+                <span class="text-charcoal dark:text-ivory text-sm font-medium" x-text="'Rs.' + $store.buy.price">Rs.{{ product.price|floatformat:0 }}</span>
                 {% if product.compare_price %}<span class="text-charcoal/35 line-through text-xs">Rs.{{ product.compare_price }}</span>{% endif %}
             </div>
         </div>
@@ -495,6 +495,11 @@
 document.addEventListener('alpine:init', () => {
     Alpine.store('buy', {
         variant: {% if product.variants.exists %}{{ product.variants.first.pk }}{% else %}null{% endif %},
+        base: {{ product.price|floatformat:0 }},
+        prices: { {% for v in product.variants.all %}{{ v.pk }}: {{ v.final_price|floatformat:0 }}{% if not forloop.last %}, {% endif %}{% endfor %} },
+        get price() {
+            return (this.variant != null && this.prices[this.variant] != null) ? this.prices[this.variant] : this.base;
+        },
     });
 });
 
