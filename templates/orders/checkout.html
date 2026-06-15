@@ -167,7 +167,7 @@
                 <div class="flex gap-2 mb-5">
                     <input x-model="couponCode" type="text" placeholder="Coupon code"
                            class="flex-1 border border-line dark:border-white/10 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-gold uppercase bg-ivory dark:bg-gray-700 dark:text-ivory">
-                    <button @click="applyCheckoutCoupon()" class="bg-charcoal text-ivory px-5 py-2.5 rounded-full text-[13px] tracking-wide hover:bg-gold transition-colors">Apply</button>
+                    <button @click="applyCheckoutCoupon($data)" class="bg-charcoal text-ivory px-5 py-2.5 rounded-full text-[13px] tracking-wide hover:bg-gold transition-colors">Apply</button>
                 </div>
                 {% if cart.bundle_discount %}
                 <div class="flex items-center gap-2 bg-green-50 dark:bg-green-900/20 border border-green-200 rounded-xl px-3 py-2 mb-3">
@@ -201,7 +201,7 @@
                     <hr class="border-line dark:border-white/10">
                     <div class="flex justify-between text-base font-bold text-charcoal dark:text-ivory pt-1">
                         <span>Total</span>
-                        <span x-text="'Rs.' + Math.max(0, {{ cart.total_after_bundle|floatformat:0 }} - (redeemPoints ? availablePoints : 0)).toFixed(0)">Rs.{{ cart.total_after_bundle|floatformat:0 }}</span>
+                        <span x-text="'Rs.' + Math.max(0, {{ cart.total_after_bundle|floatformat:0 }} - discount - (redeemPoints ? availablePoints : 0)).toFixed(0)">Rs.{{ cart.total_after_bundle|floatformat:0 }}</span>
                     </div>
                 </div>
                 <button @click="placeOrder()" :disabled="loading || !selectedAddress"
@@ -236,13 +236,16 @@
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-function applyCheckoutCoupon() {
+function applyCheckoutCoupon(state) {
     const code = document.querySelector('[x-model="couponCode"]')?._x_model?.get() || '';
     fetch('/orders/apply-coupon/', {
         method: 'POST',
         headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')},
         body: JSON.stringify({code, cart_total: {{ cart.subtotal }}})
-    }).then(r => r.json()).then(d => showToast(d.message));
+    }).then(r => r.json()).then(d => {
+        if (state) state.discount = d.success ? d.discount : 0;
+        showToast(d.message);
+    });
 }
 
 async function placeOrder() {

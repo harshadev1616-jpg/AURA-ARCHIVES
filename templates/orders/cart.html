@@ -66,7 +66,7 @@
                     <div class="flex gap-2">
                         <input x-model="couponCode" type="text" placeholder="Coupon code"
                                class="flex-1 border border-line dark:border-white/10 rounded-full px-4 py-2.5 text-sm focus:outline-none focus:border-gold bg-white dark:bg-gray-700 dark:text-ivory uppercase tracking-wide">
-                        <button @click="applyCoupon()" class="bg-charcoal text-ivory px-5 py-2.5 rounded-full text-[13px] tracking-wide hover:bg-gold transition-colors">Apply</button>
+                        <button @click="applyCoupon($data)" class="bg-charcoal text-ivory px-5 py-2.5 rounded-full text-[13px] tracking-wide hover:bg-gold transition-colors">Apply</button>
                     </div>
                     <p x-show="discountMsg" x-text="discountMsg" class="text-xs mt-1.5 text-green-600"></p>
                 </div>
@@ -180,19 +180,23 @@ function updateQty(productId, variantId, qty) {
         }
     });
 }
-function applyCoupon() {
+function applyCoupon(state) {
     const code = document.querySelector('input[placeholder="Coupon code"]').value;
     const total = {{ cart.subtotal|floatformat:0 }};
+    const baseTotal = {{ cart.total_after_bundle|floatformat:0 }};
     fetch('/orders/apply-coupon/', {
         method: 'POST',
         headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')},
         body: JSON.stringify({code, cart_total: total})
     }).then(r => r.json()).then(data => {
         if (data.success) {
-            showToast(data.message);
+            if (state) { state.discount = data.discount; state.discountMsg = data.message; }
+            document.getElementById('total-display').textContent = 'Rs.' + Math.max(0, Math.round(baseTotal - data.discount));
         } else {
-            showToast(data.message);
+            if (state) { state.discount = 0; state.discountMsg = ''; }
+            document.getElementById('total-display').textContent = 'Rs.' + Math.round(baseTotal);
         }
+        showToast(data.message);
     });
 }
 </script>
