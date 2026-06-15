@@ -8,7 +8,8 @@
                 <span class="font-display text-xl md:text-2xl text-gold tracking-[0.2em]">ARCHIVES</span>
             </a>
             <div class="hidden md:flex items-center gap-9">
-                <a href="/shop/" class="link-grow text-[13px] tracking-wide text-charcoal/80 dark:text-ivory/80 hover:text-gold transition-colors">Shop</a>
+                <a href="/" class="link-grow text-[13px] tracking-wide {% if path == '/' %}text-gold{% else %}text-charcoal/80 dark:text-ivory/80{% endif %} hover:text-gold transition-colors">Home</a>
+                <a href="/shop/" class="link-grow text-[13px] tracking-wide {% if '/shop' in path %}text-gold{% else %}text-charcoal/80 dark:text-ivory/80{% endif %} hover:text-gold transition-colors">Shop</a>
                 <a href="/shop/quiz/" class="link-grow text-[13px] tracking-wide text-gold hover:text-gold transition-colors">Find Your Scent</a>
                 <a href="/blog/" class="link-grow text-[13px] tracking-wide text-charcoal/80 dark:text-ivory/80 hover:text-gold transition-colors">Journal</a>
                 <a href="/about/" class="link-grow text-[13px] tracking-wide text-charcoal/80 dark:text-ivory/80 hover:text-gold transition-colors">About</a>
