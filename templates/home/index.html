@@ -269,7 +269,7 @@
                 </div>
                 <div class="hover-lift bg-gold/20 border border-gold/30 rounded-2xl aspect-square flex items-center justify-center p-8 text-center anim-glow">
                     <div>
-                        <div class="text-3xl mb-2 anim-flicker">🕯️</div>
+                        <svg class="w-8 h-8 mx-auto mb-2 text-gold anim-flicker" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.047 8.287 8.287 0 009 9.601a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1.001A3.75 3.75 0 0012 18z"/></svg>
                         <div class="text-sm text-gold font-medium">Handmade<br>with Love</div>
                     </div>
                 </div>
@@ -331,7 +331,7 @@
                     {% if post.featured_image %}
                     <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     {% else %}
-                    <div class="w-full h-full bg-gradient-to-br from-blush to-lavender flex items-center justify-center"><span class="text-4xl">🕯️</span></div>
+                    <div class="w-full h-full bg-gradient-to-br from-blush to-lavender flex items-center justify-center"><svg class="w-10 h-10 text-charcoal/25" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.047 8.287 8.287 0 009 9.601a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1.001A3.75 3.75 0 0012 18z"/></svg></div>
                     {% endif %}
                 </a>
                 {% if post.category %}<p class="text-xs text-gold uppercase tracking-wider mb-2">{{ post.category.name }}</p>{% endif %}

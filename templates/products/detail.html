@@ -4,7 +4,7 @@
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <!-- Breadcrumb -->
-    <nav class="flex items-center gap-2 text-xs text-gray-400 mb-8">
+    <nav class="flex items-center gap-2 text-xs text-charcoal/45 dark:text-ivory/45 mb-8">
         <a href="/" class="hover:text-gold">Home</a><span>/</span>
         <a href="/shop/" class="hover:text-gold">Shop</a><span>/</span>
         {% if product.category %}<a href="{{ product.category.get_absolute_url }}" class="hover:text-gold">{{ product.category.name }}</a><span>/</span>{% endif %}
@@ -279,7 +279,7 @@
                         Description
                         <svg class="w-4 h-4 transition-transform" :class="open === 1 ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                     </button>
-                    <div x-show="open === 1" x-transition class="pb-4 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{{ product.description }}</div>
+                    <div x-show="open === 1" x-transition class="pb-4 text-sm text-charcoal/65 dark:text-ivory/55 leading-relaxed">{{ product.description }}</div>
                 </div>
                 {% endif %}
                 {% if product.ingredients %}
@@ -288,7 +288,7 @@
                         Ingredients
                         <svg class="w-4 h-4 transition-transform" :class="open === 2 ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                     </button>
-                    <div x-show="open === 2" x-transition class="pb-4 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{{ product.ingredients }}</div>
+                    <div x-show="open === 2" x-transition class="pb-4 text-sm text-charcoal/65 dark:text-ivory/55 leading-relaxed">{{ product.ingredients }}</div>
                 </div>
                 {% endif %}
                 {% if product.care_instructions %}
@@ -297,7 +297,7 @@
                         Care Instructions
                         <svg class="w-4 h-4 transition-transform" :class="open === 3 ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                     </button>
-                    <div x-show="open === 3" x-transition class="pb-4 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{{ product.care_instructions }}</div>
+                    <div x-show="open === 3" x-transition class="pb-4 text-sm text-charcoal/65 dark:text-ivory/55 leading-relaxed">{{ product.care_instructions }}</div>
                 </div>
                 {% endif %}
             </div>
@@ -381,10 +381,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="text-xs text-gray-400">{{ review.created_at|date:"M d, Y" }}</div>
+                    <div class="text-xs text-charcoal/45 dark:text-ivory/45">{{ review.created_at|date:"M d, Y" }}</div>
                 </div>
                 {% if review.title %}<h4 class="font-semibold text-charcoal dark:text-ivory mb-2 text-sm">{{ review.title }}</h4>{% endif %}
-                <p class="text-sm text-gray-600 dark:text-gray-400">{{ review.body }}</p>
+                <p class="text-sm text-charcoal/65 dark:text-ivory/55">{{ review.body }}</p>
                 {% if review.image %}
                 <a href="{{ review.image.url }}" target="_blank" class="inline-block mt-3 rounded-xl overflow-hidden w-24 h-24 bg-blush img-zoom">
                     <img src="{{ review.image.url }}" alt="Review photo" class="w-full h-full object-cover">
@@ -392,7 +392,7 @@
                 {% endif %}
                 <div class="flex items-center gap-4 mt-3">
                     {% if review.is_verified_purchase %}<p class="text-xs text-green-500 flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>Verified Purchase</p>{% endif %}
-                    <button onclick="markHelpful({{ review.pk }}, this)" class="text-xs text-gray-400 hover:text-gold transition-colors flex items-center gap-1.5">
+                    <button onclick="markHelpful({{ review.pk }}, this)" class="text-xs text-charcoal/45 dark:text-ivory/45 hover:text-gold transition-colors flex items-center gap-1.5">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/></svg>
                         Helpful (<span class="helpful-count">{{ review.helpful_count }}</span>)
                     </button>
