@@ -30,13 +30,13 @@
                     {% if current_sort %}<input type="hidden" name="sort" value="{{ current_sort }}">{% endif %}
                     <!-- Search -->
                     <div class="mb-6">
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Search</label>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-charcoal/50 dark:text-ivory/50 mb-3">Search</label>
                         <input type="text" name="q" value="{{ search_query }}" placeholder="Search candles..."
                                class="w-full border border-line dark:border-white/10 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-gold bg-ivory dark:bg-gray-700 dark:text-ivory">
                     </div>
                     <!-- Categories -->
                     <div class="mb-6">
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Category</label>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-charcoal/50 dark:text-ivory/50 mb-3">Category</label>
                         <div class="space-y-2">
                             <label class="flex items-center gap-2 cursor-pointer">
                                 <input type="radio" name="category" value="" {% if not current_category %}checked{% endif %} class="text-gold" onchange="this.form.submit()">
@@ -53,7 +53,7 @@
                     </div>
                     <!-- Price Range -->
                     <div class="mb-6">
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Price Range</label>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-charcoal/50 dark:text-ivory/50 mb-3">Price Range</label>
                         <div class="flex gap-2">
                             <input type="number" name="price_min" placeholder="Min" value="{{ request.GET.price_min }}"
                                    class="w-full border border-line dark:border-white/10 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-gold bg-ivory dark:bg-gray-700">
@@ -65,7 +65,7 @@
                     <!-- Tags -->
                     {% if tags %}
                     <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Tags</label>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-charcoal/50 dark:text-ivory/50 mb-3">Tags</label>
                         <div class="flex flex-wrap gap-2">
                             {% for tag in tags %}
                             <a href="?tag={{ tag.slug }}" class="text-xs border border-line dark:border-white/10 rounded-full px-3 py-1 hover:border-gold hover:text-gold transition-colors {% if request.GET.tag == tag.slug %}bg-gold text-white border-gold{% endif %}">{{ tag.name }}</a>
