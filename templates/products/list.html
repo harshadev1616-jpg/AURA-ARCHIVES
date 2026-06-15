@@ -12,16 +12,16 @@
 
     <div class="flex flex-col lg:flex-row gap-8">
         <!-- Sidebar Filters -->
-        <aside class="w-full lg:w-64 shrink-0" x-data="{ open: false }">
-            <!-- Mobile filter toggle -->
-            <button @click="open=!open" class="lg:hidden w-full flex items-center justify-between bg-white dark:bg-gray-800 rounded-2xl px-5 py-3 shadow-sm mb-3 text-sm font-semibold text-charcoal dark:text-ivory">
+        <aside class="w-full lg:w-64 shrink-0">
+            <!-- Mobile filter toggle (vanilla JS — no Alpine/CDN dependency) -->
+            <button type="button" id="filter-toggle" class="lg:hidden w-full flex items-center justify-between bg-white dark:bg-gray-800 rounded-2xl px-5 py-3 shadow-sm mb-3 text-sm font-semibold text-charcoal dark:text-ivory">
                 <span class="flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
                     Filters
                 </span>
-                <svg class="w-4 h-4 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                <svg id="filter-chevron" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
             </button>
-            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm lg:sticky lg:top-24 hidden lg:block" :class="open ? '!block' : ''">
+            <div id="filter-panel" class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm lg:sticky lg:top-24 hidden lg:block">
                 <div class="flex items-center justify-between mb-6">
                     <h3 class="font-semibold text-charcoal dark:text-ivory">Filters</h3>
                     <a href="/shop/" class="text-xs text-gold hover:underline">Clear All</a>
@@ -152,4 +152,18 @@
 
 {% include "components/recently_viewed.html" %}
 {# addToCart() and toggleWishlist() come from main.js (cart-drawer + badge wired). #}
+<script>
+  // Mobile filter panel toggle — vanilla JS so it works even if Alpine's CDN is blocked/slow.
+  (function () {
+    var btn = document.getElementById('filter-toggle');
+    var panel = document.getElementById('filter-panel');
+    var chevron = document.getElementById('filter-chevron');
+    if (btn && panel) {
+      btn.addEventListener('click', function () {
+        panel.classList.toggle('hidden');
+        if (chevron) chevron.classList.toggle('rotate-180');
+      });
+    }
+  })();
+</script>
 {% endblock %}
