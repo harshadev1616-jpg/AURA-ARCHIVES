@@ -63,7 +63,7 @@
                 <button @click="navigator.clipboard.writeText('{{ request.scheme }}://{{ request.get_host }}/accounts/register/?ref={{ user.referral_code }}'); copied=true; setTimeout(()=>copied=false,2000)"
                         class="bg-charcoal text-ivory px-5 py-2.5 rounded-full text-[13px] tracking-wide hover:bg-gold transition-colors whitespace-nowrap">
                     <span x-show="!copied">Copy Link</span>
-                    <span x-show="copied" x-cloak>Copied! ✨</span>
+                    <span x-show="copied" x-cloak>Copied!</span>
                 </button>
             </div>
         </div>
@@ -72,26 +72,26 @@
     <!-- Stats Cards -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <a href="/orders/" class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all group">
-            <div class="text-2xl mb-2">📦</div>
+            <svg class="w-7 h-7 mb-2 text-gold" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z"/></svg>
             <div class="font-display text-3xl text-charcoal dark:text-ivory group-hover:text-gold transition-colors">{{ recent_orders|length }}</div>
-            <div class="text-xs text-gray-400 mt-1">Recent Orders</div>
+            <div class="text-xs text-charcoal/45 dark:text-ivory/45 mt-1">Recent Orders</div>
         </a>
         <a href="/accounts/wishlist/" class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all group">
-            <div class="text-2xl mb-2">❤️</div>
+            <svg class="w-7 h-7 mb-2 text-gold" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>
             <div class="font-display text-3xl text-charcoal dark:text-ivory group-hover:text-gold transition-colors">
                 {% if user.wishlist %}{{ user.wishlist.products.count }}{% else %}0{% endif %}
             </div>
-            <div class="text-xs text-gray-400 mt-1">Wishlist Items</div>
+            <div class="text-xs text-charcoal/45 dark:text-ivory/45 mt-1">Wishlist Items</div>
         </a>
         <a href="/accounts/addresses/" class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all group">
-            <div class="text-2xl mb-2">📍</div>
+            <svg class="w-7 h-7 mb-2 text-gold" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
             <div class="font-display text-3xl text-charcoal dark:text-ivory group-hover:text-gold transition-colors">{{ user.addresses.count }}</div>
-            <div class="text-xs text-gray-400 mt-1">Saved Addresses</div>
+            <div class="text-xs text-charcoal/45 dark:text-ivory/45 mt-1">Saved Addresses</div>
         </a>
         <a href="/accounts/notifications/" class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all group relative">
-            <div class="text-2xl mb-2">🔔</div>
+            <svg class="w-7 h-7 mb-2 text-gold" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
             <div class="font-display text-3xl text-charcoal dark:text-ivory group-hover:text-gold transition-colors">{{ unread_notifications }}</div>
-            <div class="text-xs text-gray-400 mt-1">Notifications</div>
+            <div class="text-xs text-charcoal/45 dark:text-ivory/45 mt-1">Notifications</div>
             {% if unread_notifications > 0 %}
             <div class="absolute top-3 right-3 w-2.5 h-2.5 bg-red-400 rounded-full"></div>
             {% endif %}
@@ -133,7 +133,7 @@
                     <div class="w-10 h-10 bg-blush dark:bg-gray-700 rounded-xl flex items-center justify-center text-sm">
                         {% if order.items.first and order.items.first.product_image %}
                         <img src="{{ order.items.first.product_image }}" class="w-full h-full object-cover rounded-xl">
-                        {% else %}🕯️{% endif %}
+                        {% else %}<svg class="w-5 h-5 text-charcoal/30" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>{% endif %}
                     </div>
                     <div>
                         <p class="text-sm font-semibold text-charcoal dark:text-ivory">#{{ order.order_number }}</p>
@@ -158,8 +158,8 @@
         </div>
         {% else %}
         <div class="text-center py-16">
-            <div class="text-5xl mb-4">🕯️</div>
-            <p class="text-gray-400 text-sm mb-4">No orders yet. Start your candle journey!</p>
+            <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-gold/10 flex items-center justify-center"><svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z"/></svg></div>
+            <p class="text-charcoal/45 dark:text-ivory/45 text-sm mb-4">No orders yet. Start your candle journey!</p>
             <a href="/shop/" class="bg-gold text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-opacity-90">Shop Now</a>
         </div>
         {% endif %}
