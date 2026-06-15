@@ -179,12 +179,12 @@
 
             <!-- Variants -->
             {% if product.variants.exists %}
-            <div class="mb-6" x-data="{ selectedVariant: null }">
+            <div class="mb-6">
                 <p class="text-sm font-semibold text-charcoal dark:text-ivory mb-3">Select Variant</p>
                 <div class="flex flex-wrap gap-2">
                     {% for variant in product.variants.all %}
-                    <button @click="selectedVariant = {{ variant.pk }}"
-                            :class="selectedVariant === {{ variant.pk }} ? 'bg-charcoal text-ivory border-charcoal' : 'bg-white dark:bg-gray-800 border-line hover:border-gold hover:text-gold'"
+                    <button @click="$store.buy.variant = {{ variant.pk }}"
+                            :class="$store.buy.variant === {{ variant.pk }} ? 'bg-charcoal text-ivory border-charcoal' : 'bg-white dark:bg-gray-800 border-line hover:border-gold hover:text-gold'"
                             class="border-2 rounded-full px-4 py-2 text-sm font-medium transition-all">
                         {{ variant.value }}
                         {% if variant.price_adjustment != 0 %}
@@ -204,7 +204,7 @@
                     <button @click="qty++" class="px-4 py-3.5 hover:text-gold transition-colors text-base">+</button>
                 </div>
                 {% if product.is_in_stock %}
-                <button @click="addToCart({{ product.pk }}, null, qty)"
+                <button @click="addToCart({{ product.pk }}, $store.buy.variant, qty)"
                         class="flex-1 bg-charcoal dark:bg-ivory text-ivory dark:text-charcoal py-4 rounded-full text-[13px] tracking-wide hover:bg-gold dark:hover:bg-gold dark:hover:text-white transition-colors flex items-center justify-center gap-2">
                     Add to Cart
                 </button>
@@ -213,7 +213,7 @@
                 {% endif %}
             </div>
             {% if product.is_in_stock %}
-            <a href="/orders/checkout/" onclick="addToCart({{ product.pk }}, null, 1)" class="w-full block text-center border border-charcoal dark:border-ivory text-charcoal dark:text-ivory py-4 rounded-full text-[13px] tracking-wide hover:bg-charcoal hover:text-ivory dark:hover:bg-ivory dark:hover:text-charcoal transition-colors mb-6">
+            <a href="/orders/checkout/" x-data @click="addToCart({{ product.pk }}, $store.buy.variant, 1)" class="w-full block text-center border border-charcoal dark:border-ivory text-charcoal dark:text-ivory py-4 rounded-full text-[13px] tracking-wide hover:bg-charcoal hover:text-ivory dark:hover:bg-ivory dark:hover:text-charcoal transition-colors mb-6">
                 Buy Now
             </a>
             {% else %}
@@ -476,7 +476,7 @@
             <span class="px-2 text-sm min-w-8 text-center" x-text="qty">1</span>
             <button @click="qty++" class="px-3.5 py-2.5 hover:text-gold text-base">+</button>
         </div>
-        <button @click="addToCart({{ product.pk }}, null, qty)"
+        <button @click="addToCart({{ product.pk }}, $store.buy.variant, qty)"
                 class="bg-charcoal dark:bg-ivory text-ivory dark:text-charcoal px-6 sm:px-8 py-3 rounded-full text-[13px] tracking-wide hover:bg-gold dark:hover:bg-gold dark:hover:text-white transition-colors shrink-0">
             Add to Cart
         </button>
@@ -489,6 +489,15 @@
 {% include "components/recently_viewed.html" with exclude_pk=product.pk %}
 
 <script>
+// Shared buy state — single source of truth for the selected variant, used by
+// the main Add to Cart, Buy Now, and the sticky bar. Pre-selects the first
+// variant so a variant product is always added with a concrete variant.
+document.addEventListener('alpine:init', () => {
+    Alpine.store('buy', {
+        variant: {% if product.variants.exists %}{{ product.variants.first.pk }}{% else %}null{% endif %},
+    });
+});
+
 // Reveal the sticky buy bar once the main buy box scrolls out of view
 (function () {
     const buyBox = document.getElementById('buy-box');
