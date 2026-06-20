@@ -6,7 +6,7 @@
     <div class="flex items-center justify-between mb-8">
         <div>
             <h1 class="font-display text-3xl text-charcoal dark:text-ivory">Hello, {{ user.first_name }}</h1>
-            <p class="text-gray-400 text-sm mt-1">Welcome back to Aura Archives</p>
+            <p class="text-charcoal/45 dark:text-ivory/45 text-sm mt-1">Welcome back to Aura Archives</p>
         </div>
         <a href="/accounts/profile/" class="flex items-center gap-3 bg-white dark:bg-gray-800 rounded-2xl px-4 py-2.5 shadow-sm hover:shadow-md transition-shadow">
             <div class="w-9 h-9 bg-gradient-to-br from-blush to-lavender rounded-full flex items-center justify-center font-bold text-charcoal">{{ user.first_name|first }}</div>
@@ -26,9 +26,9 @@
                 </div>
                 <div class="flex items-baseline gap-2">
                     <span class="font-display text-4xl text-ivory">{{ user.loyalty_points }}</span>
-                    <span class="text-gray-400 text-sm">points · worth Rs.{{ loyalty_value }}</span>
+                    <span class="text-ivory/55 text-sm">points · worth Rs.{{ loyalty_value }}</span>
                 </div>
-                <p class="text-gray-400 text-xs mt-2">Earn 10% back in points on every delivered order. Redeem from {{ min_redeem }} points at checkout.</p>
+                <p class="text-ivory/55 text-xs mt-2">Earn 10% back in points on every delivered order. Redeem from {{ min_redeem }} points at checkout.</p>
             </div>
             <div class="flex items-center gap-3">
                 
@@ -41,7 +41,7 @@
         <div x-show="open" x-transition x-cloak class="relative mt-5 pt-5 border-t border-white/10 space-y-2">
             {% for tx in loyalty_history %}
             <div class="flex items-center justify-between text-sm">
-                <span class="text-gray-300">{{ tx.reason }}</span>
+                <span class="text-ivory/65">{{ tx.reason }}</span>
                 <span class="font-semibold {% if tx.points > 0 %}text-green-400{% else %}text-gold{% endif %}">{{ tx.points|stringformat:"+d" }} pts</span>
             </div>
             {% endfor %}
@@ -55,7 +55,7 @@
             <div>
                 <p class="eyebrow text-gold mb-1">Give 100, Get 100</p>
                 <h3 class="font-display text-xl text-charcoal dark:text-ivory">Refer a friend</h3>
-                <p class="text-gray-500 text-sm mt-1">Share your code. When a friend places their first order, you <em>both</em> get 100 points.
+                <p class="text-charcoal/55 dark:text-ivory/55 text-sm mt-1">Share your code. When a friend places their first order, you <em>both</em> get 100 points.
                 {% if user.successful_referrals %}<span class="text-gold font-medium">· {{ user.successful_referrals }} friend{{ user.successful_referrals|pluralize }} joined!</span>{% endif %}</p>
             </div>
             <div class="flex items-center gap-2 shrink-0">
@@ -137,7 +137,7 @@
                     </div>
                     <div>
                         <p class="text-sm font-semibold text-charcoal dark:text-ivory">#{{ order.order_number }}</p>
-                        <p class="text-xs text-gray-400">{{ order.created_at|date:"M d, Y" }} · {{ order.items.count }} item{{ order.items.count|pluralize }}</p>
+                        <p class="text-xs text-charcoal/45 dark:text-ivory/45">{{ order.created_at|date:"M d, Y" }} · {{ order.items.count }} item{{ order.items.count|pluralize }}</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-4">
